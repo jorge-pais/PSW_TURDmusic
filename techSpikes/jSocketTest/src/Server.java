@@ -26,7 +26,9 @@ public class Server {
         // get file info
         String fileName = null;
         long fileSize;
+
         fileName = in.readUTF();
+
         System.out.println("filename: " + fileName);
         fileSize = in.readLong();
         System.out.println("size: " + fileSize);
@@ -53,7 +55,7 @@ public class Server {
 
     public static void main(String args[]){
         if (args.length != 1) {
-            System.out.println("USAGE: java Server <port>");
+            System.out.println("USAGE: java Server <port> <file-name>");
             return;
         }
         try {

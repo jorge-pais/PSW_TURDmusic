@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.io.File;
 
-
 public class User {
 
     // Library stuff
@@ -32,6 +31,7 @@ public class User {
 
         // Remove all children music
         songs.removeIf(i -> i.getFile().getPath().startsWith(path));
+
     }
 
     public ArrayList<String> getPaths(){
@@ -69,6 +69,4 @@ public class User {
 
         return musicList;
     }
-
-
 }

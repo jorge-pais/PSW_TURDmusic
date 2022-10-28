@@ -29,11 +29,10 @@ public class Music {
 
     public void getSongAttribute() {
         try {
-            //This doesn't work (?)
             AudioFile f = AudioFileIO.read(file);
             Tag tag = f.getTag();
 
-            System.out.println("Album:" + tag.getFirst(FieldKey.ALBUM));
+            System.out.println("Album: " + tag.getFirst(FieldKey.ALBUM));
             System.out.println("Artist: " + tag.getFirst(FieldKey.ARTIST));
             System.out.println("Title: "+ tag.getFirst(FieldKey.TITLE));
 

@@ -3,7 +3,7 @@ import java.util.Scanner;
 import java.io.File;
 
 public class Main {
-
+    // CLI interface loop
     public static void main(String[] args) {
 
         System.out.print(
@@ -56,7 +56,7 @@ public class Main {
                     break;
 
                 case "readData":
-                    if(argument[1] == null) return;
+                    if(argument[1] == null) break;
 
                     int i = Integer.parseInt(argument[1]);
 
