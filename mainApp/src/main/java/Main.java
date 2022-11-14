@@ -12,7 +12,7 @@ public class Main {
         Scanner scan = new Scanner(System.in);
         String cmd; String[] argument;
 
-        User user = new User();
+        Library library = new Library();
 
         Desktop desktop = Desktop.getDesktop();
 
@@ -27,32 +27,44 @@ public class Main {
                     "addPath <Path-to-folder> : adds a path to library and scans it for music files\n" +
                     "removePath <Path-to-folder> : removes a path from the library\n" +
                     "listPath : lists all library file paths\n"+
-                    "list: lists all available music files\n" +
+                    "listSongs: lists all available music files\n" +
                     "open <index-of-song-in-list> : open a specified music file in OS default media player\n" +
                     "exit : exits the application\n" +
-                    "readData <music-index> : print a song's metadata\n" );
+                    "readData <music-index> : print a song's metadata\n" +
+                    "listAlbums: lists all added albums\n" +
+                    "listArtists: lists all artists\n");
                     break;
 
                 case "addPath":
                     if(argument[1] != null)
-                        user.addPath(argument[1]);
+                        library.addPath(argument[1]);
                     else
                         System.out.println("Usage: addPath <Path-to-folder>");
                     break;
 
                 case "removePath":
                     if(argument[1] != null)
-                        user.removePath(argument[1]);
+                        library.removePath(argument[1]);
                     break;
 
                 case "listPath":
-                    for (String i: user.getPaths())
+                    for (String i: library.getPaths())
                         System.out.println(i);
                     break;
 
-                case "list":
-                    for(int i = 0; i < user.getAllSongs().toArray().length; i++)
-                        System.out.println(i + "->" +user.getAllSongs().get(i).getTitle());
+                case "listSongs":
+                    for(int i = 0; i < library.getAllSongs().toArray().length; i++)
+                        System.out.println(i + " -> " + library.getAllSongs().get(i).getTitle());
+                    break;
+
+                case "listAlbums":
+                    for (int i = 0; i < library.getAlbums().toArray().length; i++)
+                        System.out.println(i + " -> " + library.getAlbums().get(i).getTitle());
+                    break;
+
+                case "listArtists":
+                    for (int i = 0; i < library.getArtists().toArray().length; i++)
+                        System.out.println(i + " -> " + library.getArtists().get(i).getName());
                     break;
 
                 case "readData":
@@ -60,7 +72,7 @@ public class Main {
 
                     int i = Integer.parseInt(argument[1]);
 
-                    user.getAllSongs().get(i).getSongAttribute();
+                    library.getAllSongs().get(i).getSongAttribute();
                     break;
 
                 case "open":
@@ -70,7 +82,7 @@ public class Main {
                         int index = Integer.parseInt(argument[1]);
 
                         // This approach can only open one file at a time
-                        File file = user.getAllSongs().get(index).getFile();
+                        File file = library.getAllSongs().get(index).getFile();
                         desktop.open(file);
                     } catch (Exception e){
                         System.out.println(e);

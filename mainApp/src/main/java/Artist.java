@@ -1,14 +1,17 @@
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Artist {
 
     private String name;
-    private String picture; // path to file
+    //private Image picture;
 
     private ArrayList<Music> songs;
     private ArrayList<Album> albums;
 
-    public Artist(){
+    public Artist(String name){
+        this.name = name;
+
         songs = new ArrayList<>();
         albums = new ArrayList<>();
     }
@@ -16,5 +19,20 @@ public class Artist {
     public String getName(){
         return name;
     }
+
+    public void addSong(Music song){
+        songs.add(song);
+    }
+    public void removeSong(Music song){songs.remove(song);}
+
+    public ArrayList<Album> getAllAlbums(){
+        return albums;
+    }
+    public ArrayList<Music> getAllSongs(){return songs;}
+
+    public void addAlbum(Album album){
+        albums.add(album);
+    }
+    public void removeAlbum(Album album){ albums.remove(album); }
 
 }
