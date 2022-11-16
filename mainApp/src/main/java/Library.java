@@ -9,7 +9,7 @@ import java.io.File;
 public class Library {
 
     // Library stuff
-    private ArrayList<String> libraryFilePaths;
+    private ArrayList<String> libraryFilePaths; // We can change the library paths from strings to file objects
     private ArrayList<Music> songs;
     private ArrayList<Album> albums;
     private ArrayList<Artist> artists;
@@ -172,4 +172,8 @@ public class Library {
         album.addSong(song);
         return song;
     }
+
+
+
+    public void saveLibrary(){}
 }

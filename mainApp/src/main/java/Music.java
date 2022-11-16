@@ -23,6 +23,7 @@ public class Music {
     }
     public Album getAlbum(){ return album; }
     public Artist getArtist(){ return artist; }
+    public int getTrackNumber(){ return trackNumber; }
 
     public Music(String songTitle, File fileHandle, Artist artist, Album album, int trackNumber){
         this.title = songTitle;
