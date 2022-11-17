@@ -1,18 +1,22 @@
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.io.File;
 
-public class Library {
+public class Library{
 
     // Library stuff
     private ArrayList<String> libraryFilePaths; // We can change the library paths from strings to file objects
     private ArrayList<Music> songs;
     private ArrayList<Album> albums;
     private ArrayList<Artist> artists;
+    private ArrayList<Playlist> playlists;
+
     private Album undefinedAlbum;
     private Artist undefinedArtist;
 
@@ -22,6 +26,7 @@ public class Library {
         this.songs = new ArrayList<>();
         this.artists = new ArrayList<>();
         this.albums = new ArrayList<>();
+        this.playlists = new ArrayList<>();
         this.undefinedAlbum = null;
         this.undefinedArtist = null;
     }
@@ -42,6 +47,7 @@ public class Library {
     public ArrayList<String> getPaths(){ return libraryFilePaths; }
     public ArrayList<Artist> getArtists(){ return artists; }
     public ArrayList<Album> getAlbums(){ return albums; }
+    public ArrayList<Playlist> getPlaylists(){ return playlists; }
 
     public void removePath(String path){
         libraryFilePaths.remove(path);
@@ -78,6 +84,11 @@ public class Library {
         }
 
         this.songs.remove(song);
+    }
+
+    // coise?
+    public void removePlaylist(Playlist list){
+        this.playlists.remove(list);
     }
 
     private boolean checkFileExtension(String name){
@@ -173,7 +184,6 @@ public class Library {
         return song;
     }
 
-
-
+    // This needs to be done
     public void saveLibrary(){}
 }

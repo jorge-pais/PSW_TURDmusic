@@ -1,3 +1,5 @@
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,9 +10,11 @@ public class Album {
 
     private String title;
     private Image coverArt;
-    private Date releaseDate;
+    private Date releaseDate; // Maybe just save the year, many albums do not include the actual release date
 
+    @JsonBackReference
     private ArrayList<Artist> artists;
+    @JsonBackReference
     private ArrayList<Music> tracklist;
 
     public Album(String name, Artist artist){
