@@ -1,4 +1,5 @@
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -6,19 +7,26 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 
+@JsonIdentityInfo(
+        generator= ObjectIdGenerators.IntSequenceGenerator.class,
+        property="@json_id")
 public class Album {
+    public int id;
 
     private String title;
     private Image coverArt;
     private Date releaseDate; // Maybe just save the year, many albums do not include the actual release date
 
-    @JsonBackReference
     private ArrayList<Artist> artists;
-    @JsonBackReference
     private ArrayList<Music> tracklist;
 
-    public Album(String name, Artist artist){
+    public Album(){
+        super();
+    }
+
+    public Album(String name, Artist artist, int id){
         this.title = name;
+        this.id = id;
         this.tracklist = new ArrayList<>();
 
         this.artists = new ArrayList<>();
@@ -37,8 +45,7 @@ public class Album {
         tracklist.add(song);
     }
     public void removeSong(Music song){ tracklist.remove(song); }
-    public ArrayList<Music> getAllSongs(){ return tracklist; }
-
+    public ArrayList<Music> getTracklist(){ return tracklist; }
 
     // UNTESTED FUNCTION
     public void orderTracklist(){

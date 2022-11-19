@@ -1,5 +1,5 @@
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.Tag;
@@ -9,32 +9,38 @@ import org.jaudiotagger.tag.images.Artwork;
 import java.io.File;
 import java.util.List;
 
+@JsonIdentityInfo(
+        generator= ObjectIdGenerators.IntSequenceGenerator.class,
+        property="@json_id")
 public class Music {
+    //
+    // Now that we are able to save the library utilizing json, the field id
+    // is not need, we'll keep it in case the UI/UX benefits from this
+    //
+    public int id;
 
     private String title;
     private File file;
 
     private boolean undefined = true;
-    @JsonBackReference
     private Artist artist; // for now, we'll assume that each song has only one artist
-    @JsonBackReference
     private Album album;
-
     private int trackNumber;
 
-    public String getTitle(){
-        return title;
-    }
-    public File getFile(){
-        return file;
-    }
+    public String getTitle(){ return title; }
+    public File getFile(){ return file; }
     public Album getAlbum(){ return album; }
     public Artist getArtist(){ return artist; }
     public int getTrackNumber(){ return trackNumber; }
 
-    public Music(String songTitle, File fileHandle, Artist artist, Album album, int trackNumber){
+    public Music(){
+        super();
+    }
+
+    public Music(String songTitle, int id, File fileHandle, Artist artist, Album album, int trackNumber){
         this.title = songTitle;
         this.file = fileHandle;
+        this.id = id;
         if(artist == null || album == null || trackNumber == 0)
             return;
 
