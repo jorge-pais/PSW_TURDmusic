@@ -1,9 +1,15 @@
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.awt.*;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Scanner;
-import java.io.File;
 
 public class Main {
+    //
     // CLI interface loop
+    // We should re-do
+    //
     public static void main(String[] args) {
 
         System.out.print(
@@ -32,7 +38,9 @@ public class Main {
                     "exit : exits the application\n" +
                     "readData <music-index> : print a song's metadata\n" +
                     "listAlbums: lists all added albums\n" +
-                    "listArtists: lists all artists\n");
+                    "listArtists: lists all artists\n" +
+                    "newPlaylist <playlistName> <songIndex[]>: creates a new playlist entry\n"+
+                    "listPlaylists: lists all playlists\n");
                     break;
 
                 case "addPath":
@@ -48,50 +56,112 @@ public class Main {
                     break;
 
                 case "listPath":
-                    for (String i: library.getPaths())
+                    for (String i: library.getLibraryPaths())
                         System.out.println(i);
                     break;
 
                 case "listSongs":
-                    for(int i = 0; i < library.getAllSongs().toArray().length; i++)
-                        System.out.println(i + " -> " + library.getAllSongs().get(i).getTitle());
+                    for(Music i : library.getSongs())
+                        System.out.println(i.id + "->" + i.getTitle());
                     break;
 
                 case "listAlbums":
-                    for (int i = 0; i < library.getAlbums().toArray().length; i++)
-                        System.out.println(i + " -> " + library.getAlbums().get(i).getTitle());
+                    for (Album i : library.getAlbums())
+                        System.out.println(i.id + "->" + i.getTitle());
                     break;
 
                 case "listArtists":
-                    for (int i = 0; i < library.getArtists().toArray().length; i++)
-                        System.out.println(i + " -> " + library.getArtists().get(i).getName());
+                    for (Artist i : library.getArtists())
+                        System.out.println(i.id + " -> " + i.getName());
                     break;
 
                 case "readData":
                     if(argument[1] == null) break;
 
-                    int i = Integer.parseInt(argument[1]);
+                    int index = Integer.parseInt(argument[1]);
 
-                    library.getAllSongs().get(i).getSongAttribute();
+                    library.getSongs().get(index).getSongAttribute();
                     break;
 
                 case "open":
                     if(argument[1] == null) break;
 
                     try{
-                        int index = Integer.parseInt(argument[1]);
+                        // HOW IS THIS THE SAME SCOPE AS THE PREVIOUS INDEX???
+                        index = Integer.parseInt(argument[1]);
 
                         // This approach can only open one file at a time
-                        File file = library.getAllSongs().get(index).getFile();
+                        File file = library.getSongs().get(index).getFile();
                         desktop.open(file);
                     } catch (Exception e){
                         System.out.println(e);
                     }
                     break;
+                // newPlaylist <playlistName> <songIndex1> ... <songIndexN>
+                case "newPlaylist":
+                    if(argument.length == 1) break;
+
+                    ArrayList<Music> initialSongs = new ArrayList<>();
+
+                    for (int i = 2; i < argument.length; i++)
+                        initialSongs.add(library.getSongs().get(i));
+
+                    Playlist playlist = new Playlist(argument[1], initialSongs);
+                    library.getPlaylists().add(playlist);
+
+                    break;
+
+                case "listPlaylists":
+                    for (int i = 0; i < library.getPlaylists().toArray().length; i++)
+                        System.out.println(i + " -> " + library.getPlaylists().get(i).getTitle());
+                    break;
 
                 case "exit":
                     System.out.println("Exiting");
                     break;
+
+                case "saveLibrary":
+                    if(argument.length == 1) break;
+
+                    File outputFile = new File(argument[1]);
+                    try{
+                        ObjectMapper objectMapper = new ObjectMapper();
+                        objectMapper.writeValue(outputFile, library);
+
+                        System.out.println("Library saved to file!");
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+                    break;
+
+                case "loadLibrary":
+                    if(argument.length == 1) break;
+
+                    File inputFile = new File(argument[1]);
+                    try{
+                        ObjectMapper objectMapper = new ObjectMapper();
+                        library = objectMapper.readValue(inputFile, Library.class);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+
+                    break;
+
+                /*case "getArtwork": // Test to read album cover as bitmap
+                    if(argument[1] == null) break;
+                    Music music = library.getAllSongs().get(Integer.parseInt(argument[1]));
+
+                    try {
+                        File output = new File("albumCoverTest.bmp");
+                        FileOutputStream outputStream = new FileOutputStream(output);
+
+                        outputStream.write(music.readSongArtwork());
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    break;*/
 
                 default:
                     break;
