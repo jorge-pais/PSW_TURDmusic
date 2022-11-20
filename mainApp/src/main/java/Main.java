@@ -1,4 +1,5 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
+import repository.Repository;
 
 import java.awt.*;
 import java.io.*;
@@ -148,6 +149,13 @@ public class Main {
                     }
 
 
+                    break;
+                case "testDavid":
+                    try {
+                        Repository.getGenres();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     break;
 
                 /*case "getArtwork": // Test to read album cover as bitmap
