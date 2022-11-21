@@ -193,4 +193,62 @@ public class Library{
         album.addSong(song);
         return song;
     }
+
+    //
+    // Repeating functions for simplicity
+    // TODO: find a way to reuse the same function without major class alterations
+    // UNTESTED
+    //
+    public ArrayList<Music> searchSongs(String searchTerm){
+        String query = searchTerm.toLowerCase();
+
+        ArrayList<Music> output = new ArrayList<>();
+
+        for (Music i: this.songs)
+            if(i.getTitle().toLowerCase().contains(query))
+                output.add(i);
+
+        if(output.size() > 0)
+            return output;
+        return null;
+    }
+    public ArrayList<Album> searchAlbums(String searchTerm){
+        String query = searchTerm.toLowerCase();
+
+        ArrayList<Album> output = new ArrayList<>();
+
+        for (Album i: this.albums)
+            if(i.getTitle().toLowerCase().contains(query))
+                output.add(i);
+
+        if(output.size() > 0)
+            return output;
+        return null;
+    }
+    public ArrayList<Artist> searchArtists(String searchTerm){
+        String query = searchTerm.toLowerCase();
+
+        ArrayList<Artist> output = new ArrayList<>();
+
+        for (Artist i: this.artists)
+            if(i.getName().toLowerCase().contains(query))
+                output.add(i);
+
+        if(output.size() > 0)
+            return output;
+        return null;
+    }
+    public ArrayList<Playlist> searchPlaylist(String searchTerm){
+        String query = searchTerm.toLowerCase();
+
+        ArrayList<Playlist> output = new ArrayList<>();
+
+        for (Playlist i: this.playlists)
+            if(i.getTitle().toLowerCase().contains(query))
+                output.add(i);
+
+        if(output.size() > 0)
+            return output;
+        return null;
+    }
 }

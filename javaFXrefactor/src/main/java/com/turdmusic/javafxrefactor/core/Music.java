@@ -52,7 +52,7 @@ public class Music {
         this.album = album;
         this.trackNumber = trackNumber;
 
-        // get tracklength
+        // get the track's length
         try{
             AudioFile f = AudioFileIO.read(fileHandle);
             this.trackLength = f.getAudioHeader().getTrackLength();
