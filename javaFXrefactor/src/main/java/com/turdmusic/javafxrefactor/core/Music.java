@@ -28,12 +28,14 @@ public class Music {
     private Artist artist; // for now, we'll assume that each song has only one artist
     private Album album;
     private int trackNumber;
+    private int trackLength;
 
     public String getTitle(){ return title; }
     public File getFile(){ return file; }
     public Album getAlbum(){ return album; }
     public Artist getArtist(){ return artist; }
     public int getTrackNumber(){ return trackNumber; }
+    public int getTrackLength(){ return trackLength; }
 
     public Music(){
         super();
@@ -49,8 +51,18 @@ public class Music {
         this.artist = artist;
         this.album = album;
         this.trackNumber = trackNumber;
+
+        // get tracklength
+        try{
+            AudioFile f = AudioFileIO.read(fileHandle);
+            this.trackLength = f.getAudioHeader().getTrackLength();
+        }catch (Exception e){
+            this.trackLength = -1; // error
+            e.printStackTrace();
+        }
     }
 
+    // this can be deleted
     public void getSongAttribute() {
         try {
             AudioFile f = AudioFileIO.read(file);

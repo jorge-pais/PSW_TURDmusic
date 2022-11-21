@@ -146,6 +146,20 @@ public class MainCLI {
 
 
                     break;
+                    
+                case "getFingerprint":
+                    if(argument.length == 1) break;
+
+                    AcoustidRequester req = new AcoustidRequester();
+                    Music song = library.getSongs().get(Integer.parseInt(argument[1]));
+                    try{
+                        System.out.println("Fingerprint: " + req.getFingerprint(song, "/usr/bin/fpcalc"));
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+                    break;
+
 
                 /*case "getArtwork": // Test to read album cover as bitmap
                     if(argument[1] == null) break;
