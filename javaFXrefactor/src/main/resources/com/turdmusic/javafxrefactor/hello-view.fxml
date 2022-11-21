@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="600.0" onMouseClicked="#onMouseClicked" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.turdmusic.javafxrefactor.HelloController">
+   <children>
+      <Label layoutX="109.0" layoutY="64.0" text="Welcome to Totally Related, Unified and Deliverable Music!" textAlignment="CENTER" AnchorPane.leftAnchor="109.0" AnchorPane.rightAnchor="109.00641729490343">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Label>
+      <Label layoutX="210.0" layoutY="149.0" prefHeight="100.0" prefWidth="179.0" text="Click anywhere to add library folders and begin organizing" textAlignment="CENTER" wrapText="true" AnchorPane.leftAnchor="210.0" AnchorPane.rightAnchor="210.47298985139065">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

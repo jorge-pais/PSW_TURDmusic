@@ -1,4 +1,5 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
+import repository.Repository;
 
 import java.awt.*;
 import java.io.*;
@@ -6,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
-
     //
     // CLI interface loop
     // We should re-do
@@ -57,23 +57,23 @@ public class Main {
                     break;
 
                 case "listPath":
-                    for (String i: library.getPaths())
+                    for (String i: library.getLibraryPaths())
                         System.out.println(i);
                     break;
 
                 case "listSongs":
-                    for(int i = 0; i < library.getAllSongs().toArray().length; i++)
-                        System.out.println(i + " -> " + library.getAllSongs().get(i).getTitle());
+                    for(Music i : library.getSongs())
+                        System.out.println(i.id + "->" + i.getTitle());
                     break;
 
                 case "listAlbums":
-                    for (int i = 0; i < library.getAlbums().toArray().length; i++)
-                        System.out.println(i + " -> " + library.getAlbums().get(i).getTitle());
+                    for (Album i : library.getAlbums())
+                        System.out.println(i.id + "->" + i.getTitle());
                     break;
 
                 case "listArtists":
-                    for (int i = 0; i < library.getArtists().toArray().length; i++)
-                        System.out.println(i + " -> " + library.getArtists().get(i).getName());
+                    for (Artist i : library.getArtists())
+                        System.out.println(i.id + " -> " + i.getName());
                     break;
 
                 case "readData":
@@ -81,7 +81,7 @@ public class Main {
 
                     int index = Integer.parseInt(argument[1]);
 
-                    library.getAllSongs().get(index).getSongAttribute();
+                    library.getSongs().get(index).getSongAttribute();
                     break;
 
                 case "open":
@@ -92,7 +92,7 @@ public class Main {
                         index = Integer.parseInt(argument[1]);
 
                         // This approach can only open one file at a time
-                        File file = library.getAllSongs().get(index).getFile();
+                        File file = library.getSongs().get(index).getFile();
                         desktop.open(file);
                     } catch (Exception e){
                         System.out.println(e);
@@ -105,7 +105,7 @@ public class Main {
                     ArrayList<Music> initialSongs = new ArrayList<>();
 
                     for (int i = 2; i < argument.length; i++)
-                        initialSongs.add(library.getAllSongs().get(i));
+                        initialSongs.add(library.getSongs().get(i));
 
                     Playlist playlist = new Playlist(argument[1], initialSongs);
                     library.getPlaylists().add(playlist);
@@ -148,6 +148,13 @@ public class Main {
                     }
 
 
+                    break;
+                case "testDavid":
+                    try {
+                        Repository.getGenres();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     break;
 
                 /*case "getArtwork": // Test to read album cover as bitmap
