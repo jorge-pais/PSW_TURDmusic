@@ -1,0 +1,23 @@
+/home/jorgep/.jdks/openjdk-19.0.1/bin/java -javaagent:/usr/share/idea/lib/idea_rt.jar=33591:/usr/share/idea/bin -Dfile.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -classpath /home/jorgep/repos/t02_1/techSpikes/PostgresqlTest/out/production/PostgresqlTest:/usr/share/java/postgresql-jdbc/postgresql-jdbc.jar com.testing.postgresql
+Connection established
+Exception in thread "main" java.lang.RuntimeException: org.postgresql.util.PSQLException: ERROR: malformed array literal: "56"
+  Detail: Array value must start with "{" or dimension information.
+  Position: 46
+	at com.testing.DBFunctions.newMusicDB(DBFunctions.java:81)
+	at com.testing.postgresql.main(postgresql.java:17)
+Caused by: org.postgresql.util.PSQLException: ERROR: malformed array literal: "56"
+  Detail: Array value must start with "{" or dimension information.
+  Position: 46
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2674)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2364)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:354)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:484)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:404)
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:325)
+	at org.postgresql.jdbc.PgStatement.executeCachedSql(PgStatement.java:311)
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:287)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:282)
+	at com.testing.DBFunctions.newMusicDB(DBFunctions.java:78)
+	... 1 more
+
+Process finished with exit code 1
