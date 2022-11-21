@@ -10,11 +10,9 @@ import java.io.IOException;
 // TODO : make the text labels centered
 public class HelloController {
 
-
     public void initialize(){
         // When this controller's scene is loaded into the stage
         // this method is the first being executed
-
     }
 
     @FXML

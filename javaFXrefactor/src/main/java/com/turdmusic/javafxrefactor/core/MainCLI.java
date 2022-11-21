@@ -146,7 +146,7 @@ public class MainCLI {
 
 
                     break;
-                    
+
                 case "getFingerprint":
                     if(argument.length == 1) break;
 

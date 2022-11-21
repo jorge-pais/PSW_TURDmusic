@@ -11,6 +11,9 @@ import java.io.InputStreamReader;
 //      https://musicbrainz.org/doc/MusicBrainz_API
 // The resulting ID's can then be queried to obtain the metadata in
 //
+// TODO: implement the function prototypes (easier said than done)
+// TODO: Verify if the user has the fpcalc application installed
+//
 
 public class AcoustidRequester {
 
