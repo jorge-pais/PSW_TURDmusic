@@ -15,6 +15,8 @@ public class MainGUI extends Application {
         stage.setTitle("TURD Music");
         stage.setScene(scene);
         stage.show();
+
+        //GUIController guiController = new GUIController();
     }
 
     public static void main(String[] args) {

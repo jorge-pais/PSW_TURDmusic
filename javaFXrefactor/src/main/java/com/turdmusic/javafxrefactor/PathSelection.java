@@ -24,6 +24,7 @@ public class PathSelection {
         pathList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         // set stage reference
         //stage = (Stage) pathList.getScene().getWindow();
+
     }
 
     @FXML

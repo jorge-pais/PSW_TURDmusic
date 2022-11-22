@@ -11,7 +11,7 @@
             <Font name="System Bold" size="13.0" />
          </font>
       </Label>
-      <Label layoutX="210.0" layoutY="149.0" prefHeight="100.0" prefWidth="179.0" text="Click anywhere to add library folders and begin organizing" textAlignment="CENTER" wrapText="true" AnchorPane.leftAnchor="210.0" AnchorPane.rightAnchor="210.47298985139065">
+      <Label fx:id="label1" layoutX="210.0" layoutY="149.0" prefHeight="100.0" prefWidth="179.0" text="Click anywhere to add library folders and begin organizing" textAlignment="CENTER" wrapText="true" AnchorPane.leftAnchor="210.0" AnchorPane.rightAnchor="210.47298985139065">
          <font>
             <Font size="17.0" />
          </font>
