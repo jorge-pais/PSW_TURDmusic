@@ -27,13 +27,17 @@ public class HelloController {
 
         // Create a new stage (window) and load the file selection scene
         Stage newStage = new Stage();
-        FXMLLoader fxmlLoader = new FXMLLoader(MainGUI.class.getResource("pathSelection.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(MainGUI.class.getResource("pathManager.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 600, 400);
         newStage.setTitle("Select Folders");
         newStage.setScene(scene);
+
+        // Change new window modality (block input from current window)
+        //newStage.initOwner((Stage)scene.getWindow());
+        //newStage.initModality(Modality.WINDOW_MODAL);
+
         newStage.show();
-        newStage.initModality(Modality.WINDOW_MODAL);
-        newStage.initOwner((Stage)scene.getWindow());
+
     }
 
     @FXML
