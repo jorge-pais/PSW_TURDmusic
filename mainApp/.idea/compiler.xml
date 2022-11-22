@@ -13,4 +13,9 @@
       <module name="mainApp" target="11" />
     </bytecodeTargetLevel>
   </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="mainApp" options="" />
+    </option>
+  </component>
 </project>
