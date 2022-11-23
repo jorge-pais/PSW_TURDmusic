@@ -2,6 +2,7 @@ package com.turdmusic.mainApp.core;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import javafx.beans.property.SimpleObjectProperty;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.Tag;
@@ -35,6 +36,9 @@ public class Music {
     public Album getAlbum(){ return album; }
     public Artist getArtist(){ return artist; }
     public int getTrackNumber(){ return trackNumber; }
+    public String getFormattedTrackLength(){
+        return String.format("%d:%d", trackLength/60, trackLength%60);
+    }
     public int getTrackLength(){ return trackLength; }
 
     public Music(){
