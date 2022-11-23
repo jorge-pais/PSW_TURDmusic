@@ -1,5 +1,6 @@
 package com.turdmusic.mainApp.core;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;
@@ -50,6 +51,7 @@ public class Library{
     }
 
     public void removePath(String path){
+        if(!libraryFilePaths.contains(path)) return;
         libraryFilePaths.remove(path);
 
         // Remove all children music
@@ -250,5 +252,23 @@ public class Library{
         if(output.size() > 0)
             return output;
         return null;
+    }
+
+    public void saveLibrary(String filePath) throws Exception{
+        File outputFile = new File(filePath);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.writeValue(outputFile,this);
+
+        System.out.println("Library saved to file!");
+    }
+
+    public static Library loadLibrary(String filePath) throws Exception{
+        File inputFile = new File(filePath);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Library library = objectMapper.readValue(inputFile, Library.class);
+
+        return library;
     }
 }

@@ -1,5 +1,6 @@
 package com.turdmusic.mainApp;
 
+import com.turdmusic.mainApp.core.Library;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -11,13 +12,17 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 
-public class PathSelection {
+public class PathController {
+
+    public static boolean addedFolder; // This tells the hello view that folder have been added and scanned
+    public static Library library;
 
     public ListView<String> pathList;
     private ObservableList<String> items = FXCollections.observableArrayList();
     public Stage stage;
 
     public void initialize(){
+        addedFolder = false;
         // TODO : Load existing library path strings from current library object
 
         // Allow multiple items to be selected
@@ -32,6 +37,7 @@ public class PathSelection {
 
         items.add(path.getPath());
         pathList.setItems(items); // Update list
+        addedFolder = true;
     }
 
     @FXML
@@ -53,8 +59,10 @@ public class PathSelection {
 
     @FXML
     protected void cancelButtonClicked() throws IOException{
+        pathList.setItems(null);
         stage = (Stage) pathList.getScene().getWindow();
         stage.close();
+        addedFolder = false;
     }
 
 }

@@ -120,30 +120,24 @@ public class MainCLI {
 
                 case "saveLibrary":
                     if(argument.length == 1) break;
-
-                    File outputFile = new File(argument[1]);
-                    try{
-                        ObjectMapper objectMapper = new ObjectMapper();
-                        objectMapper.writeValue(outputFile, library);
-
-                        System.out.println("Library saved to file!");
-                    } catch (Exception e){
+                    try {
+                        library.saveLibrary(argument[1]);
+                    }catch (Exception e){
                         e.printStackTrace();
                     }
-
                     break;
 
                 case "loadLibrary":
                     if(argument.length == 1) break;
 
-                    File inputFile = new File(argument[1]);
-                    try{
-                        ObjectMapper objectMapper = new ObjectMapper();
-                        library = objectMapper.readValue(inputFile, Library.class);
+                    try {
+                        library = Library.loadLibrary(argument[1]);
                     }catch (Exception e){
                         e.printStackTrace();
                     }
 
+                    if(library == null)
+                        System.out.println("error");
 
                     break;
 
