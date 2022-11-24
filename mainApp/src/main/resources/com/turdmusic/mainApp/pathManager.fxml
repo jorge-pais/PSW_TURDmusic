@@ -6,12 +6,11 @@
 
 <AnchorPane prefHeight="395.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.turdmusic.mainApp.PathController">
    <children>
-      <ListView fx:id="pathList" layoutX="14.0" layoutY="14.0" prefHeight="331.0" prefWidth="447.0" AnchorPane.bottomAnchor="54.87240350367608" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="138.17984690708" AnchorPane.topAnchor="14.0" />
+      <ListView fx:id="pathList" layoutX="14.0" layoutY="14.0" prefHeight="364.0" prefWidth="549.0" AnchorPane.bottomAnchor="17.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="138.0" AnchorPane.topAnchor="14.0" />
       <Button layoutX="477.0" layoutY="14.0" mnemonicParsing="false" onAction="#addFolderClicked" prefHeight="27.0" prefWidth="109.0" text="Add Folder" AnchorPane.rightAnchor="13.289049353627618" AnchorPane.topAnchor="14.0" />
       <Button layoutX="629.0" layoutY="50.0" mnemonicParsing="false" onAction="#removeFolderClicked" text="Remove Folder" AnchorPane.rightAnchor="13.28904935362766" AnchorPane.topAnchor="50.0" />
-      <Button layoutX="477.0" layoutY="283.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="109.0" text="Scan Selected" AnchorPane.bottomAnchor="89.07357619910522" AnchorPane.rightAnchor="13.289049353627618" />
-      <Button layoutX="477.0" layoutY="317.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="109.0" text="Scan All" AnchorPane.bottomAnchor="55.07357619910522" AnchorPane.rightAnchor="13.28904935362766" />
-      <Button layoutX="511.0" layoutY="359.0" mnemonicParsing="false" onAction="#finishButtonClicked" prefHeight="27.0" prefWidth="75.0" text="Finish" AnchorPane.bottomAnchor="13.073576199105212" AnchorPane.rightAnchor="13.289049353627618" />
-      <Button layoutX="424.0" layoutY="359.0" mnemonicParsing="false" onAction="#cancelButtonClicked" prefHeight="27.0" prefWidth="75.0" text="Cancel" AnchorPane.bottomAnchor="13.073576199105212" AnchorPane.rightAnchor="100.19970682614269" />
+      <Button layoutX="579.0" layoutY="285.0" mnemonicParsing="false" onAction="#scanSelectedPressed" prefHeight="27.0" prefWidth="109.0" text="Scan Selected" AnchorPane.bottomAnchor="83.0" AnchorPane.rightAnchor="13.0" />
+      <Button layoutX="579.0" layoutY="319.0" mnemonicParsing="false" onAction="#scanAllPressed" prefHeight="27.0" prefWidth="109.0" text="Scan All" AnchorPane.bottomAnchor="49.0" AnchorPane.rightAnchor="13.0" />
+      <Button layoutX="579.0" layoutY="354.0" mnemonicParsing="false" onAction="#finishButtonClicked" prefHeight="27.0" prefWidth="109.0" text="Finish" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="13.0" />
    </children>
 </AnchorPane>

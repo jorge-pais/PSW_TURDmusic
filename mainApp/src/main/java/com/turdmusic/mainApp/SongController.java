@@ -5,10 +5,10 @@ import com.turdmusic.mainApp.core.Music;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Label;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+
+import java.util.ArrayList;
 
 public class SongController {
 
@@ -30,13 +30,25 @@ public class SongController {
         // Allow multiple table items to be selected
         songTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-        // Setup columns
+        // Setup columns (really important Lambda expressions)
         titleColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getTitle()));
         artistColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getArtist().getName()));
         albumColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getAlbum().getTitle()));
         durationColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getFormattedTrackLength()));
 
         updateSongTable();
+
+        // Set up table event handlers to open selected songs on double click
+        songTable.setOnMouseClicked(mouseEvent -> {
+            if(mouseEvent.getClickCount() == 2){    // Double click
+                openSelectedSongs();
+            }
+        });
+        songTable.setOnKeyPressed(keyEvent -> {
+            if(keyEvent.getCode() == KeyCode.ENTER){ // Enter
+                openSelectedSongs();
+            }
+        });
     }
 
     private void updateSongTable(){
@@ -45,5 +57,13 @@ public class SongController {
 
         if(songsToAdd.size() > 0)
             songTable.setItems(songsToAdd);
+    }
+
+    private void openSelectedSongs(){
+        ObservableList<Music> songsSelected = songTable.getSelectionModel().getSelectedItems();
+        if(songsSelected.size()>0){
+            ArrayList<Music> songsToPlay = new ArrayList<>(songsSelected);
+            library.openSongs(songsToPlay);
+        }
     }
 }

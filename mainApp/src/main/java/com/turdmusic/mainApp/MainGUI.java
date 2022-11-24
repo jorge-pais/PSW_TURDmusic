@@ -6,13 +6,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
 
 public class MainGUI extends Application {
 
     public static Library library;
-    public boolean firstStart = false; // This will be a preference somewhere
+    public static boolean firstLaunch = true; // This will be a preference somewhere
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -20,15 +19,13 @@ public class MainGUI extends Application {
         SongController songController;
         HelloController helloController;
 
-        if(firstStart) {
+        if(firstLaunch) {
             fxmlLoader = new FXMLLoader(getClass().getResource("helloPage.fxml"));
             helloController = fxmlLoader.getController();
-            HelloController.library = library;
         }
         else {
             fxmlLoader = new FXMLLoader(getClass().getResource("songView.fxml"));
             songController = fxmlLoader.getController();
-            SongController.library = library;
         }
 
         Scene scene = new Scene(fxmlLoader.load(), 1000, 700);
@@ -43,12 +40,23 @@ public class MainGUI extends Application {
         //  or load previous library from json and start the song view
 
         try{
-            library = Library.loadLibrary("teste.json");
+            if(firstLaunch)
+                library = new Library();
+            else
+                // Change to default path, perhaps change it within the actual method
+                library = Library.loadLibrary("teste.json");
+            setLibrary();
         }catch (Exception e){
             System.out.println("Error while loading library");
             e.printStackTrace();
         }
 
         launch();
+    }
+
+    private static void setLibrary(){
+        HelloController.library = library;
+        PathController.library = library;
+        SongController.library = library;
     }
 }

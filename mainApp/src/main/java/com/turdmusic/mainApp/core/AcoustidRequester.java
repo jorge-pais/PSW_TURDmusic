@@ -2,6 +2,9 @@ package com.turdmusic.mainApp.core;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.*;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 //
 // Resources for implementing this:
@@ -18,13 +21,13 @@ import java.io.InputStreamReader;
 public class AcoustidRequester {
 
     // API key
-    public final String key = "PFjVWjJwPw";
+    private final String key = "PFjVWjJwPw";
 
     // API request parameters
-    public final String baseURL = "https://api.acoustid.org/v2/lookup";
+    private final String baseURL = "https://api.acoustid.org/v2/lookup";
     public final String format = "json";
 
-    public String getFingerprint(Music music, String fpcalcPath) throws Exception{
+    private String getFingerprint(Music music, String fpcalcPath) throws Exception{
 
         ProcessBuilder processBuilder = new ProcessBuilder();
 
@@ -59,7 +62,18 @@ public class AcoustidRequester {
     }
 
     // Find out the song's ID through Musicbrainz
-    public void getMusicbrainzID(String fingerprint){
+    private String getMusicbrainzID(String fingerprint, int duration) {
+
+        String requestUrl = baseURL+"?client="+key+"&meta=recordings&duration="+duration+"&fingerprint="+fingerprint;
+
+        try {
+            URL url = new URL(requestUrl);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
 
     }
 
