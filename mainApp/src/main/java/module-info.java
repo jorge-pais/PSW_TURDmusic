@@ -9,6 +9,7 @@ module com.turdmusic.javafxrefactor {
     requires jaudiotagger;
     requires com.fasterxml.jackson.databind;
     requires java.desktop;
+    requires java.net.http;
 
     opens com.turdmusic.mainApp to javafx.fxml;
     opens com.turdmusic.mainApp.core to com.fasterxml.jackson.databind;

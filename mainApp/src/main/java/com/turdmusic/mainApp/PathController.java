@@ -10,7 +10,6 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.IOException;
 
 public class PathController {
 
@@ -23,14 +22,14 @@ public class PathController {
 
     public void initialize(){
         addedFolder = false;
-        // TODO : Load existing library path strings from current library object
 
+        items.setAll(library.getLibraryPaths());
         // Allow multiple items to be selected
         pathList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
     @FXML
-    protected void addFolderClicked(){
+    public void addFolderClicked(){
         DirectoryChooser directoryChooser = new DirectoryChooser();
 
         File path = directoryChooser.showDialog(null);
@@ -50,19 +49,28 @@ public class PathController {
     }
 
     @FXML
-    protected void finishButtonClicked() {
-        stage = (Stage) pathList.getScene().getWindow();
-        stage.close();
-        // We should somehow relay the information that this button was pressed,
-        // and that folder paths have been scanned
+    protected void scanSelectedPressed(){
+        ObservableList<String> selectedItems = pathList.getSelectionModel().getSelectedItems();
+
+        for (String i: selectedItems)
+            library.addPath(i);
+        addedFolder = true;
     }
 
     @FXML
-    protected void cancelButtonClicked() throws IOException{
-        pathList.setItems(null);
-        stage = (Stage) pathList.getScene().getWindow();
-        stage.close();
-        addedFolder = false;
+    protected void scanAllPressed(){
+        ObservableList<String> allItems = pathList.getItems();
+
+        for (String i: allItems)
+            library.addPath(i);
+        addedFolder = true;
     }
 
+    @FXML
+    protected void finishButtonClicked() {
+        stage = (Stage) pathList.getScene().getWindow();
+        stage.close();
+
+        addedFolder = true;
+    }
 }

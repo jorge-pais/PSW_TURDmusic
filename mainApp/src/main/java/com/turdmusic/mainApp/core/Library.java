@@ -21,6 +21,8 @@ public class Library{
     private Album undefinedAlbum;
     private Artist undefinedArtist;
 
+    private final String defaultMediaPlayer = "/usr/bin/vlc";
+
     public ArrayList<Music> getSongs(){
         return songs;
     }
@@ -111,7 +113,7 @@ public class Library{
         return false;
     }
 
-    public ArrayList<Music> scanFilePath(String path, int startId){
+    public ArrayList<Music>scanFilePath(String path, int startId){
         //
         // Search for music files in a given path and create artist and album
         // entries for each file
@@ -133,13 +135,16 @@ public class Library{
             }
             else
             if(checkFileExtension(file.getName())) { // check for a valid music file
+                for (Music i: this.songs) // Prevent songs from being added twice
+                    if(file.getPath().equals(i.getFile().getPath()))
+                        return null;
                 Music song;
 
                 try { // this is where we get the metadata
                     song = createSongMetadata(file, songsAdded + startId);
                 } catch (Exception e){
-                    // if the function call fails we can assume that no metadata is defined for
-                    System.out.println("Error getting metadata, using undefined parameters");
+                    // if the function call fails we can assume that no metadata is defined in the file
+                    //System.out.println("Error getting metadata, using undefined parameters");
                     if(undefinedArtist == null && undefinedAlbum == null){
                         undefinedArtist = new Artist("Undefined", this.artists.size());
                         undefinedAlbum = new Album("Undefined", undefinedArtist, this.albums.size());
@@ -270,5 +275,25 @@ public class Library{
         Library library = objectMapper.readValue(inputFile, Library.class);
 
         return library;
+    }
+
+    public void openSongs(ArrayList<Music> songs){
+        ProcessBuilder processBuilder = new ProcessBuilder();
+
+        StringBuilder commandString = new StringBuilder(defaultMediaPlayer);
+
+        for (Music i: songs)
+            commandString.append(" \"").append(i.getFile().getPath()).append("\"");
+
+        // Linux
+        processBuilder.command("bash", "-c", commandString.toString());
+        // Windows
+        // processBuilder.command("cmd.exe", "/c", commandString.toString());
+
+        try {
+            Process process = processBuilder.start();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
