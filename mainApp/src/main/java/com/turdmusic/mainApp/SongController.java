@@ -1,14 +1,19 @@
 package com.turdmusic.mainApp;
 
+import com.turdmusic.mainApp.core.Album;
 import com.turdmusic.mainApp.core.Library;
 import com.turdmusic.mainApp.core.Music;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.StackPane;
 
+import java.security.cert.PolicyNode;
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class SongController {
 
@@ -20,10 +25,12 @@ public class SongController {
     public Label playlistsLabelButton;
 
     public TableView<Music> songTable;
+    public TableView<Album> albumTable;
     public TableColumn<Music, String> titleColumn;
     public TableColumn<Music, String> artistColumn;
     public TableColumn<Music, String> albumColumn;
     public TableColumn<Music, String> durationColumn;
+    public StackPane stackPane1;
 
 
     public void initialize(){
@@ -49,6 +56,20 @@ public class SongController {
                 openSelectedSongs();
             }
         });
+
+        albumsLabelButton.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getClickCount() == 1){
+                albumTable.toFront();
+            }
+        });
+
+        songsLabelButton.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getClickCount() == 1){
+                songTable.toFront();
+            }
+        });
+
+
     }
 
     private void updateSongTable(){
@@ -66,4 +87,14 @@ public class SongController {
             library.openSongs(songsToPlay);
         }
     }
+
+    /*private void changeTop() {
+        //ObservableList<Node> albumTable = this.stackPane1.getChildren();
+
+        if (albumTable.size() > 1) {
+            //
+            Node topNode =  albumTable.get(albumTable.size()-1);
+            topNode.toBack();
+        }
+    }*/
 }

@@ -1,4 +1,4 @@
-module com.example.javafxdemo {
+module com.javafxdemo {
     requires javafx.controls;
     requires javafx.fxml;
 
@@ -6,6 +6,6 @@ module com.example.javafxdemo {
     requires com.dlsc.formsfx;
     requires org.kordamp.bootstrapfx.core;
 
-    opens com.example.javafxdemo to javafx.fxml;
-    exports com.example.javafxdemo;
+    opens com.javafxdemo to javafx.fxml;
+    exports com.javafxdemo;
 }
