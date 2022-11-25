@@ -3,9 +3,9 @@ package com.turdmusic.mainApp;
 import com.turdmusic.mainApp.core.Library;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -17,6 +17,8 @@ public class HelloController {
     protected Label label1;
     protected Scene scene;
     public static Library library;
+
+    //public StackPane stackPane;
 
     public void initialize(){
         // When this controller's scene is loaded into the stage

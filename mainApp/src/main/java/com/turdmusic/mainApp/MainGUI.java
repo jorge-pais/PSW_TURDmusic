@@ -28,7 +28,7 @@ public class MainGUI extends Application {
             songController = fxmlLoader.getController();
         }
 
-        Scene scene = new Scene(fxmlLoader.load(), 1000, 700);
+        Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("TURD Music");
         stage.setScene(scene);
         stage.show();
