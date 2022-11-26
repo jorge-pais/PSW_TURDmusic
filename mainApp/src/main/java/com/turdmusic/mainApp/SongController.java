@@ -39,12 +39,12 @@ public class SongController {
     public StackPane stackPane1;
 
     public TableView<Music> songTable;
-    public TableView<Album> albumTable;
     public TableColumn<Music, String> titleColumn;
     public TableColumn<Music, String> artistColumn;
     public TableColumn<Music, String> albumColumn;
     public TableColumn<Music, String> durationColumn;
-    public StackPane stackPane1;
+
+    public TableView<Album> albumTable;
 
     //public TilePane albumTiles;
 
