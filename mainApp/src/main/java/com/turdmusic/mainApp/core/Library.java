@@ -21,8 +21,15 @@ public class Library{
     private Album undefinedAlbum;
     private Artist undefinedArtist;
 
-    //private final String defaultMediaPlayer = "/usr/bin/vlc";
-    private final String defaultMediaPlayer = "C:\\Program Files\\VideoLAN\\VLC\\vlc.exe";
+    private String defaultMediaPlayer;
+
+    public void setDefaultMediaPlayer(){
+        String osName = System.getProperty("os.name").toLowerCase();
+        if(osName.startsWith("windows"))
+            this.defaultMediaPlayer = "C:\\Program Files\\VideoLAN\\VLC\\vlc.exe";
+        else if (osName.contains("linux"))
+            this.defaultMediaPlayer = "/usr/bin/vlc";
+    }
 
     public ArrayList<Music> getSongs(){
         return songs;
@@ -41,6 +48,8 @@ public class Library{
         this.playlists = new ArrayList<>();
         this.undefinedAlbum = null;
         this.undefinedArtist = null;
+
+        setDefaultMediaPlayer();
     }
 
     public void addPath(String path){

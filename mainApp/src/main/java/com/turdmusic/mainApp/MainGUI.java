@@ -16,17 +16,11 @@ public class MainGUI extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader;
-        SongController songController;
-        HelloController helloController;
 
-        if(firstLaunch) {
+        if(firstLaunch)
             fxmlLoader = new FXMLLoader(getClass().getResource("helloPage.fxml"));
-            helloController = fxmlLoader.getController();
-        }
-        else {
+        else
             fxmlLoader = new FXMLLoader(getClass().getResource("songView.fxml"));
-            songController = fxmlLoader.getController();
-        }
 
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("TURD Music");
@@ -43,7 +37,7 @@ public class MainGUI extends Application {
             if(firstLaunch)
                 library = new Library();
             else
-                // Change to default path, perhaps change it within the actual method
+                // Change to default path
                 library = Library.loadLibrary("teste.json");
             setLibrary();
         }catch (Exception e){

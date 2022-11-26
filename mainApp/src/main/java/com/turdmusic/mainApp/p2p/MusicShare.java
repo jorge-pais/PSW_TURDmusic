@@ -4,6 +4,7 @@ import com.turdmusic.mainApp.core.Music;
 
 import java.io.File;
 
+
 public class MusicShare {
 
     public String title;
@@ -16,5 +17,7 @@ public class MusicShare {
         this.title = source.getTitle();
         this.artist = source.getArtist().getName();
         this.album = source.getAlbum().getTitle();
+
+
     }
 }

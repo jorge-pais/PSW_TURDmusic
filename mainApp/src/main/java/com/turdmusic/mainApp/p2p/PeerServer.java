@@ -8,6 +8,10 @@ public class PeerServer {
 
     private ArrayList<Music> sharingList;
 
+    public void announceSongOnDatabase(Music music){
+        return;
+    }
 
+    //public void
 
 }
