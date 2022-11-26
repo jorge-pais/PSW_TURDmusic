@@ -44,6 +44,7 @@ public class SongController {
     public TableColumn<Music, String> artistColumn;
     public TableColumn<Music, String> albumColumn;
     public TableColumn<Music, String> durationColumn;
+    public StackPane stackPane1;
 
     //public TilePane albumTiles;
 
