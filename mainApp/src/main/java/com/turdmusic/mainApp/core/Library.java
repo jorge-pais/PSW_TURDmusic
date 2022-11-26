@@ -51,7 +51,6 @@ public class Library{
 
         System.out.println("Path added!");
     }
-
     public void removePath(String path){
         if(!libraryFilePaths.contains(path)) return;
         libraryFilePaths.remove(path);
@@ -112,7 +111,6 @@ public class Library{
 
         return false;
     }
-
     public ArrayList<Music>scanFilePath(String path, int startId){
         //
         // Search for music files in a given path and create artist and album
@@ -162,7 +160,6 @@ public class Library{
 
         return musicList;
     }
-
     private Music createSongMetadata(File fileHandle, int id) throws Exception{
         //
         // This function gets the metadata from a file and returns null if
@@ -204,8 +201,6 @@ public class Library{
     //
     // Repeating functions for simplicity
     // TODO: find a way to reuse the same function without major class alterations
-    // UNTESTED
-    //
     public ArrayList<Music> searchSongs(String searchTerm){
         String query = searchTerm.toLowerCase();
 
@@ -285,10 +280,15 @@ public class Library{
         for (Music i: songs)
             commandString.append(" \"").append(i.getFile().getPath()).append("\"");
 
-        // Linux
-        processBuilder.command("bash", "-c", commandString.toString());
-        // Windows
-        // processBuilder.command("cmd.exe", "/c", commandString.toString());
+
+        // TODO : TEST THIS !!
+        String osName = System.getProperty("os.name").toLowerCase();
+        if(osName.startsWith("windows"))
+            processBuilder.command("cmd.exe", "/c", commandString.toString());
+        else if (osName.contains("linux"))
+            processBuilder.command("bash", "-c", commandString.toString());
+        else if (osName.contains("macos"))
+            System.out.println("error, unsupported");
 
         try {
             Process process = processBuilder.start();

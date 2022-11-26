@@ -9,11 +9,22 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.TilePane;
 
 import java.security.cert.PolicyNode;
 import java.util.ArrayList;
 import java.util.Stack;
+
+//
+// Song Controller Class
+//  This is the main UI/UX controller class, here are all the views for the main
+//  application window, including song/album/artist/playlist views
+// TODO: ADD CONTEXT MENU (RIGHT_CLICK) TO SONGS
+// TODO: FIGURE OUT HOW TO UTILIZE TILEPLANE(+VBOX) TO DISPLAY IMAGES
+// TODO: ADD A PREFERENCES MENU
+//
 
 public class SongController {
 
@@ -24,6 +35,9 @@ public class SongController {
     public Label artistsLabelButton;
     public Label playlistsLabelButton;
 
+
+    public StackPane stackPane1;
+
     public TableView<Music> songTable;
     public TableView<Album> albumTable;
     public TableColumn<Music, String> titleColumn;
@@ -32,6 +46,7 @@ public class SongController {
     public TableColumn<Music, String> durationColumn;
     public StackPane stackPane1;
 
+    //public TilePane albumTiles;
 
     public void initialize(){
         // Allow multiple table items to be selected
@@ -57,12 +72,18 @@ public class SongController {
             }
         });
 
+        // Label button event handler
         albumsLabelButton.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getClickCount() == 1){
                 albumTable.toFront();
+                /*albumTiles.toFront();
+
+                for (int i=0; i<10; i++)
+                    albumTiles.getChildren().add(new Button("Button"+i));
+                */
+
             }
         });
-
         songsLabelButton.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getClickCount() == 1){
                 songTable.toFront();
