@@ -9,6 +9,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 
+//
+//  Album Class
+//  Holds all album data and relations with their respective songs and artists
+//
+
 @JsonIdentityInfo(
         generator= ObjectIdGenerators.IntSequenceGenerator.class,
         property="@json_id")
@@ -49,18 +54,19 @@ public class Album {
     public void removeSong(Music song){ tracklist.remove(song); }
     public ArrayList<Music> getTracklist(){ return tracklist; }
 
+    //
     // UNTESTED FUNCTION
+    // This function is to address a problem with song scanning on linux
+    // on windows this does not seem to be a problem
+    //
     public void orderTracklist(){
-        Collections.sort(this.tracklist, new Comparator<Music>() {
-            @Override
-            public int compare(Music m1, Music m2) {
-                int t1 = m1.getTrackNumber();
-                int t2 = m2.getTrackNumber();
-                if(t1 == t2) // this probably shouldn't happen
-                    return 0;
+        this.tracklist.sort((m1, m2) -> {
+            int t1 = m1.getTrackNumber();
+            int t2 = m2.getTrackNumber();
+            if (t1 == t2) // this probably shouldn't happen
+                return 0;
 
-                return t1 < t2 ? -1 : 1;
-            }
+            return t1 < t2 ? -1 : 1;
         });
     }
 }

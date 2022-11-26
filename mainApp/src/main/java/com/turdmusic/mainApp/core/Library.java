@@ -21,7 +21,8 @@ public class Library{
     private Album undefinedAlbum;
     private Artist undefinedArtist;
 
-    private final String defaultMediaPlayer = "/usr/bin/vlc";
+    //private final String defaultMediaPlayer = "/usr/bin/vlc";
+    private final String defaultMediaPlayer = "C:\\Program Files\\VideoLAN\\VLC\\vlc.exe";
 
     public ArrayList<Music> getSongs(){
         return songs;
@@ -275,18 +276,25 @@ public class Library{
     public void openSongs(ArrayList<Music> songs){
         ProcessBuilder processBuilder = new ProcessBuilder();
 
-        StringBuilder commandString = new StringBuilder(defaultMediaPlayer);
-
-        for (Music i: songs)
-            commandString.append(" \"").append(i.getFile().getPath()).append("\"");
-
+        StringBuilder commandString = new StringBuilder();
 
         // TODO : TEST THIS !!
         String osName = System.getProperty("os.name").toLowerCase();
-        if(osName.startsWith("windows"))
-            processBuilder.command("cmd.exe", "/c", commandString.toString());
-        else if (osName.contains("linux"))
+        if(osName.startsWith("windows")) {
+            for (Music i: songs)
+                commandString.append("\"").append(i.getFile().getPath()).append("\" ");
+            // delete the last space char, this makes it work!
+            commandString.deleteCharAt(commandString.length()-1);
+
+            processBuilder.command(defaultMediaPlayer, commandString.toString());
+        }
+        else if (osName.contains("linux")) {
+            commandString.append(defaultMediaPlayer);
+            for (Music i: songs)
+                commandString.append(" \"").append(i.getFile().getPath()).append("\"");
+
             processBuilder.command("bash", "-c", commandString.toString());
+        }
         else if (osName.contains("macos"))
             System.out.println("error, unsupported");
 
