@@ -18,6 +18,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
@@ -147,6 +148,7 @@
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy>
                         </TableView>
+                        <TilePane fx:id="albumTiles" prefHeight="200.0" prefWidth="200.0" />
                         <TableView fx:id="songTable" editable="true" prefHeight="518.0" prefWidth="558.0">
                           <columns>
                             <TableColumn fx:id="titleColumn" prefWidth="163.0" text="Title" />
