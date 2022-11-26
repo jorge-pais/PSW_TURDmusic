@@ -11,7 +11,7 @@ import java.io.IOException;
 public class MainGUI extends Application {
 
     public static Library library;
-    public static boolean firstLaunch = true; // This will be a preference somewhere
+    public static boolean firstLaunch = false; // This will be a preference somewhere
 
     @Override
     public void start(Stage stage) throws IOException {
