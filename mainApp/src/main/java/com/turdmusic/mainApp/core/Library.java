@@ -23,16 +23,6 @@ public class Library{
 
     public Settings settings;
 
-    private String defaultMediaPlayer;
-
-    public void setDefaultMediaPlayer(){
-        String osName = System.getProperty("os.name").toLowerCase();
-        if(osName.startsWith("windows"))
-            this.defaultMediaPlayer = "C:\\Program Files\\VideoLAN\\VLC\\vlc.exe";
-        else if (osName.contains("linux"))
-            this.defaultMediaPlayer = "/usr/bin/vlc";
-    }
-
     public ArrayList<Music> getSongs(){
         return songs;
     }
