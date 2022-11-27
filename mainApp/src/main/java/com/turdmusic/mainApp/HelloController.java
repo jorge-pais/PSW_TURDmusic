@@ -40,29 +40,25 @@ public class HelloController {
 
         // Change the new window's modality
         // block input from all other application windows
+        // TODO: investigate context menu buttons
         newStage.initModality(Modality.APPLICATION_MODAL);
 
         newStage.showAndWait();
 
         if(PathController.addedFolder) {
+            // Mark the first launch here
+            library.settings.setFirstLaunch(false);
             System.out.println("Paths have been added");
+
+            // Change to music view
+            try{
+                fxmlLoader = new FXMLLoader(getClass().getResource("songView.fxml"));
+                Stage stage = (Stage) label1.getScene().getWindow();
+                Scene newScene = new Scene(fxmlLoader.load());
+                stage.setScene(newScene);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
         }
-
-        // Change to music view
-        try{
-            fxmlLoader = new FXMLLoader(getClass().getResource("songView.fxml"));
-            Stage stage = (Stage) label1.getScene().getWindow();
-            Scene newScene = new Scene(fxmlLoader.load());
-            stage.setScene(newScene);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-
-    }
-
-    @FXML
-    protected void onKeyPressed(){
-
-
     }
 }
