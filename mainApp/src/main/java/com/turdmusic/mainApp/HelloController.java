@@ -46,6 +46,8 @@ public class HelloController {
         newStage.showAndWait();
 
         if(PathController.addedFolder) {
+            // Mark the first launch here
+            library.settings.setFirstLaunch(false);
             System.out.println("Paths have been added");
 
             // Change to music view
@@ -58,11 +60,5 @@ public class HelloController {
                 e.printStackTrace();
             }
         }
-    }
-
-    @FXML
-    protected void onKeyPressed(){
-
-
     }
 }
