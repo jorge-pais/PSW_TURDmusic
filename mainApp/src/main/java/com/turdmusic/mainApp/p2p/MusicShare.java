@@ -4,7 +4,6 @@ import com.turdmusic.mainApp.core.Music;
 
 import java.io.File;
 
-
 public class MusicShare {
 
     public String title;

@@ -12,6 +12,4 @@ public class PeerServer {
         return;
     }
 
-    //public void
-
 }

@@ -7,17 +7,18 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 public class MainGUI extends Application {
 
     public static Library library;
-    public static boolean firstLaunch = true; // This will be a preference somewhere
+    public static Settings settings;
 
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader;
 
-        if(firstLaunch)
+        if(settings.getFirstLaunch())
             fxmlLoader = new FXMLLoader(getClass().getResource("helloPage.fxml"));
         else
             fxmlLoader = new FXMLLoader(getClass().getResource("songView.fxml"));
@@ -30,15 +31,20 @@ public class MainGUI extends Application {
     }
 
     public static void main(String[] args) {
-        // TODO : create a new library object and open hello-view,
-        //  or load previous library from json and start the song view
+
+        // Load the settings object containing the preferences
+        settings = new Settings();
+
+        // Test from the first launch
+        settings.setFirstLaunch(true);
 
         try{
-            if(firstLaunch)
+            if(settings.getFirstLaunch())
                 library = new Library();
-            else
-                // Change to default path
+            else // TODO: update this to utilize preferences
                 library = Library.loadLibrary("teste.json");
+
+            library.settings = settings; // There's probably a more elegant way of doing this
             setLibrary();
         }catch (Exception e){
             System.out.println("Error while loading library");
@@ -48,9 +54,11 @@ public class MainGUI extends Application {
         launch();
     }
 
+    // Add static library reference to all of JavaFX controllers
     private static void setLibrary(){
         HelloController.library = library;
         PathController.library = library;
         SongController.library = library;
+        PreferenceController.library = library;
     }
 }

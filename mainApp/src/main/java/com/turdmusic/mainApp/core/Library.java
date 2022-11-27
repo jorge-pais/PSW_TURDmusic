@@ -21,6 +21,8 @@ public class Library{
     private Album undefinedAlbum;
     private Artist undefinedArtist;
 
+    public Settings settings;
+
     private String defaultMediaPlayer;
 
     public void setDefaultMediaPlayer(){
@@ -287,7 +289,6 @@ public class Library{
 
         StringBuilder commandString = new StringBuilder();
 
-        // TODO : TEST THIS !!
         String osName = System.getProperty("os.name").toLowerCase();
         if(osName.startsWith("windows")) {
             for (Music i: songs)
@@ -295,10 +296,10 @@ public class Library{
             // delete the last space char, this makes it work!
             commandString.deleteCharAt(commandString.length()-1);
 
-            processBuilder.command(defaultMediaPlayer, commandString.toString());
+            processBuilder.command(settings.getMediaPlayerExecutable(), commandString.toString());
         }
         else if (osName.contains("linux")) {
-            commandString.append(defaultMediaPlayer);
+            commandString.append(settings.getMediaPlayerExecutable());
             for (Music i: songs)
                 commandString.append(" \"").append(i.getFile().getPath()).append("\"");
 
