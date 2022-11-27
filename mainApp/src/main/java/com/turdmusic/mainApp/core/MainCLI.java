@@ -1,18 +1,19 @@
 package com.turdmusic.mainApp.core;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 import java.awt.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
+
+
 
 public class MainCLI {
     //
     // Basic CLI interface loop
     // We should re-do
     //
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
         System.out.print(
                 "Yet nameless music organizer CLI:\n" +
@@ -140,6 +141,29 @@ public class MainCLI {
                         System.out.println("error");
 
                     break;
+
+                case "testDavid":
+                    AcoustidRequester test = new AcoustidRequester();
+                    /*String url = "falhou";
+                    for(Music i : library.getSongs()) {
+                        url = test.getFingerprint(i);
+                        break;
+                    }*/
+
+                    System.out.println(test.fetchMetadata(library.getSongs().get(0)).getTitle());
+
+
+
+                    /* *********************************************************************** */
+
+                    /*for (MusicInfo.Result result : music.getResults()) {
+                        for(MusicInfo.Result.Record record : result.getRecordings()){
+                            if(record.getTitle() != null) {
+                                System.out.println(record.getTitle());
+                            }
+                        }
+                        System.out.println(result.getScore());
+                    }*/
 
                 /*case "getArtwork": // Test to read album cover as bitmap
                     if(argument[1] == null) break;
