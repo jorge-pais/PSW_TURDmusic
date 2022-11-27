@@ -23,6 +23,7 @@ public class Music {
     public int id;
 
     private String title;
+
     private File file;
 
     private boolean undefined = true;
@@ -31,6 +32,9 @@ public class Music {
     private int trackNumber;
     private int trackLength;
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
     public String getTitle(){ return title; }
     public File getFile(){ return file; }
     public Album getAlbum(){ return album; }

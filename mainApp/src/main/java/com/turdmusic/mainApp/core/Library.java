@@ -22,7 +22,7 @@ public class Library{
     private Artist undefinedArtist;
 
     private final String defaultMediaPlayer = "/usr/bin/vlc";
-
+    private final String os = System.getProperty("os.name").toLowerCase();
     public ArrayList<Music> getSongs(){
         return songs;
     }
@@ -285,10 +285,15 @@ public class Library{
         for (Music i: songs)
             commandString.append(" \"").append(i.getFile().getPath()).append("\"");
 
-        // Linux
-        processBuilder.command("bash", "-c", commandString.toString());
-        // Windows
-        // processBuilder.command("cmd.exe", "/c", commandString.toString());
+
+        if (os.contains("windows")) {
+            processBuilder.command("cmd.exe", "/c", commandString.toString());
+        } else if (os.contains("linux")) {
+            processBuilder.command("bash", "-c", commandString.toString());
+        } else {
+            System.out.println("Operative system is not supported");
+        }
+
 
         try {
             Process process = processBuilder.start();
