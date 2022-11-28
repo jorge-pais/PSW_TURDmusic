@@ -160,6 +160,8 @@ public class Library{
 
         return musicList;
     }
+
+    // TODO: FIND THE BUG!!!!!
     private Music createSongMetadata(File fileHandle, int id) throws Exception{
         //
         // This function gets the metadata from a file and returns null if
