@@ -3,6 +3,7 @@ package com.turdmusic.mainApp.core;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 // Maybe change this to a UUID object identifier
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 public class Artist {
 
     public int id;
-    //private Image picture;
+    private Image picture;
     private String name;
     private ArrayList<Music> songs;
     private ArrayList<Album> albums;
@@ -31,6 +32,9 @@ public class Artist {
 
     public String getName(){
         return name;
+    }
+    public Image getPicture(){
+        return picture;
     }
 
     public void addSong(Music song){

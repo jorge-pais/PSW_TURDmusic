@@ -1,6 +1,7 @@
 package com.turdmusic.mainApp;
 
 import com.turdmusic.mainApp.core.Album;
+import com.turdmusic.mainApp.core.Artist;
 import com.turdmusic.mainApp.core.Library;
 import com.turdmusic.mainApp.core.Music;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -8,10 +9,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 
 import java.security.cert.PolicyNode;
 import java.util.ArrayList;
@@ -46,11 +53,13 @@ public class SongController {
 
     public TableView<Album> albumTable;
 
+    public TilePane artistTiles;
     //public TilePane albumTiles;
 
     public void initialize(){
         // Allow multiple table items to be selected
         songTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        artistTiles.setStyle("-fx-background-color: #FFFFFF;");
 
         // Setup columns (really important Lambda expressions)
         titleColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getTitle()));
@@ -59,6 +68,14 @@ public class SongController {
         durationColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getFormattedTrackLength()));
 
         updateSongTable();
+
+
+        for (Artist i: library.getArtists()) {
+            artistTiles.getChildren().add(vBoxFromArtist(i));
+            System.out.println(i.id + "---"+ i.getName() );
+        }
+
+        System.out.println("aaaaaaaaaaa: "+library.getArtists().size());
 
         // Set up table event handlers to open selected songs on double click
         songTable.setOnMouseClicked(mouseEvent -> {
@@ -76,6 +93,9 @@ public class SongController {
         albumsLabelButton.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getClickCount() == 1){
                 albumTable.toFront();
+                albumsLabelButton.setFont(Font.font("System",FontWeight.BOLD, FontPosture.REGULAR, 18));
+                songsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
+                artistsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
                 /*albumTiles.toFront();
 
                 for (int i=0; i<10; i++)
@@ -84,13 +104,39 @@ public class SongController {
 
             }
         });
+
         songsLabelButton.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getClickCount() == 1){
                 songTable.toFront();
+                albumsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
+                songsLabelButton.setFont(Font.font("System",FontWeight.BOLD, FontPosture.REGULAR, 18));
+                artistsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
             }
         });
 
+        artistsLabelButton.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getClickCount() == 1){
+                artistTiles.toFront();
+                albumsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
+                songsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
+                artistsLabelButton.setFont(Font.font("System",FontWeight.BOLD, FontPosture.REGULAR, 18));
 
+
+            }
+
+        });
+
+    }
+
+    private VBox vBoxFromArtist(Artist i) {
+        VBox vBoxout = new VBox();
+        vBoxout.prefHeight(200);
+        vBoxout.prefWidth(200);
+        vBoxout.setStyle("-fx-border-color: #000000;");
+        vBoxout.getChildren().add(new Label(i.getName()));
+        //vBoxout.getChildren().add(new ImageView(i.getPicture()));
+
+        return vBoxout;
     }
 
     private void updateSongTable(){
@@ -109,13 +155,4 @@ public class SongController {
         }
     }
 
-    /*private void changeTop() {
-        //ObservableList<Node> albumTable = this.stackPane1.getChildren();
-
-        if (albumTable.size() > 1) {
-            //
-            Node topNode =  albumTable.get(albumTable.size()-1);
-            topNode.toBack();
-        }
-    }*/
 }
