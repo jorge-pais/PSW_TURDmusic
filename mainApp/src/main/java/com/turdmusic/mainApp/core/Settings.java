@@ -49,9 +49,9 @@ public class Settings {
         String homeFolder = System.getProperty("user.home");
 
         if(osName.startsWith("windows")) {
-            System.out.println("is this even being executed?");
             prefs.put(savePath, homeFolder + "\\Music\\TURDmusic");
             prefs.put(mediaPlayerExecutable, "C:\\Program Files\\VideoLAN\\VLC\\vlc.exe");
+            // fpcalc must be added manually (or be included with the app executable or installer)
         }
         else if (osName.contains("linux")) {
             prefs.put(savePath, homeFolder + "/.turd");

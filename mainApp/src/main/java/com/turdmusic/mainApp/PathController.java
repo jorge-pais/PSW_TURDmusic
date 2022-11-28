@@ -46,6 +46,9 @@ public class PathController {
 
         items.removeAll(selectedItems);
         pathList.setItems(items); //Update list
+
+        for (String i: selectedItems)
+            library.removePath(i);
     }
 
     @FXML
