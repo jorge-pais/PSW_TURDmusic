@@ -2,12 +2,18 @@ package com.turdmusic.mainApp.core;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.tag.Tag;
+import org.jaudiotagger.tag.images.Artwork;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
 //
 //  Album Class
@@ -57,7 +63,7 @@ public class Album {
     //
     // UNTESTED FUNCTION
     // This function is to address a problem with song scanning on linux
-    // on windows this does not seem to be a problem
+    // on Windows this does not seem to be a problem
     //
     public void orderTracklist(){
         this.tracklist.sort((m1, m2) -> {
@@ -68,5 +74,23 @@ public class Album {
 
             return t1 < t2 ? -1 : 1;
         });
+    }
+
+    // TODO: FINISH THIS!
+    public void findAlbumCover(){
+        // try to search the song files for artwork data
+        try{
+            AudioFile fileIn = AudioFileIO.read(tracklist.get(0).getFile());
+            Tag tag = fileIn.getTag();
+
+            Artwork art = tag.getFirstArtwork();
+
+            if(art != null){ //
+                //BufferedImage image = art.getImage();
+            }
+        } catch (Exception e){
+            System.out.println("Error trying to read artwork for album");
+            e.printStackTrace();
+        }
     }
 }
