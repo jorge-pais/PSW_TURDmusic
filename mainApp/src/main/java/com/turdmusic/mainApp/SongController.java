@@ -7,12 +7,12 @@ import com.turdmusic.mainApp.core.Music;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.Node;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
@@ -20,9 +20,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 
-import java.security.cert.PolicyNode;
+import java.awt.*;
 import java.util.ArrayList;
-import java.util.Stack;
+import java.util.Objects;
 
 //
 // Song Controller Class
@@ -133,8 +133,19 @@ public class SongController {
         vBoxout.prefHeight(200);
         vBoxout.prefWidth(200);
         vBoxout.setStyle("-fx-border-color: #000000;");
+        vBoxout.setAlignment(Pos.CENTER);
+        vBoxout.setLayoutX(10);
+        vBoxout.setLayoutY(10);
         vBoxout.getChildren().add(new Label(i.getName()));
-        //vBoxout.getChildren().add(new ImageView(i.getPicture()));
+
+        //Rectangle rectangle = new Rectangle();
+        //rectangle.setSize(150,150);
+        /*ImageView picture = new ImageView();
+        Image myImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("album_capas/Abbey_Road.jpg")));
+        picture.setImage(myImage);
+        vBoxout.getChildren().add(picture);*/
+        //vBoxout.getChildren().add(rectangle);
+        //vBoxout.getChildren().add(new Rectangle(150,150));
 
         return vBoxout;
     }
