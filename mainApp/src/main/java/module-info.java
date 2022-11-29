@@ -8,6 +8,7 @@ module com.turdmusic.javafxrefactor {
     requires com.fasterxml.jackson.annotation;
     requires jaudiotagger;
     requires com.fasterxml.jackson.databind;
+    requires javafx.swing;
     requires java.desktop;
     requires java.net.http;
     requires java.prefs;

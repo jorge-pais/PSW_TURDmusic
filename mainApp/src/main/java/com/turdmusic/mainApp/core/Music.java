@@ -12,6 +12,10 @@ import org.jaudiotagger.tag.images.Artwork;
 import java.io.File;
 import java.util.List;
 
+/*
+    This class holds all the information of a song
+    Also maintains all relationships with the respective Artists and Albums
+*/
 @JsonIdentityInfo(
         generator= ObjectIdGenerators.IntSequenceGenerator.class,
         property="@json_id")
@@ -23,7 +27,6 @@ public class Music {
     public int id;
 
     private String title;
-
     private File file;
 
     private boolean undefined = true;
@@ -68,42 +71,5 @@ public class Music {
             this.trackLength = -1; // error
             e.printStackTrace();
         }
-    }
-
-    // this can be deleted
-    public void getSongAttribute() {
-        try {
-            AudioFile f = AudioFileIO.read(file);
-            Tag tag = f.getTag();
-
-            System.out.println("Album: " + tag.getFirst(FieldKey.ALBUM));
-            System.out.println("Artist: " + tag.getFirst(FieldKey.ARTIST));
-            System.out.println("Title: "+ tag.getFirst(FieldKey.TITLE));
-
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    //
-    // this will only work for files with an artwork already
-    // maybe we can scan an album's directory for any image file to utilize
-    //
-    public byte[] readSongArtwork(){
-        try{
-            AudioFile fileIn = AudioFileIO.read(this.file);
-            Tag tag = fileIn.getTag();
-
-            List<Artwork> artList = tag.getArtworkList();
-            System.out.println(artList.size());
-
-            Artwork art = tag.getFirstArtwork();
-
-            if(art != null)
-                return art.getBinaryData();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return null;
     }
 }

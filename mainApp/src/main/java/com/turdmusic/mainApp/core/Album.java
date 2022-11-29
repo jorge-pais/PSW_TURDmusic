@@ -2,18 +2,19 @@ package com.turdmusic.mainApp.core;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import javafx.scene.image.Image;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.images.Artwork;
+import org.jaudiotagger.tag.images.Images;
 
-import java.awt.*;
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.concurrent.ExecutionException;
+import javafx.embed.swing.SwingFXUtils;
 
 //
 //  Album Class
@@ -30,7 +31,7 @@ public class Album {
     private Image coverArt;
     private Date releaseDate; // Maybe just save the year, many albums do not include the actual release date
 
-    private ArrayList<Artist> artists;
+    private Artist artist;
     private ArrayList<Music> tracklist;
 
     public Album(){
@@ -41,16 +42,11 @@ public class Album {
         this.title = name;
         this.id = id;
         this.tracklist = new ArrayList<>();
-
-        this.artists = new ArrayList<>();
-        if (artist != null)
-            this.setArtists(artists);
+        this.artist = artist;
     }
 
-    public void setArtists(ArrayList<Artist> artists) {
-        this.artists.addAll(artists);
-    }
-
+    //public void setArtists(Artist artist) { this.artist = artist; }
+    public Artist getArtist(){ return this.artist; }
     public String getTitle(){
         return title;
     }
@@ -59,13 +55,16 @@ public class Album {
     }
     public void removeSong(Music song){ tracklist.remove(song); }
     public ArrayList<Music> getTracklist(){ return tracklist; }
+    public void setCoverArt(Image image){
+        this.coverArt = image;
+    }
+    public Image getCoverArt(){ return this.coverArt;}
 
     //
-    // UNTESTED FUNCTION
-    // This function is to address a problem with song scanning on linux
-    // on Windows this does not seem to be a problem
+    // This function is to address a problem with scanning songs recursively
+    // where the songs might not be added in the correct track ordering
     //
-    public void orderTracklist(){
+    public void sortTrackList(){
         this.tracklist.sort((m1, m2) -> {
             int t1 = m1.getTrackNumber();
             int t2 = m2.getTrackNumber();
@@ -76,20 +75,42 @@ public class Album {
         });
     }
 
-    // TODO: FINISH THIS!
     public void findAlbumCover(){
+
+        try { // Check all children files for any pictures
+            File folder = new File(tracklist.get(0).getFile().getParent());
+
+            for (File child : folder.listFiles()) { // The file listing is never null, there is at least one file
+                if (Utils.checkFileExtension(child.getName(), Utils.fileType.Image)) {
+                    BufferedImage image = ImageIO.read(child);
+                    int h = image.getHeight(), w = image.getWidth();
+                    if (Math.abs((float) (w - h) / w) <= 0.02) { // If the image is at least "98% square"
+                        this.coverArt = SwingFXUtils.toFXImage(image, null); return; // set the image
+                    }
+                }
+            }
+        }catch (Exception e){
+            System.out.println("Something went wrong when loading the images");
+            e.printStackTrace();
+        }
+
+        System.out.println("No album art found for the album");
+
+        //
         // try to search the song files for artwork data
+        // very unreliable tho
+        //
         try{
             AudioFile fileIn = AudioFileIO.read(tracklist.get(0).getFile());
             Tag tag = fileIn.getTag();
 
             Artwork art = tag.getFirstArtwork();
+            assert art != null;
 
-            if(art != null){ //
-                //BufferedImage image = art.getImage();
-            }
+            this.coverArt = SwingFXUtils.toFXImage(Images.getImage(art), null);
+
         } catch (Exception e){
-            System.out.println("Error trying to read artwork for album");
+            System.out.println("Error trying to read album cover art from the song file");
             e.printStackTrace();
         }
     }

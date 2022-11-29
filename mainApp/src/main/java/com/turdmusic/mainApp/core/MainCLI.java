@@ -83,7 +83,7 @@ public class MainCLI {
 
                     int index = Integer.parseInt(argument[1]);
 
-                    library.getSongs().get(index).getSongAttribute();
+                    //library.getSongs().get(index).getSongAttribute();
                     break;
 
                 case "open":
