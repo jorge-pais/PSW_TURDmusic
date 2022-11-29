@@ -12,9 +12,11 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
@@ -55,8 +57,10 @@ public class SongController {
 
     public TableView<Album> albumTable;
 
+    public ScrollPane playlistScroll;
+    public ScrollPane artistScroll;
     public TilePane artistTiles;
-    //public TilePane albumTiles;
+
 
     public void initialize(){
         // Allow multiple table items to be selected
@@ -71,6 +75,7 @@ public class SongController {
 
         updateSongTable();
 
+        //for artist view
         for (Artist i: library.getArtists()) {
             artistTiles.getChildren().add(vBoxFromArtist(i));
             System.out.println(i.id + "---"+ i.getName() );
@@ -97,6 +102,7 @@ public class SongController {
                 albumsLabelButton.setFont(Font.font("System",FontWeight.BOLD, FontPosture.REGULAR, 18));
                 songsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
                 artistsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
+                playlistsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
                 /*albumTiles.toFront();
 
                 for (int i=0; i<10; i++)
@@ -112,27 +118,40 @@ public class SongController {
                 albumsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
                 songsLabelButton.setFont(Font.font("System",FontWeight.BOLD, FontPosture.REGULAR, 18));
                 artistsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
+                playlistsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
             }
         });
 
         artistsLabelButton.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getClickCount() == 1){
-                artistTiles.toFront();
+                artistScroll.toFront();
                 albumsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
                 songsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
                 artistsLabelButton.setFont(Font.font("System",FontWeight.BOLD, FontPosture.REGULAR, 18));
+                playlistsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
 
 
             }
+        });
 
+        playlistsLabelButton.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getClickCount() == 1){
+                playlistScroll.toFront();
+                albumsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
+                songsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
+                artistsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
+                playlistsLabelButton.setFont(Font.font("System",FontWeight.BOLD, FontPosture.REGULAR, 18));
+
+
+            }
         });
 
     }
     @FXML
     private VBox vBoxFromArtist(Artist i) {
         VBox vBoxout = new VBox();
-        //vBoxout.prefHeight(200);
-        //vBoxout.prefWidth(200);
+        vBoxout.prefHeight(200);
+        vBoxout.prefWidth(200);
         vBoxout.setStyle("-fx-border-color: #000000;");
         vBoxout.setAlignment(Pos.CENTER);
         vBoxout.setLayoutX(10);
@@ -145,6 +164,8 @@ public class SongController {
         //Image myImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("album_capas/Abbey_Road.jpg")));
         Image myImage = new Image(getClass().getResourceAsStream("album_capas/Abbey_Road.jpg"));
         picture.setImage(myImage);
+        picture.setFitHeight(150);
+        picture.setFitWidth(150);
         vBoxout.getChildren().add(picture);
         //vBoxout.getChildren().add(rectangle);
         //vBoxout.getChildren().add(new Button());
