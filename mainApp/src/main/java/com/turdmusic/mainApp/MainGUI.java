@@ -41,7 +41,7 @@ public class MainGUI extends Application {
         try{
             if(settings.getFirstLaunch())
                 library = new Library();
-            else // TODO: update this to utilize preferences
+            else // TODO: update this to utilize library path from preferences
                 library = Library.loadLibrary("teste.json");
 
             library.settings = settings; // There's probably a more elegant way of doing this

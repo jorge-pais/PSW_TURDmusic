@@ -56,6 +56,8 @@ public class SongController {
     public TilePane artistTiles;
     //public TilePane albumTiles;
 
+    public ImageView imageViewTest;
+
     public void initialize(){
         // Allow multiple table items to be selected
         songTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -69,14 +71,6 @@ public class SongController {
 
         updateSongTable();
 
-
-        for (Artist i: library.getArtists()) {
-            artistTiles.getChildren().add(vBoxFromArtist(i));
-            System.out.println(i.id + "---"+ i.getName() );
-        }
-
-        System.out.println("aaaaaaaaaaa: "+library.getArtists().size());
-
         // Set up table event handlers to open selected songs on double click
         songTable.setOnMouseClicked(mouseEvent -> {
             if(mouseEvent.getClickCount() == 2){    // Double click
@@ -89,19 +83,13 @@ public class SongController {
             }
         });
 
-        // Label button event handler
+        // Label button event handlers
         albumsLabelButton.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getClickCount() == 1){
                 albumTable.toFront();
                 albumsLabelButton.setFont(Font.font("System",FontWeight.BOLD, FontPosture.REGULAR, 18));
                 songsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
                 artistsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
-                /*albumTiles.toFront();
-
-                for (int i=0; i<10; i++)
-                    albumTiles.getChildren().add(new Button("Button"+i));
-                */
-
             }
         });
 
@@ -120,9 +108,14 @@ public class SongController {
                 albumsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
                 songsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
                 artistsLabelButton.setFont(Font.font("System",FontWeight.BOLD, FontPosture.REGULAR, 18));
-
-
             }
+
+            for (Album i: library.getAlbums())
+                System.out.println(i.id +  "-->" + i.getTitle());
+
+            // Find image from the file
+            library.getAlbums().get(2).findAlbumCover();
+            imageViewTest.setImage(library.getAlbums().get(2).getCoverArt());
 
         });
 

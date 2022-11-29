@@ -49,6 +49,9 @@ public class Library{
         if(scanResult != null)
             songs.addAll(scanResult);
 
+        for (Album i: this.albums)
+            i.sortTrackList();
+
         System.out.println("Path added!");
     }
     public void removePath(String path){
@@ -101,16 +104,6 @@ public class Library{
         this.songs.remove(song);
     }
 
-    private boolean checkFileExtension(String name){
-
-        final String[] supportedExtensions = {"mp3", "ogg", "flac", "wav", "aif", "dsf", "wma", "mp4"};
-
-        for (String i: supportedExtensions)
-            if(name.endsWith(i))
-                return true;
-
-        return false;
-    }
     public ArrayList<Music>scanFilePath(String path, int startId){
         //
         // Search for music files in a given path and create artist and album
@@ -132,7 +125,7 @@ public class Library{
                 songsAdded += scanResult.size();
             }
             else
-            if(checkFileExtension(file.getName())) { // check for a valid music file
+            if(Utils.checkFileExtension(file.getName(), Utils.fileType.Audio)) { // check for a valid music file
                 for (Music i: this.songs) // Prevent songs from being added twice
                     if(file.getPath().equals(i.getFile().getPath()))
                         return null;
@@ -152,6 +145,8 @@ public class Library{
                     }
                     int track = undefinedAlbum.getTracklist().size() + 1;
                     song = new Music(file.getName(), this.songs.size(), file, undefinedArtist, undefinedAlbum, track);
+                    undefinedArtist.getSongs().add(song);
+                    undefinedAlbum.getTracklist().add(song);
                 }
                 songsAdded++;
                 musicList.add(song);
@@ -161,21 +156,27 @@ public class Library{
         return musicList;
     }
 
-    // TODO: FIND THE BUG!!!!!
     private Music createSongMetadata(File fileHandle, int id) throws Exception{
         //
-        // This function gets the metadata from a file and returns null if
+        // This function gets the metadata from a file and creates
+        // artist and album objects for the song, or adds the song
+        // to an existing album of artist
         //
-
         AudioFile f = AudioFileIO.read(fileHandle);
         Tag tag = f.getTag();
 
-        String artistName = tag.getFirst(FieldKey.ARTIST);
-        Artist artist = null;
-        String albumTitle = tag.getFirst(FieldKey.ALBUM);
+        // regex used to remove whitespace at the end of string
+        String artistName = tag.getFirst(FieldKey.ARTIST).replaceFirst("\\s++$", "");
+        String albumTitle = tag.getFirst(FieldKey.ALBUM).replaceFirst("\\s++$", "");;
+        String trackTitle = tag.getFirst(FieldKey.TITLE).replaceFirst("\\s++$", "");;
+        String trackNumber = tag.getFirst(FieldKey.TRACK).replaceFirst("\\s++$", "");;
+
         Album album = null;
-        String trackTitle = tag.getFirst(FieldKey.TITLE);
-        String trackNumber = tag.getFirst(FieldKey.TRACK);
+        Artist artist = null;
+
+        // If anything goes wrong
+        if (artistName.length() == 0 || albumTitle.length() == 0 || trackTitle.length() == 0 || trackNumber.length() == 0)
+            throw new Exception();
 
         for (Artist i : this.artists)
             if (i.getName().equals(artistName))
