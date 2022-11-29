@@ -7,12 +7,16 @@ import com.turdmusic.mainApp.core.Music;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
@@ -53,8 +57,10 @@ public class SongController {
 
     public TableView<Album> albumTable;
 
+    public ScrollPane playlistScroll;
+    public ScrollPane artistScroll;
     public TilePane artistTiles;
-    //public TilePane albumTiles;
+
 
     public ImageView imageViewTest;
 
@@ -70,6 +76,14 @@ public class SongController {
         durationColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getFormattedTrackLength()));
 
         updateSongTable();
+
+        //for artist view
+        for (Artist i: library.getArtists()) {
+            artistTiles.getChildren().add(vBoxFromArtist(i));
+            System.out.println(i.id + "---"+ i.getName() );
+        }
+
+        System.out.println("aaaaaaaaaaa: "+library.getArtists().size());
 
         // Set up table event handlers to open selected songs on double click
         songTable.setOnMouseClicked(mouseEvent -> {
@@ -90,6 +104,13 @@ public class SongController {
                 albumsLabelButton.setFont(Font.font("System",FontWeight.BOLD, FontPosture.REGULAR, 18));
                 songsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
                 artistsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
+                playlistsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
+                /*albumTiles.toFront();
+
+                for (int i=0; i<10; i++)
+                    albumTiles.getChildren().add(new Button("Button"+i));
+                */
+
             }
         });
 
@@ -99,28 +120,38 @@ public class SongController {
                 albumsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
                 songsLabelButton.setFont(Font.font("System",FontWeight.BOLD, FontPosture.REGULAR, 18));
                 artistsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
+                playlistsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
             }
         });
 
         artistsLabelButton.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getClickCount() == 1){
-                artistTiles.toFront();
+                artistScroll.toFront();
                 albumsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
                 songsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
                 artistsLabelButton.setFont(Font.font("System",FontWeight.BOLD, FontPosture.REGULAR, 18));
-            }
+                playlistsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
 
             for (Album i: library.getAlbums())
                 System.out.println(i.id +  "-->" + i.getTitle());
 
-            // Find image from the file
-            library.getAlbums().get(2).findAlbumCover();
-            imageViewTest.setImage(library.getAlbums().get(2).getCoverArt());
+            }
+        });
 
+        playlistsLabelButton.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getClickCount() == 1){
+                playlistScroll.toFront();
+                albumsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
+                songsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
+                artistsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
+                playlistsLabelButton.setFont(Font.font("System",FontWeight.BOLD, FontPosture.REGULAR, 18));
+
+
+            }
         });
 
     }
-
+    @FXML
     private VBox vBoxFromArtist(Artist i) {
         VBox vBoxout = new VBox();
         vBoxout.prefHeight(200);
@@ -129,17 +160,22 @@ public class SongController {
         vBoxout.setAlignment(Pos.CENTER);
         vBoxout.setLayoutX(10);
         vBoxout.setLayoutY(10);
-        vBoxout.getChildren().add(new Label(i.getName()));
 
-        //Rectangle rectangle = new Rectangle();
-        //rectangle.setSize(150,150);
-        /*ImageView picture = new ImageView();
-        Image myImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("album_capas/Abbey_Road.jpg")));
+        vBoxout.getChildren().add(new TilePane());
+        Rectangle rectangle = new Rectangle();
+        rectangle.setSize(150,150);
+        ImageView picture = new ImageView();
+        //Image myImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("album_capas/Abbey_Road.jpg")));
+        Image myImage = new Image(getClass().getResourceAsStream("album_capas/Abbey_Road.jpg"));
         picture.setImage(myImage);
-        vBoxout.getChildren().add(picture);*/
+        picture.setFitHeight(150);
+        picture.setFitWidth(150);
+        vBoxout.getChildren().add(picture);
         //vBoxout.getChildren().add(rectangle);
+        //vBoxout.getChildren().add(new Button());
         //vBoxout.getChildren().add(new Rectangle(150,150));
-
+        //vBoxout.getChildren()
+        vBoxout.getChildren().add(new Label(i.getName()));
         return vBoxout;
     }
 
