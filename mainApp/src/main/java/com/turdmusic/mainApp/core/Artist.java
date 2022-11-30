@@ -2,11 +2,10 @@ package com.turdmusic.mainApp.core;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import javafx.scene.image.Image;
 
-import java.awt.*;
 import java.util.ArrayList;
 
-// Maybe change this to a UUID object identifierChanges merged into devel
 @JsonIdentityInfo(
         generator= ObjectIdGenerators.IntSequenceGenerator.class,
         property="@json_id")
@@ -25,6 +24,7 @@ public class Artist {
     public Artist(String name, int id){
         this.name = name;
         this.id = id;
+        this.picture = null;
 
         songs = new ArrayList<>();
         albums = new ArrayList<>();

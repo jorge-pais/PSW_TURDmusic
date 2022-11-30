@@ -2,7 +2,9 @@ package com.turdmusic.mainApp.core;
 
 import java.util.prefs.Preferences;
 
-// This class is responsible to hold the application's preferences
+/**
+    This class is responsible to hold the application's preferences
+*/
 public class Settings {
 
     public Preferences prefs;
