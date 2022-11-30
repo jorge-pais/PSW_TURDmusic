@@ -98,7 +98,6 @@ public class Album {
 
         //
         // try to search the song files for artwork data
-        // very unreliable tho
         //
         try{
             AudioFile fileIn = AudioFileIO.read(tracklist.get(0).getFile());
@@ -110,8 +109,10 @@ public class Album {
             this.coverArt = SwingFXUtils.toFXImage(Images.getImage(art), null);
 
         } catch (Exception e){
-            System.out.println("Error trying to read album cover art from the song file");
+            System.out.println("No valid artwork was found within the music files");
             e.printStackTrace();
+
+            this.coverArt = null; // Set one of the default album covers
         }
     }
 }

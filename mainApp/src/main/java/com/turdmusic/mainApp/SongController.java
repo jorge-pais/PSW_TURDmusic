@@ -46,7 +46,6 @@ public class SongController {
     public Label artistsLabelButton;
     public Label playlistsLabelButton;
 
-
     public StackPane stackPane1;
 
     public TableView<Music> songTable;
@@ -59,10 +58,9 @@ public class SongController {
 
     public ScrollPane playlistScroll;
     public ScrollPane artistScroll;
+    public ScrollPane albumScroll;
     public TilePane artistTiles;
-
-
-    public ImageView imageViewTest;
+    public TilePane albumTiles;
 
     public void initialize(){
         // Allow multiple table items to be selected
@@ -78,12 +76,9 @@ public class SongController {
         updateSongTable();
 
         //for artist view
-        for (Artist i: library.getArtists()) {
-            artistTiles.getChildren().add(vBoxFromArtist(i));
-            System.out.println(i.id + "---"+ i.getName() );
-        }
+        //for (Artist i: library.getArtists())
+            //artistTiles.getChildren().add(vBoxFromArtist(i));
 
-        System.out.println("aaaaaaaaaaa: "+library.getArtists().size());
 
         // Set up table event handlers to open selected songs on double click
         songTable.setOnMouseClicked(mouseEvent -> {
@@ -100,17 +95,19 @@ public class SongController {
         // Label button event handlers
         albumsLabelButton.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getClickCount() == 1){
-                albumTable.toFront();
                 albumsLabelButton.setFont(Font.font("System",FontWeight.BOLD, FontPosture.REGULAR, 18));
                 songsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
                 artistsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
                 playlistsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
-                /*albumTiles.toFront();
 
-                for (int i=0; i<10; i++)
-                    albumTiles.getChildren().add(new Button("Button"+i));
-                */
+                albumTiles.getChildren().removeAll(albumTiles.getChildren());
+                albumScroll.toFront();
 
+                for (Album i: library.getAlbums()) {
+                    i.findAlbumCover();
+                    VBox tile = makeImageTile(i.getCoverArt(), i.getTitle());
+                    albumTiles.getChildren().add(tile);
+                }
             }
         });
 
@@ -145,14 +142,13 @@ public class SongController {
                 songsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
                 artistsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
                 playlistsLabelButton.setFont(Font.font("System",FontWeight.BOLD, FontPosture.REGULAR, 18));
-
-
             }
         });
 
     }
     @FXML
-    private VBox vBoxFromArtist(Artist i) {
+    public VBox makeImageTile(Image image, String label){
+    //private VBox vBoxFromArtist(Artist i) {
         VBox vBoxout = new VBox();
         vBoxout.prefHeight(200);
         vBoxout.prefWidth(200);
@@ -166,16 +162,12 @@ public class SongController {
         rectangle.setSize(150,150);
         ImageView picture = new ImageView();
         //Image myImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("album_capas/Abbey_Road.jpg")));
-        Image myImage = new Image(getClass().getResourceAsStream("album_capas/Abbey_Road.jpg"));
-        picture.setImage(myImage);
+        picture.setImage(image);
         picture.setFitHeight(150);
         picture.setFitWidth(150);
         vBoxout.getChildren().add(picture);
-        //vBoxout.getChildren().add(rectangle);
-        //vBoxout.getChildren().add(new Button());
-        //vBoxout.getChildren().add(new Rectangle(150,150));
-        //vBoxout.getChildren()
-        vBoxout.getChildren().add(new Label(i.getName()));
+
+        vBoxout.getChildren().add(new Label(label));
         return vBoxout;
     }
 

@@ -12,8 +12,6 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -24,7 +22,6 @@
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
-<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
 <VBox prefHeight="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.turdmusic.mainApp.SongController">
@@ -145,50 +142,19 @@
                            <children>
                               <ScrollPane fx:id="playlistScroll" prefHeight="518.0" prefWidth="530.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <content>
-                                    <TilePane alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0">
-                                       <children>
-                                          <VBox alignment="CENTER" layoutX="175.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0">
-                                             <children>
-                                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="150.0" stroke="BLACK" strokeType="INSIDE" width="150.0" />
-                                                <Label text="Just Queen" />
-                                             </children>
-                                          </VBox>
-                                       </children>
-                                    </TilePane>
+                                    <TilePane alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="503.0" prefWidth="521.0" />
                                  </content>
                               </ScrollPane>
                               <ScrollPane fx:id="artistScroll" prefHeight="519.3333333333334" prefWidth="530.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <content>
-                                    <TilePane fx:id="artistTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0">
-                                       <children>
-                                          <VBox alignment="CENTER" prefHeight="200.0" prefWidth="200.0">
-                                             <children>
-                                                <ImageView fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
-                                                   <VBox.margin>
-                                                      <Insets left="10.0" right="10.0" />
-                                                   </VBox.margin>
-                                                   <image>
-                                                      <Image url="@album_capas/Abbey_Road.jpg" />
-                                                   </image>
-                                                </ImageView>
-                                                <Label text="Allbey Queen" />
-                                             </children>
-                                          </VBox>
-                                       </children>
-                                    </TilePane>
+                                    <TilePane fx:id="artistTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0" />
                                  </content>
                               </ScrollPane>
-                              <TableView fx:id="albumTable" editable="true" prefHeight="519.3333333333334" prefWidth="530.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                 <columns>
-                                    <TableColumn fx:id="titleColumn1" prefWidth="163.0" text="TEST" />
-                                    <TableColumn fx:id="artistColumn1" minWidth="0.0" prefWidth="144.0" text="Artist" />
-                                    <TableColumn fx:id="albumColumn1" prefWidth="153.5" text="Album" />
-                                    <TableColumn fx:id="durationColumn1" editable="false" maxWidth="67.0" minWidth="67.0" prefWidth="67.0" text="Duration" />
-                                 </columns>
-                                 <columnResizePolicy>
-                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                 </columnResizePolicy>
-                              </TableView>
+                              <ScrollPane fx:id="albumScroll" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="519.3333333333334" prefWidth="530.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <content>
+                                    <TilePane fx:id="albumTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0" />
+                                 </content>
+                              </ScrollPane>
                               <TableView fx:id="songTable" editable="true" prefHeight="519.3333333333334" prefWidth="530.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                 <columns>
                                   <TableColumn fx:id="titleColumn" prefWidth="163.0" text="Title" />
