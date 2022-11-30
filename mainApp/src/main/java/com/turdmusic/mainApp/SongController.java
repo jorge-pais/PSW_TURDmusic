@@ -47,7 +47,6 @@ public class SongController {
     public Label artistsLabelButton;
     public Label playlistsLabelButton;
 
-
     public StackPane stackPane1;
 
     public TableView<Music> songTable;
@@ -86,7 +85,6 @@ public class SongController {
 
         updateSongTable();
 
-        System.out.println("aaaaaaaaaaa: "+library.getArtists().size());
 
         // Set up table event handlers to open selected songs on double click
         songTable.setOnMouseClicked(mouseEvent -> {
@@ -103,11 +101,19 @@ public class SongController {
         // Label button event handlers
         albumsLabelButton.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getClickCount() == 1){
-                songTable.toFront();
-                albumsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
-                songsLabelButton.setFont(Font.font("System",FontWeight.BOLD, FontPosture.REGULAR, 18));
+                albumsLabelButton.setFont(Font.font("System",FontWeight.BOLD, FontPosture.REGULAR, 18));
+                songsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
                 artistsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
                 playlistsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
+
+                albumTiles.getChildren().removeAll(albumTiles.getChildren());
+                albumScroll.toFront();
+
+                for (Album i: library.getAlbums()) {
+                    i.findAlbumCover();
+                    VBox tile = makeImageTile(i.getCoverArt(), i.getTitle());
+                    albumTiles.getChildren().add(tile);
+                }
             }
         });
 
@@ -142,38 +148,13 @@ public class SongController {
                 songsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
                 artistsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
                 playlistsLabelButton.setFont(Font.font("System",FontWeight.BOLD, FontPosture.REGULAR, 18));
-
-
             }
         });
 
     }
-
-    private void createArtistScroll() {
-        //for artist view
-        for (Artist i: library.getArtists()) {
-            artistTiles.getChildren().add(vBoxFromArtist(i));
-            System.out.println(i.id + "---"+ i.getName() );
-        }
-    }
-
-    private void createAlbumScroll() {
-        //for artist view
-        for (Album i: library.getAlbums()) {
-            albumTiles.getChildren().add(vBoxFromAlbum(i));
-            System.out.println(i.id + "---"+ i.getTitle() );
-        }
-    }
-
-    private VBox vBoxFromAlbum(Album i) {
-        //set picture
-        ImageView picture = new ImageView();
-        Image myImage = new Image(getClass().getResourceAsStream("defaultphotos/album_default.png"));
-        picture.setImage(myImage);
-        picture.setFitHeight(150);
-        picture.setFitWidth(150);
-
-        //set vBox
+    @FXML
+    public VBox makeImageTile(Image image, String label){
+    //private VBox vBoxFromArtist(Artist i) {
         VBox vBoxout = new VBox();
         vBoxout.prefHeight(200);
         vBoxout.prefWidth(200);
@@ -208,7 +189,8 @@ public class SongController {
 
         //Add children to the vBox
         vBoxout.getChildren().add(picture);
-        vBoxout.getChildren().add(new Label(i.getName()));
+
+        vBoxout.getChildren().add(new Label(label));
         return vBoxout;
     }
     private void updateSongTable(){
