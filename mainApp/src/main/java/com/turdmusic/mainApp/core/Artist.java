@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.awt.*;
 import java.util.ArrayList;
 
-// Maybe change this to a UUID object identifier
+// Maybe change this to a UUID object identifierChanges merged into devel
 @JsonIdentityInfo(
         generator= ObjectIdGenerators.IntSequenceGenerator.class,
         property="@json_id")
@@ -52,4 +52,7 @@ public class Artist {
     }
     public void removeAlbum(Album album){ albums.remove(album); }
 
+    public void setPicture(Image image){
+        this.picture = image;
+    }
 }

@@ -66,6 +66,8 @@ public class SongController {
     public TilePane playlistTiles;
 
 
+    public ImageView imageViewTest;
+
     public void initialize(){
         // Allow multiple table items to be selected
         songTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -98,8 +100,8 @@ public class SongController {
             }
         });
 
-        // Label button event handler
-        songsLabelButton.setOnMouseClicked(mouseEvent -> {
+        // Label button event handlers
+        albumsLabelButton.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getClickCount() == 1){
                 songTable.toFront();
                 albumsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
@@ -127,6 +129,8 @@ public class SongController {
                 artistsLabelButton.setFont(Font.font("System",FontWeight.BOLD, FontPosture.REGULAR, 18));
                 playlistsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
 
+            for (Album i: library.getAlbums())
+                System.out.println(i.id +  "-->" + i.getTitle());
 
             }
         });
