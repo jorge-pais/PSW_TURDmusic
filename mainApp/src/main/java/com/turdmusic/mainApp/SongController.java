@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -54,18 +55,24 @@ public class SongController {
     public TableColumn<Music, String> albumColumn;
     public TableColumn<Music, String> durationColumn;
 
-    public TableView<Album> albumTable;
-
-    public ScrollPane playlistScroll;
-    public ScrollPane artistScroll;
+    //public TableView<Album> albumTable;
     public ScrollPane albumScroll;
-    public TilePane artistTiles;
+
+    public ScrollPane artistScroll;
+    public ScrollPane playlistScroll;
     public TilePane albumTiles;
+    public TilePane artistTiles;
+    public TilePane playlistTiles;
+
+
+    public ImageView imageViewTest;
 
     public void initialize(){
         // Allow multiple table items to be selected
         songTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         artistTiles.setStyle("-fx-background-color: #FFFFFF;");
+        albumTiles.setStyle("-fx-background-color: #FFFFFF;");
+        playlistTiles.setStyle("-fx-background-color: #FFFFFF;");
 
         // Setup columns (really important Lambda expressions)
         titleColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getTitle()));
@@ -73,11 +80,10 @@ public class SongController {
         albumColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getAlbum().getTitle()));
         durationColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getFormattedTrackLength()));
 
-        updateSongTable();
+        createAlbumScroll();
+        createArtistScroll();
 
-        //for artist view
-        //for (Artist i: library.getArtists())
-            //artistTiles.getChildren().add(vBoxFromArtist(i));
+        updateSongTable();
 
 
         // Set up table event handlers to open selected songs on double click
@@ -111,19 +117,19 @@ public class SongController {
             }
         });
 
-        songsLabelButton.setOnMouseClicked(mouseEvent -> {
+        albumsLabelButton.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getClickCount() == 1){
-                songTable.toFront();
-                albumsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
-                songsLabelButton.setFont(Font.font("System",FontWeight.BOLD, FontPosture.REGULAR, 18));
+                albumScroll.toFront();
+                albumsLabelButton.setFont(Font.font("System",FontWeight.BOLD, FontPosture.REGULAR, 18));
+                songsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
                 artistsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
                 playlistsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
             }
         });
-
         artistsLabelButton.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getClickCount() == 1){
                 artistScroll.toFront();
+                //in progress, not working: updateArtistScroll();
                 albumsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
                 songsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
                 artistsLabelButton.setFont(Font.font("System",FontWeight.BOLD, FontPosture.REGULAR, 18));
@@ -152,31 +158,55 @@ public class SongController {
         VBox vBoxout = new VBox();
         vBoxout.prefHeight(200);
         vBoxout.prefWidth(200);
-        vBoxout.setStyle("-fx-border-color: #000000;");
+        //vBoxout.setStyle("-fx-border-color: #000000;");
         vBoxout.setAlignment(Pos.CENTER);
         vBoxout.setLayoutX(10);
         vBoxout.setLayoutY(10);
 
-        vBoxout.getChildren().add(new TilePane());
-        Rectangle rectangle = new Rectangle();
-        rectangle.setSize(150,150);
+        //Add children to the vBox
+        vBoxout.getChildren().add(picture);
+        vBoxout.getChildren().add(new Label(i.getTitle()));
+        return vBoxout;
+    }
+
+    @FXML
+    private VBox vBoxFromArtist(Artist i) {
+        //set picture
         ImageView picture = new ImageView();
-        //Image myImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("album_capas/Abbey_Road.jpg")));
-        picture.setImage(image);
+        Image myImage = new Image(getClass().getResourceAsStream("defaultphotos/artist_default.png"));
+        picture.setImage(myImage);
         picture.setFitHeight(150);
         picture.setFitWidth(150);
+
+        //set vBox
+        VBox vBoxout = new VBox();
+        vBoxout.prefHeight(200);
+        vBoxout.prefWidth(200);
+        //vBoxout.setStyle("-fx-border-color: #000000;");
+        vBoxout.setAlignment(Pos.CENTER);
+        vBoxout.setLayoutX(10);
+        vBoxout.setLayoutY(10);
+
+        //Add children to the vBox
         vBoxout.getChildren().add(picture);
 
         vBoxout.getChildren().add(new Label(label));
         return vBoxout;
     }
-
     private void updateSongTable(){
         ObservableList<Music> songsToAdd = FXCollections.observableArrayList();
         songsToAdd.addAll(library.getSongs());
 
         if(songsToAdd.size() > 0)
             songTable.setItems(songsToAdd);
+    }
+    private void updateArtistScroll(){
+        ObservableList<Artist> artistToAdd = FXCollections.observableArrayList();
+        artistToAdd.addAll(library.getArtists());
+        for (Artist i: library.getArtists()) {
+            artistTiles.getChildren().add(vBoxFromArtist(i));
+            System.out.println(i.id + "---"+ i.getName() );
+        }
     }
 
     private void openSelectedSongs(){
