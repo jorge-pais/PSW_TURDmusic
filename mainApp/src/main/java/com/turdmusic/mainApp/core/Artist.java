@@ -1,9 +1,12 @@
 package com.turdmusic.mainApp.core;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.turdmusic.mainApp.core.models.ImageInfo;
 import javafx.scene.image.Image;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 @JsonIdentityInfo(
@@ -12,7 +15,7 @@ import java.util.ArrayList;
 public class Artist {
 
     public int id;
-    private Image picture;
+    private ImageInfo picture;
     private String name;
     private ArrayList<Music> songs;
     private ArrayList<Album> albums;
@@ -33,8 +36,10 @@ public class Artist {
     public String getName(){
         return name;
     }
+    public ImageInfo getImageInfo(){ return this.picture; }
+    @JsonIgnore
     public Image getPicture(){
-        return picture;
+        return picture.getImageObj();
     }
 
     public void addSong(Music song){
@@ -52,7 +57,12 @@ public class Artist {
     }
     public void removeAlbum(Album album){ albums.remove(album); }
 
-    public void setPicture(Image image){
-        this.picture = image;
+    public void setPicture(BufferedImage image){
+        try {
+            this.picture = new ImageInfo(image, "artist_" + id);
+        }catch (Exception e){
+            System.out.println("Error setting artist picture");
+            e.printStackTrace();
+        }
     }
 }

@@ -45,10 +45,9 @@ import java.util.Objects;
 
 public class SongController {
     private enum CurrentView {Songs, Albums, Artists, Playlists};
+    private CurrentView state;
 
     public static Library library;
-
-    private CurrentView state;
 
     public MenuItem optionsPreferences;
 
@@ -186,11 +185,9 @@ public class SongController {
     private void updateAlbumTiles(ArrayList<Album> albums){
         albumTiles.getChildren().removeAll(albumTiles.getChildren());
 
-
         for (Album i: albums) {
             i.findAlbumCover();
-            if(i.getCoverArt() == null)
-                i.setCoverArt(new Image(getClass().getResourceAsStream("defaultphotos/album_default.png")));
+
             VBox tile = makeImageTile(i.getCoverArt(), i.getTitle());
             albumTiles.getChildren().add(tile);
         }
@@ -199,8 +196,6 @@ public class SongController {
         artistTiles.getChildren().removeAll(artistTiles.getChildren()); //Clear
 
         for(Artist i: artists){
-            if(i.getPicture() == null)
-                i.setPicture(new Image(getClass().getResourceAsStream("defaultphotos/artist_default.png")));
             VBox tile = makeImageTile(i.getPicture(), i.getName());
             artistTiles.getChildren().add(tile);
         }
@@ -220,15 +215,25 @@ public class SongController {
         newStage.showAndWait();
     }
 
-
 /*
     Save and load methods save/load the library
     to the defined savePath as library.json
 */
     public void saveDefaultLibrary() throws Exception{
-        System.out.println(library.settings.getSavePath());
+        String filePath;
 
-        String path = new String(library.settings.getSavePath() + "library.json");
+        String osName = System.getProperty("os.name").toLowerCase();
+        if(osName.startsWith("windows"))
+            filePath = library.settings.getSavePath() + "\\";
+        else if (osName.contains("linux"))
+            filePath = library.settings.getSavePath() + "/";
+        else // Unsupported OS
+            throw new Exception();
+
+        File folder = new File(filePath);
+        folder.mkdirs();
+
+        String path = filePath + "library.json";
 
         library.saveLibrary(path);
     }
