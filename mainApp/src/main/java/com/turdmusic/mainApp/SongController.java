@@ -23,10 +23,12 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -123,7 +125,8 @@ public class SongController {
             }
         });
     }
-    @FXML
+    // TODO: FIND WHAT'S MAKING THE TILES WIERD
+    // TODO: FIND HOW TO MAKE THE TILEPANE AND SCROLLPANE WORK
     public VBox makeImageTile(Image image, String label){
     //private VBox vBoxFromArtist(Artist i) {
         VBox vBoxout = new VBox();
@@ -134,11 +137,7 @@ public class SongController {
         vBoxout.setLayoutX(10);
         vBoxout.setLayoutY(10);
 
-        vBoxout.getChildren().add(new TilePane());
-        Rectangle rectangle = new Rectangle();
-        rectangle.setSize(150,150);
         ImageView picture = new ImageView();
-        //Image myImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("album_capas/Abbey_Road.jpg")));
         picture.setImage(image);
         picture.setFitHeight(150);
         picture.setFitWidth(150);
@@ -220,6 +219,35 @@ public class SongController {
         newStage.initModality(Modality.APPLICATION_MODAL);
         newStage.showAndWait();
     }
+
+
+/*
+    Save and load methods save/load the library
+    to the defined savePath as library.json
+*/
+    public void saveDefaultLibrary() throws Exception{
+        System.out.println(library.settings.getSavePath());
+
+        String path = new String(library.settings.getSavePath() + "library.json");
+
+        library.saveLibrary(path);
+    }
+    public void loadDefaultLibrary() throws Exception{
+        String path = new String(library.settings.getSavePath() + "library.json");
+        library = Library.loadLibrary(path);
+    }
+
+    public void exportLibrary() throws Exception{
+        FileChooser fileChooser = new FileChooser();
+        File file = fileChooser.showSaveDialog(null);
+    }
+    public void importLibrary() throws Exception{
+        FileChooser fileChooser = new FileChooser();
+        File file = fileChooser.showOpenDialog(null);
+
+        library = Library.loadLibrary(file.getPath());
+    }
+
 
     private void openSelectedSongs(){
         ObservableList<Music> songsSelected = songTable.getSelectionModel().getSelectedItems();

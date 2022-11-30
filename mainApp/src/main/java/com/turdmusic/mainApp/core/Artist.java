@@ -6,7 +6,6 @@ import javafx.scene.image.Image;
 
 import java.util.ArrayList;
 
-// Maybe change this to a UUID object identifierChanges merged into devel
 @JsonIdentityInfo(
         generator= ObjectIdGenerators.IntSequenceGenerator.class,
         property="@json_id")

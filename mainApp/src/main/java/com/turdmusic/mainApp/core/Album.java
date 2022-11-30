@@ -16,11 +16,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import javafx.embed.swing.SwingFXUtils;
 
-//
-//  Album Class
-//  Holds all album data and relations with their respective songs and artists
-//
-
+/**
+    Album Class which holds all album data and relations with their respective songs and artists
+*/
 @JsonIdentityInfo(
         generator= ObjectIdGenerators.IntSequenceGenerator.class,
         property="@json_id")
@@ -60,10 +58,9 @@ public class Album {
     }
     public Image getCoverArt(){ return this.coverArt;}
 
-    //
-    // This function is to address a problem with scanning songs recursively
-    // where the songs might not be added in the correct track ordering
-    //
+    /**
+        This function sorts the tracklist array
+    */
     public void sortTrackList(){
         this.tracklist.sort((m1, m2) -> {
             int t1 = m1.getTrackNumber();
@@ -75,16 +72,23 @@ public class Album {
         });
     }
 
+    /**
+        This function will look for the cover art within the
+        first song's parent directory, or if there is no image file
+        it tries to read from the song metadata
+    */
     public void findAlbumCover(){
-        try { // Check all children files for any pictures
+        try { // First check all children files for any pictures
             File folder = new File(tracklist.get(0).getFile().getParent());
 
             for (File child : folder.listFiles()) {
                 if (Utils.checkFileExtension(child.getName(), Utils.fileType.Image)) {
                     BufferedImage image = ImageIO.read(child);
+
                     int h = image.getHeight(), w = image.getWidth();
                     if (Math.abs((float) (w - h) / w) <= 0.02) { // If the image is at least "98% square"
-                        this.coverArt = SwingFXUtils.toFXImage(image, null); return; // set the image
+                        this.coverArt = SwingFXUtils.toFXImage(image, null);
+                        return;
                     }
                 }
             }
@@ -105,7 +109,8 @@ public class Album {
             Artwork art = tag.getFirstArtwork();
             assert art != null;
 
-            this.coverArt = SwingFXUtils.toFXImage(Images.getImage(art), null);
+            // Save to file
+            Images.getImage(art);
 
         } catch (Exception e){
             System.out.println("No valid artwork was found within the music files");

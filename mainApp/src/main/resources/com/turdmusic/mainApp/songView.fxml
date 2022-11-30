@@ -63,7 +63,10 @@
                 </Menu>
             <Menu mnemonicParsing="false" text="Library">
                <items>
-                  <MenuItem mnemonicParsing="false" text="About TURD" />
+                  <MenuItem mnemonicParsing="false" onAction="#loadDefaultLibrary" text="Load" />
+                  <MenuItem mnemonicParsing="false" onAction="#saveDefaultLibrary" text="Save" />
+                  <MenuItem mnemonicParsing="false" onAction="#importLibrary" text="Import..." />
+                  <MenuItem fx:id="exportLibrary" mnemonicParsing="false" onAction="#exportLibrary" text="Export..." />
                </items>
             </Menu>
                 <Menu mnemonicParsing="false" text="Help">

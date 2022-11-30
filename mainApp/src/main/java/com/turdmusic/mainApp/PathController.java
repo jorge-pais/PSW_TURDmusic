@@ -1,6 +1,7 @@
 package com.turdmusic.mainApp;
 
 import com.turdmusic.mainApp.core.Library;
+import com.turdmusic.mainApp.core.Settings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -11,10 +12,14 @@ import javafx.stage.Stage;
 
 import java.io.File;
 
+/**
+    Controller class for the path selection window
+*/
 public class PathController {
 
     public static boolean addedFolder; // This tells the hello view that folder have been added and scanned
     public static Library library;
+    public static Settings settings;
 
     public ListView<String> pathList;
     private ObservableList<String> items = FXCollections.observableArrayList();

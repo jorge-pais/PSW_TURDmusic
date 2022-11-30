@@ -1,6 +1,7 @@
 package com.turdmusic.mainApp.core;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;
@@ -9,6 +10,10 @@ import org.jaudiotagger.tag.Tag;
 import java.util.ArrayList;
 import java.io.File;
 
+/**
+    Library class which houses all saved music, album, artist and playlists
+    objects
+*/
 public class Library{
 
     // We can change the library paths from strings to file objects
@@ -21,7 +26,7 @@ public class Library{
     private Album undefinedAlbum;
     private Artist undefinedArtist;
 
-    public Settings settings;
+    public static Settings settings;
 
     public ArrayList<Music> getSongs(){
         return songs;
@@ -201,9 +206,10 @@ public class Library{
         return song;
     }
 
-    //
-    // Repeating functions for simplicity
-    // TODO: find a way to reuse the same function without major class alterations
+    /*
+        Repeating functions for simplicity
+        TODO: find a way to reuse the same function without major class alterations
+    */
     public ArrayList<Music> searchSongs(String searchTerm){
         String query = searchTerm.toLowerCase();
 
@@ -266,6 +272,7 @@ public class Library{
         System.out.println("Library saved to file!");
     }
 
+    // Add a check function upon loading the library
     public static Library loadLibrary(String filePath) throws Exception{
         File inputFile = new File(filePath);
 
