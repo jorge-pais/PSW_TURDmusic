@@ -33,6 +33,7 @@ public class PathController {
         DirectoryChooser directoryChooser = new DirectoryChooser();
 
         File path = directoryChooser.showDialog(null);
+        if(path == null) return;
 
         items.add(path.getPath());
         pathList.setItems(items); // Update list
@@ -73,7 +74,5 @@ public class PathController {
     protected void finishButtonClicked() {
         stage = (Stage) pathList.getScene().getWindow();
         stage.close();
-
-        addedFolder = true;
     }
 }

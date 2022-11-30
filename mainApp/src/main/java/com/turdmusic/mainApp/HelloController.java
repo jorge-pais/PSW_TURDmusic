@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -31,8 +30,6 @@ public class HelloController {
         // Create a new stage (window) and load the file selection scene
         Stage newStage = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("pathManager.fxml"));
-
-        PathController pathController = fxmlLoader.getController();
 
         Scene scene = new Scene(fxmlLoader.load(), 600, 400);
         newStage.setTitle("Select Folders");

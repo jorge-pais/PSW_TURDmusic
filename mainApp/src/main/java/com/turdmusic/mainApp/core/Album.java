@@ -76,11 +76,10 @@ public class Album {
     }
 
     public void findAlbumCover(){
-
         try { // Check all children files for any pictures
             File folder = new File(tracklist.get(0).getFile().getParent());
 
-            for (File child : folder.listFiles()) { // The file listing is never null, there is at least one file
+            for (File child : folder.listFiles()) {
                 if (Utils.checkFileExtension(child.getName(), Utils.fileType.Image)) {
                     BufferedImage image = ImageIO.read(child);
                     int h = image.getHeight(), w = image.getWidth();
@@ -91,7 +90,7 @@ public class Album {
             }
         }catch (Exception e){
             System.out.println("Something went wrong when loading the images");
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
         System.out.println("No album art found for the album");
@@ -110,7 +109,7 @@ public class Album {
 
         } catch (Exception e){
             System.out.println("No valid artwork was found within the music files");
-            e.printStackTrace();
+            //e.printStackTrace();
 
             this.coverArt = null; // Set one of the default album covers
         }

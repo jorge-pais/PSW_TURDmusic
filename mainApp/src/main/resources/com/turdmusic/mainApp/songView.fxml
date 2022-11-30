@@ -12,6 +12,8 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -22,182 +24,233 @@
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
 <VBox prefHeight="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.turdmusic.mainApp.SongController">
-  <children>
-    <MenuBar VBox.vgrow="NEVER">
-      <menus>
-        <Menu mnemonicParsing="false" text="File">
-          <items>
-            <MenuItem mnemonicParsing="false" text="New" />
-            <MenuItem mnemonicParsing="false" text="Open…" />
-            <Menu mnemonicParsing="false" text="Open Recent" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Close" />
-            <MenuItem mnemonicParsing="false" text="Save" />
-            <MenuItem mnemonicParsing="false" text="Save As…" />
-            <MenuItem mnemonicParsing="false" text="Revert" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Preferences…" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Quit" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Edit">
-          <items>
-            <MenuItem mnemonicParsing="false" text="Undo" />
-            <MenuItem mnemonicParsing="false" text="Redo" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Cut" />
-            <MenuItem mnemonicParsing="false" text="Copy" />
-            <MenuItem mnemonicParsing="false" text="Paste" />
-            <MenuItem mnemonicParsing="false" text="Delete" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Select All" />
-            <MenuItem mnemonicParsing="false" text="Unselect All" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Help">
-          <items>
-            <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
-          </items>
-        </Menu>
-      </menus>
-    </MenuBar>
-    <HBox id="HBox" alignment="CENTER_LEFT" prefHeight="39.0" prefWidth="900.0" spacing="5.0" VBox.vgrow="NEVER">
-      <children>
-            <TextField minWidth="140.0" prefHeight="27.0" prefWidth="191.0" promptText="Search" HBox.hgrow="NEVER">
-               <HBox.margin>
-                  <Insets left="10.0" />
-               </HBox.margin>
-            </TextField>
-        <Label maxWidth="1.7976931348623157E308" prefHeight="33.0" prefWidth="626.0" HBox.hgrow="ALWAYS">
-          <font>
-            <Font size="11.0" fx:id="x3" />
-          </font>
-          <textFill>
-            <Color red="0.625" green="0.625" blue="0.625" fx:id="x4" />
-          </textFill>
-        </Label>
-            <MenuButton contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="27.0" prefWidth="116.0" text="Options" HBox.hgrow="NEVER">
-              <items>
-                <MenuItem mnemonicParsing="false" text="Login" />
-                <MenuItem mnemonicParsing="false" text="Create Account" />
-                  <MenuItem mnemonicParsing="false" text="Preferences" />
-              </items>
-               <HBox.margin>
-                  <Insets right="10.0" />
-               </HBox.margin>
-            </MenuButton>
-      </children>
-      <padding>
-        <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
-      </padding>
-    </HBox>
-    <SplitPane dividerPositions="0.20657015590200445, 0.8045657015590201" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
-      <items>
-        <AnchorPane maxWidth="-Infinity" minWidth="100.0" prefHeight="510.0" prefWidth="182.0" SplitPane.resizableWithParent="false">
-          <children>
-                  <GridPane maxWidth="1.7976931348623157E308" prefHeight="162.0" prefWidth="222.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                  <Label fx:id="songsLabelButton" alignment="CENTER" contentDisplay="BOTTOM" minWidth="60.0" prefHeight="40.0" prefWidth="220.0" style="&#10;" text="Songs" wrapText="false">
+    <children>
+        <MenuBar VBox.vgrow="NEVER">
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="New" />
+                        <MenuItem mnemonicParsing="false" text="Open…" />
+                        <Menu mnemonicParsing="false" text="Open Recent" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Close" />
+                        <MenuItem mnemonicParsing="false" text="Save" />
+                        <MenuItem mnemonicParsing="false" text="Save As…" />
+                        <MenuItem mnemonicParsing="false" text="Revert" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Preferences…" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Quit" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Undo" />
+                        <MenuItem mnemonicParsing="false" text="Redo" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Cut" />
+                        <MenuItem mnemonicParsing="false" text="Copy" />
+                        <MenuItem mnemonicParsing="false" text="Paste" />
+                        <MenuItem mnemonicParsing="false" text="Delete" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Select All" />
+                        <MenuItem mnemonicParsing="false" text="Unselect All" />
+                    </items>
+                </Menu>
+            <Menu mnemonicParsing="false" text="Library">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="About TURD" />
+               </items>
+            </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="About TURD" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+        <HBox id="HBox" alignment="CENTER_LEFT" prefHeight="39.0" prefWidth="900.0" spacing="5.0" VBox.vgrow="NEVER">
+            <children>
+                <TextField minWidth="140.0" prefHeight="27.0" prefWidth="191.0" promptText="Search" HBox.hgrow="NEVER">
+                    <HBox.margin>
+                        <Insets left="10.0" />
+                    </HBox.margin>
+                </TextField>
+                <Label maxWidth="1.7976931348623157E308" prefHeight="33.0" prefWidth="626.0" HBox.hgrow="ALWAYS">
                     <font>
-                      <Font name="System Bold" size="18.0" fx:id="x1" />
+                        <Font size="11.0" fx:id="x3" />
                     </font>
-                  </Label>
-                        <Label fx:id="albumsLabelButton" alignment="CENTER" contentDisplay="BOTTOM" minWidth="60.0" prefHeight="40.0" prefWidth="220.0" style="&#10;" text="Albums" wrapText="false" GridPane.rowIndex="1">
-                           <font>
-                              <Font size="18.0" fx:id="x11" />
-                           </font>
+                    <textFill>
+                        <Color red="0.625" green="0.625" blue="0.625" fx:id="x4" />
+                    </textFill>
+                </Label>
+                <MenuButton contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="27.0" prefWidth="116.0" text="Options" HBox.hgrow="NEVER">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Login" />
+                        <MenuItem mnemonicParsing="false" text="Create Account" />
+                        <MenuItem fx:id="optionsPreferences" mnemonicParsing="false" onAction="#launchPreferences" text="Preferences" />
+                    </items>
+                    <HBox.margin>
+                        <Insets right="10.0" />
+                    </HBox.margin>
+                </MenuButton>
+            </children>
+            <padding>
+                <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+            </padding>
+        </HBox>
+        <SplitPane dividerPositions="0.20657015590200445, 0.8045657015590201" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+            <items>
+                <AnchorPane maxWidth="-Infinity" minWidth="100.0" prefHeight="510.0" prefWidth="182.0" SplitPane.resizableWithParent="false">
+                    <children>
+                        <GridPane maxWidth="1.7976931348623157E308" prefHeight="162.0" prefWidth="222.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                            <children>
+                                <Label fx:id="songsLabelButton" alignment="CENTER" contentDisplay="BOTTOM" minWidth="60.0" prefHeight="40.0" prefWidth="220.0" style="&#10;" text="Songs" wrapText="false">
+                                    <font>
+                                        <Font name="System Bold" size="18.0" fx:id="x1" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="albumsLabelButton" alignment="CENTER" contentDisplay="BOTTOM" minWidth="60.0" prefHeight="40.0" prefWidth="220.0" style="&#10;" text="Albums" wrapText="false" GridPane.rowIndex="1">
+                                    <font>
+                                        <Font size="18.0" fx:id="x11" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="artistsLabelButton" alignment="CENTER" contentDisplay="BOTTOM" minWidth="60.0" prefHeight="41.0" prefWidth="220.0" style="&#10;" text="Artists" wrapText="false" GridPane.rowIndex="2">
+                                    <font>
+                                        <Font size="18.0" fx:id="x111" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="playlistsLabelButton" alignment="CENTER" contentDisplay="BOTTOM" minWidth="60.0" prefHeight="39.0" prefWidth="222.0" style="&#10;" text="Playlists" wrapText="false" GridPane.rowIndex="3">
+                                    <font>
+                                        <Font size="18.0" fx:id="x1111" />
+                                    </font>
+                                </Label>
+                            </children>
+                        </GridPane>
+                    </children>
+                </AnchorPane>
+                <AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="545.0" prefWidth="430.0" SplitPane.resizableWithParent="false">
+                    <children>
+                        <StackPane prefHeight="518.0" prefWidth="530.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <children>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <ScrollPane fx:id="playlistScroll" prefHeight="518.0" prefWidth="530.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <content>
+                                                <TilePane fx:id="playlistTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0">
+                                                    <children>
+                                                        <VBox alignment="CENTER" layoutX="175.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0">
+                                                            <children>
+                                                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="150.0" stroke="BLACK" strokeType="INSIDE" width="150.0" />
+                                                                <Label text="Just Queen" />
+                                                            </children>
+                                                        </VBox>
+                                                    </children>
+                                                </TilePane>
+                                            </content>
+                                        </ScrollPane>
+                                        <ScrollPane fx:id="artistScroll" prefHeight="518.0" prefWidth="530.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <content>
+                                                <TilePane fx:id="artistTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0">
+                                                    <children>
+                                                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="200.0">
+                                                            <children>
+                                                                <ImageView fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+                                                                    <VBox.margin>
+                                                                        <Insets left="10.0" right="10.0" />
+                                                                    </VBox.margin>
+                                                                    <image>
+                                                                        <Image url="@defaultphotos/Abbey_Road.jpg" />
+                                                                    </image>
+                                                                </ImageView>
+                                                                <Label text="Allbey Queen" />
+                                                            </children>
+                                                        </VBox>
+                                                    </children>
+                                                </TilePane>
+                                            </content>
+                                        </ScrollPane>
+                                        <ScrollPane fx:id="albumScroll" layoutX="10.0" layoutY="10.0" prefHeight="518.0" prefWidth="530.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <content>
+                                                <AnchorPane prefHeight="518.0" prefWidth="530.6666666666666">
+                                                    <children>
+                                                        <TilePane fx:id="albumTiles" alignment="TOP_CENTER" prefHeight="518.0" prefTileHeight="160.0" prefTileWidth="160.0" prefWidth="530.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                            <children>
+                                                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="200.0">
+                                                                    <children>
+                                                                        <ImageView fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+                                                                            <VBox.margin>
+                                                                                <Insets left="10.0" right="10.0" />
+                                                                            </VBox.margin>
+                                                                            <image>
+                                                                                <Image url="@defaultphotos/album_default.png" />
+                                                                            </image>
+                                                                        </ImageView>
+                                                                        <Label text="Album Queen" />
+                                                                    </children>
+                                                                </VBox>
+                                                            </children>
+                                                        </TilePane>
+                                                    </children>
+                                                </AnchorPane>
+                                            </content>
+                                        </ScrollPane>
+                                        <TableView fx:id="songTable" editable="true" prefHeight="519.3333333333334" prefWidth="530.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <columns>
+                                                <TableColumn fx:id="titleColumn" prefWidth="163.0" text="Title" />
+                                                <TableColumn fx:id="artistColumn" minWidth="0.0" prefWidth="144.0" text="Artist" />
+                                                <TableColumn fx:id="albumColumn" prefWidth="153.5" text="Album" />
+                                                <TableColumn fx:id="durationColumn" editable="false" maxWidth="67.0" minWidth="67.0" prefWidth="67.0" text="Duration" />
+                                            </columns>
+                                            <columnResizePolicy>
+                                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                            </columnResizePolicy>
+                                        </TableView>
+                                    </children>
+                                </AnchorPane>
+                            </children>
+                        </StackPane>
+                    </children>
+                </AnchorPane>
+                <AnchorPane>
+                    <children>
+                        <Label layoutX="14.0" layoutY="14.0" prefHeight="25.0" prefWidth="107.0" text="Details" textAlignment="CENTER">
+                            <font>
+                                <Font size="18.0" />
+                            </font>
                         </Label>
-                        <Label fx:id="artistsLabelButton" alignment="CENTER" contentDisplay="BOTTOM" minWidth="60.0" prefHeight="41.0" prefWidth="220.0" style="&#10;" text="Artists" wrapText="false" GridPane.rowIndex="2">
-                           <font>
-                              <Font size="18.0" fx:id="x111" />
-                           </font>
-                        </Label>
-                        <Label fx:id="playlistsLabelButton" alignment="CENTER" contentDisplay="BOTTOM" minWidth="60.0" prefHeight="39.0" prefWidth="222.0" style="&#10;" text="Playlists" wrapText="false" GridPane.rowIndex="3">
-                           <font>
-                              <Font size="18.0" fx:id="x1111" />
-                           </font>
-                        </Label>
-                     </children>
-                  </GridPane>
-          </children>
-        </AnchorPane>
-      <AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="545.0" prefWidth="430.0" SplitPane.resizableWithParent="false">
-        <children>
-                  <StackPane prefHeight="518.0" prefWidth="530.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                           <children>
-                              <ScrollPane fx:id="playlistScroll" prefHeight="518.0" prefWidth="530.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                 <content>
-                                    <TilePane alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="503.0" prefWidth="521.0" />
-                                 </content>
-                              </ScrollPane>
-                              <ScrollPane fx:id="artistScroll" prefHeight="519.3333333333334" prefWidth="530.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                 <content>
-                                    <TilePane fx:id="artistTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0" />
-                                 </content>
-                              </ScrollPane>
-                              <ScrollPane fx:id="albumScroll" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="519.3333333333334" prefWidth="530.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                 <content>
-                                    <TilePane fx:id="albumTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0" />
-                                 </content>
-                              </ScrollPane>
-                              <TableView fx:id="songTable" editable="true" prefHeight="519.3333333333334" prefWidth="530.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                <columns>
-                                  <TableColumn fx:id="titleColumn" prefWidth="163.0" text="Title" />
-                                  <TableColumn fx:id="artistColumn" minWidth="0.0" prefWidth="144.0" text="Artist" />
-                                    <TableColumn fx:id="albumColumn" prefWidth="153.5" text="Album" />
-                                    <TableColumn fx:id="durationColumn" editable="false" maxWidth="67.0" minWidth="67.0" prefWidth="67.0" text="Duration" />
-                                </columns>
-                                 <columnResizePolicy>
-                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                 </columnResizePolicy>
-                              </TableView>
-                           </children>
-                        </AnchorPane>
-                     </children>
-                  </StackPane>
-        </children>
-      </AnchorPane>
-        <AnchorPane>
-               <children>
-                  <Label layoutX="14.0" layoutY="14.0" prefHeight="25.0" prefWidth="107.0" text="Details" textAlignment="CENTER">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
-               </children>
-        </AnchorPane>
-      </items>
-    </SplitPane>
-      <HBox id="HBox" alignment="CENTER_LEFT" layoutX="10.0" layoutY="587.0" spacing="5.0">
-         <children>
-            <Pane prefHeight="16.0" prefWidth="184.0" />
-            <Label maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Double click to play song" HBox.hgrow="ALWAYS">
-               <font>
-                  <Font size="11.0" fx:id="x31" />
-               </font>
-               <textFill>
-                  <Color red="0.625" green="0.625" blue="0.625" fx:id="x41" />
-               </textFill>
-            </Label>
-         </children>
-         <padding>
-            <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
-         </padding>
-      </HBox>
-  </children>
+                    </children>
+                </AnchorPane>
+            </items>
+        </SplitPane>
+        <HBox id="HBox" alignment="CENTER_LEFT" layoutX="10.0" layoutY="587.0" spacing="5.0">
+            <children>
+                <Pane prefHeight="16.0" prefWidth="184.0" />
+                <Label maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Double click to play song" HBox.hgrow="ALWAYS">
+                    <font>
+                        <Font size="11.0" fx:id="x31" />
+                    </font>
+                    <textFill>
+                        <Color red="0.625" green="0.625" blue="0.625" fx:id="x41" />
+                    </textFill>
+                </Label>
+            </children>
+            <padding>
+                <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+            </padding>
+        </HBox>
+    </children>
 </VBox>
