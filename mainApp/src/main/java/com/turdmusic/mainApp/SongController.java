@@ -127,7 +127,6 @@ public class SongController {
     // TODO: FIND WHAT'S MAKING THE TILES WIERD
     // TODO: FIND HOW TO MAKE THE TILEPANE AND SCROLLPANE WORK
     public VBox makeImageTile(Image image, String label){
-    //private VBox vBoxFromArtist(Artist i) {
         VBox vBoxout = new VBox();
         vBoxout.prefHeight(200);
         vBoxout.prefWidth(200);
@@ -195,9 +194,13 @@ public class SongController {
     private void updateArtistTiles(ArrayList<Artist> artists){
         artistTiles.getChildren().removeAll(artistTiles.getChildren()); //Clear
 
-        for(Artist i: artists){
-            VBox tile = makeImageTile(i.getPicture(), i.getName());
-            artistTiles.getChildren().add(tile);
+        try{
+            for(Artist i: artists){
+                VBox tile = makeImageTile(i.getPicture(), i.getName());
+                artistTiles.getChildren().add(tile);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
     private void updatePlaylistTiles(ArrayList<Playlist> playlists){

@@ -64,7 +64,12 @@ public class Album {
         }
     }
     @JsonIgnore
-    public Image getCoverArt(){ return this.coverArt.getImageObj();}
+    public Image getCoverArt(){
+        if(coverArt != null)
+            return this.coverArt.getImageObj();
+        else
+            return new Image(getClass().getResourceAsStream("/com/turdmusic/mainApp/defaultphotos/album_default.png"));
+    }
     public ImageInfo getImageInfo(){ return this.coverArt; }
 
     /**

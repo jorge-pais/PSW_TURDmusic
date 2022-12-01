@@ -16,7 +16,5 @@ public class MusicShare {
         this.title = source.getTitle();
         this.artist = source.getArtist().getName();
         this.album = source.getAlbum().getTitle();
-
-
     }
 }

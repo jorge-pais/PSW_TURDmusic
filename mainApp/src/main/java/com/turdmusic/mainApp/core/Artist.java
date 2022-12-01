@@ -3,11 +3,17 @@ package com.turdmusic.mainApp.core;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.turdmusic.mainApp.MainGUI;
+import com.turdmusic.mainApp.SongController;
 import com.turdmusic.mainApp.core.models.ImageInfo;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 @JsonIdentityInfo(
         generator= ObjectIdGenerators.IntSequenceGenerator.class,
@@ -38,8 +44,11 @@ public class Artist {
     }
     public ImageInfo getImageInfo(){ return this.picture; }
     @JsonIgnore
-    public Image getPicture(){
-        return picture.getImageObj();
+    public Image getPicture() throws IOException {
+        if(picture != null)
+            return picture.getImageObj();
+        else
+            return new Image(getClass().getResourceAsStream("/com/turdmusic/mainApp/defaultphotos/artist_default.png"));
     }
 
     public void addSong(Music song){
