@@ -27,7 +27,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.turdmusic.mainApp.SongController">
+<VBox minHeight="300.0" minWidth="600.0" prefHeight="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.turdmusic.mainApp.SongController">
     <children>
         <MenuBar VBox.vgrow="NEVER">
             <menus>
@@ -145,13 +145,13 @@
                         </GridPane>
                     </children>
                 </AnchorPane>
-                <AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="545.0" prefWidth="430.0" SplitPane.resizableWithParent="false">
+                <AnchorPane id="Content" minWidth="200.0" prefHeight="545.0" prefWidth="430.0" SplitPane.resizableWithParent="false">
                     <children>
                         <StackPane prefHeight="518.0" prefWidth="530.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                             <children>
                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                     <children>
-                                        <ScrollPane fx:id="playlistScroll" prefHeight="518.0" prefWidth="530.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                        <ScrollPane fx:id="playlistScroll" fitToHeight="true" fitToWidth="true" prefHeight="518.0" prefWidth="530.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <content>
                                                 <TilePane fx:id="playlistTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0">
                                                     <children>
@@ -165,7 +165,7 @@
                                                 </TilePane>
                                             </content>
                                         </ScrollPane>
-                                        <ScrollPane fx:id="artistScroll" prefHeight="518.0" prefWidth="530.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                        <ScrollPane fx:id="artistScroll" fitToHeight="true" fitToWidth="true" prefHeight="518.0" prefWidth="530.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <content>
                                                 <TilePane fx:id="artistTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0">
                                                     <children>
@@ -183,32 +183,10 @@
                                                             </children>
                                                         </VBox>
                                                     </children>
+                                       <padding>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </padding>
                                                 </TilePane>
-                                            </content>
-                                        </ScrollPane>
-                                        <ScrollPane fx:id="albumScroll" layoutX="10.0" layoutY="10.0" prefHeight="518.0" prefWidth="530.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                            <content>
-                                                <AnchorPane prefHeight="518.0" prefWidth="530.6666666666666">
-                                                    <children>
-                                                        <TilePane fx:id="albumTiles" alignment="TOP_CENTER" prefHeight="518.0" prefTileHeight="160.0" prefTileWidth="160.0" prefWidth="530.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                            <children>
-                                                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="200.0">
-                                                                    <children>
-                                                                        <ImageView fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
-                                                                            <VBox.margin>
-                                                                                <Insets left="10.0" right="10.0" />
-                                                                            </VBox.margin>
-                                                                            <image>
-                                                                                <Image url="@defaultphotos/album_default.png" />
-                                                                            </image>
-                                                                        </ImageView>
-                                                                        <Label text="Album Queen" />
-                                                                    </children>
-                                                                </VBox>
-                                                            </children>
-                                                        </TilePane>
-                                                    </children>
-                                                </AnchorPane>
                                             </content>
                                         </ScrollPane>
                                         <TableView fx:id="songTable" editable="true" prefHeight="519.3333333333334" prefWidth="530.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -222,13 +200,37 @@
                                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                             </columnResizePolicy>
                                         </TableView>
+                              <ScrollPane fx:id="albumScroll" fitToHeight="true" fitToWidth="true" layoutX="10.0" layoutY="10.0" prefHeight="528.6666666666666" prefWidth="540.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <content>
+                                    <TilePane fx:id="albumTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0">
+                                       <children>
+                                          <VBox alignment="CENTER" prefHeight="200.0" prefWidth="200.0">
+                                             <children>
+                                                <ImageView fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+                                                   <VBox.margin>
+                                                      <Insets left="10.0" right="10.0" />
+                                                   </VBox.margin>
+                                                   <image>
+                                                      <Image url="@defaultphotos/Abbey_Road.jpg" />
+                                                   </image>
+                                                </ImageView>
+                                                <Label text="Allbey Queen" />
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </padding>
+                                    </TilePane>
+                                 </content>
+                              </ScrollPane>
                                     </children>
                                 </AnchorPane>
                             </children>
                         </StackPane>
                     </children>
                 </AnchorPane>
-                <AnchorPane>
+                <AnchorPane minWidth="100.0">
                     <children>
                         <Label layoutX="14.0" layoutY="14.0" prefHeight="25.0" prefWidth="107.0" text="Details" textAlignment="CENTER">
                             <font>

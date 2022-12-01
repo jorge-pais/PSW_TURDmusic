@@ -63,7 +63,7 @@ public class SongController {
     public TableColumn<Music, String> albumColumn;
     public TableColumn<Music, String> durationColumn;
 
-    public TableView<Album> albumTable;
+    //public TableView<Album> albumTable;
 
     public ScrollPane playlistScroll;
     public ScrollPane artistScroll;
@@ -84,6 +84,8 @@ public class SongController {
 
         updateSongTable();
 
+
+        artistTiles.boundsInParentProperty();
 
         // Set up table event handlers to open selected songs on double click
         songTable.setOnMouseClicked(mouseEvent -> {
@@ -197,7 +199,10 @@ public class SongController {
     }
     private void updateArtistTiles(ArrayList<Artist> artists){
         artistTiles.getChildren().removeAll(artistTiles.getChildren()); //Clear
-
+        artistScroll.setFitToWidth(true);
+        artistScroll.setFitToHeight(true);
+        //artistTiles.boundsInParentProperty();
+        //artistScroll.boundsInParentProperty();
         for(Artist i: artists){
             if(i.getPicture() == null)
                 i.setPicture(new Image(getClass().getResourceAsStream("defaultphotos/artist_default.png")));
