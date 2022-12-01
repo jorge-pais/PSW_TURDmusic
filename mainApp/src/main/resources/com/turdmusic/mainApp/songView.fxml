@@ -27,7 +27,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<VBox minHeight="300.0" minWidth="600.0" prefHeight="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.turdmusic.mainApp.SongController">
+<VBox minHeight="300.0" minWidth="900.0" prefHeight="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.turdmusic.mainApp.SongController">
     <children>
         <MenuBar VBox.vgrow="NEVER">
             <menus>
@@ -42,7 +42,7 @@
                         <MenuItem mnemonicParsing="false" text="Save As…" />
                         <MenuItem mnemonicParsing="false" text="Revert" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Preferences…" />
+                        <MenuItem mnemonicParsing="false" onAction="#launchPreferences" text="Preferences…" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" text="Quit" />
                     </items>
@@ -108,7 +108,7 @@
         </HBox>
         <SplitPane dividerPositions="0.20657015590200445, 0.8045657015590201" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
             <items>
-                <AnchorPane maxWidth="-Infinity" minWidth="100.0" prefHeight="510.0" prefWidth="182.0" SplitPane.resizableWithParent="false">
+                <AnchorPane maxWidth="-Infinity" minWidth="100.0" prefHeight="510.0" prefWidth="180.0" SplitPane.resizableWithParent="false">
                     <children>
                         <GridPane maxWidth="1.7976931348623157E308" prefHeight="162.0" prefWidth="222.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
                             <columnConstraints>
@@ -145,13 +145,13 @@
                         </GridPane>
                     </children>
                 </AnchorPane>
-                <AnchorPane id="Content" minWidth="200.0" prefHeight="545.0" prefWidth="430.0" SplitPane.resizableWithParent="false">
+                <AnchorPane id="Content" minWidth="200.0" SplitPane.resizableWithParent="false">
                     <children>
                         <StackPane prefHeight="518.0" prefWidth="530.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                             <children>
                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                     <children>
-                                        <ScrollPane fx:id="playlistScroll" fitToHeight="true" fitToWidth="true" prefHeight="518.0" prefWidth="530.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                        <ScrollPane fx:id="playlistScroll" fitToHeight="true" fitToWidth="true" prefHeight="518.0" prefWidth="530.6666666666666" style="-fx-background-color: #FFFFFF;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <content>
                                                 <TilePane fx:id="playlistTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0">
                                                     <children>
@@ -165,7 +165,7 @@
                                                 </TilePane>
                                             </content>
                                         </ScrollPane>
-                                        <ScrollPane fx:id="artistScroll" fitToHeight="true" fitToWidth="true" prefHeight="518.0" prefWidth="530.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                        <ScrollPane fx:id="artistScroll" fitToHeight="true" fitToWidth="true" prefHeight="518.0" prefWidth="530.6666666666666" style="-fx-background-color: #FFFFFF;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <content>
                                                 <TilePane fx:id="artistTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0">
                                                     <children>
@@ -189,7 +189,7 @@
                                                 </TilePane>
                                             </content>
                                         </ScrollPane>
-                              <ScrollPane fx:id="albumScroll" fitToHeight="true" fitToWidth="true" layoutX="10.0" layoutY="10.0" prefHeight="528.6666666666666" prefWidth="540.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <ScrollPane fx:id="albumScroll" fitToHeight="true" fitToWidth="true" layoutX="10.0" layoutY="10.0" prefHeight="528.6666666666666" prefWidth="540.6666666666666" style="-fx-background-color: #FFFFFF;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <content>
                                     <TilePane fx:id="albumTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0">
                                        <children>
@@ -230,7 +230,7 @@
                         </StackPane>
                     </children>
                 </AnchorPane>
-                <AnchorPane minWidth="100.0">
+                <AnchorPane minWidth="100.0" prefHeight="510.0" prefWidth="160.0">
                     <children>
                         <Label layoutX="14.0" layoutY="14.0" prefHeight="25.0" prefWidth="107.0" text="Details" textAlignment="CENTER">
                             <font>

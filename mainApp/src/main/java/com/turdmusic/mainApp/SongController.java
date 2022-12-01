@@ -196,7 +196,7 @@ public class SongController {
     }
     private void updateArtistTiles(ArrayList<Artist> artists){
         artistTiles.getChildren().removeAll(artistTiles.getChildren()); //Clear
-        
+
         for(Artist i: artists){
             if(i.getPicture() == null)
                 i.setPicture(new Image(getClass().getResourceAsStream("defaultphotos/artist_default.png")));
