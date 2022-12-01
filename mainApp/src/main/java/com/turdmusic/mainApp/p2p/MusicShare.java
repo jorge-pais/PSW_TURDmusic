@@ -9,6 +9,7 @@ public class MusicShare {
     public String title;
     public String artist;
     public String album;
+    public String ip_port; // <ip_address>:<port>
     public File file;
 
     public MusicShare(Music source){
