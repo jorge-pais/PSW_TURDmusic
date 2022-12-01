@@ -63,8 +63,6 @@ public class SongController {
     public TableColumn<Music, String> albumColumn;
     public TableColumn<Music, String> durationColumn;
 
-    //public TableView<Album> albumTable;
-
     public ScrollPane playlistScroll;
     public ScrollPane artistScroll;
     public ScrollPane albumScroll;
@@ -188,7 +186,6 @@ public class SongController {
     private void updateAlbumTiles(ArrayList<Album> albums){
         albumTiles.getChildren().removeAll(albumTiles.getChildren());
 
-
         for (Album i: albums) {
             i.findAlbumCover();
             if(i.getCoverArt() == null)
@@ -199,10 +196,7 @@ public class SongController {
     }
     private void updateArtistTiles(ArrayList<Artist> artists){
         artistTiles.getChildren().removeAll(artistTiles.getChildren()); //Clear
-        artistScroll.setFitToWidth(true);
-        artistScroll.setFitToHeight(true);
-        //artistTiles.boundsInParentProperty();
-        //artistScroll.boundsInParentProperty();
+        
         for(Artist i: artists){
             if(i.getPicture() == null)
                 i.setPicture(new Image(getClass().getResourceAsStream("defaultphotos/artist_default.png")));
