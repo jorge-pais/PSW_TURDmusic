@@ -1,4 +1,4 @@
-module com.turdmusic.javafxrefactor {
+module com.turdmusic.mainApp {
     requires javafx.controls;
     requires javafx.fxml;
 
@@ -18,4 +18,5 @@ module com.turdmusic.javafxrefactor {
     opens com.turdmusic.mainApp.core to com.fasterxml.jackson.databind;
     exports com.turdmusic.mainApp;
     exports com.turdmusic.mainApp.core to com.fasterxml.jackson.databind;
+    exports com.turdmusic.mainApp.core.models;
 }
