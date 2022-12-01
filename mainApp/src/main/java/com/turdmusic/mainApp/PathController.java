@@ -27,6 +27,7 @@ public class PathController {
 
     public void initialize(){
         addedFolder = false;
+        pathList.setItems(items);
 
         items.setAll(library.getLibraryPaths());
         // Allow multiple items to be selected

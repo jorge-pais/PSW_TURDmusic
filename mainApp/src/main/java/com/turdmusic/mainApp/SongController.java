@@ -62,8 +62,6 @@ public class SongController {
     public TableColumn<Music, String> albumColumn;
     public TableColumn<Music, String> durationColumn;
 
-    public TableView<Album> albumTable;
-
     public ScrollPane playlistScroll;
     public ScrollPane artistScroll;
     public ScrollPane albumScroll;
@@ -83,6 +81,8 @@ public class SongController {
 
         updateSongTable();
 
+
+        artistTiles.boundsInParentProperty();
 
         // Set up table event handlers to open selected songs on double click
         songTable.setOnMouseClicked(mouseEvent -> {
