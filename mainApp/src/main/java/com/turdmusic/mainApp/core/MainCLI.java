@@ -143,14 +143,13 @@ public class MainCLI {
                     break;
 
                 case "testDavid":
-                    AcoustidRequester test = new AcoustidRequester();
                     /*String url = "falhou";
                     for(Music i : library.getSongs()) {
                         url = test.getFingerprint(i);
                         break;
                     }*/
 
-                    System.out.println(test.fetchMetadata(library.getSongs().get(0)).getTitle());
+                    System.out.println(AcoustidRequester.fetchMetadata(library.getSongs().get(0)).getTitle());
 
 
 
