@@ -21,8 +21,8 @@ public class Library{
     private Album undefinedAlbum;
     private Artist undefinedArtist;
 
-    private final String defaultMediaPlayer = "/usr/bin/vlc";
-    private final String os = System.getProperty("os.name").toLowerCase();
+    public Settings settings;
+
     public ArrayList<Music> getSongs(){
         return songs;
     }
@@ -51,7 +51,6 @@ public class Library{
 
         System.out.println("Path added!");
     }
-
     public void removePath(String path){
         if(!libraryFilePaths.contains(path)) return;
         libraryFilePaths.remove(path);
@@ -112,7 +111,6 @@ public class Library{
 
         return false;
     }
-
     public ArrayList<Music>scanFilePath(String path, int startId){
         //
         // Search for music files in a given path and create artist and album
@@ -162,7 +160,6 @@ public class Library{
 
         return musicList;
     }
-
     private Music createSongMetadata(File fileHandle, int id) throws Exception{
         //
         // This function gets the metadata from a file and returns null if
@@ -204,8 +201,6 @@ public class Library{
     //
     // Repeating functions for simplicity
     // TODO: find a way to reuse the same function without major class alterations
-    // UNTESTED
-    //
     public ArrayList<Music> searchSongs(String searchTerm){
         String query = searchTerm.toLowerCase();
 
@@ -280,20 +275,26 @@ public class Library{
     public void openSongs(ArrayList<Music> songs){
         ProcessBuilder processBuilder = new ProcessBuilder();
 
-        StringBuilder commandString = new StringBuilder(defaultMediaPlayer);
+        StringBuilder commandString = new StringBuilder();
 
-        for (Music i: songs)
-            commandString.append(" \"").append(i.getFile().getPath()).append("\"");
+        String osName = System.getProperty("os.name").toLowerCase();
+        if(osName.startsWith("windows")) {
+            for (Music i: songs)
+                commandString.append("\"").append(i.getFile().getPath()).append("\" ");
+            // delete the last space char, this makes it work!
+            commandString.deleteCharAt(commandString.length()-1);
 
-
-        if (os.contains("windows")) {
-            processBuilder.command("cmd.exe", "/c", commandString.toString());
-        } else if (os.contains("linux")) {
-            processBuilder.command("bash", "-c", commandString.toString());
-        } else {
-            System.out.println("Operative system is not supported");
+            processBuilder.command(settings.getMediaPlayerExecutable(), commandString.toString());
         }
+        else if (osName.contains("linux")) {
+            commandString.append(settings.getMediaPlayerExecutable());
+            for (Music i: songs)
+                commandString.append(" \"").append(i.getFile().getPath()).append("\"");
 
+            processBuilder.command("bash", "-c", commandString.toString());
+        }
+        else if (osName.contains("macos"))
+            System.out.println("error, unsupported");
 
         try {
             Process process = processBuilder.start();
