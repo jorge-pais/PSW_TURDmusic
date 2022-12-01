@@ -13,6 +13,7 @@ module com.turdmusic.mainApp {
     requires java.net.http;
     requires java.prefs;
     requires com.google.gson;
+    requires java.sql;
 
     opens com.turdmusic.mainApp to javafx.fxml;
     opens com.turdmusic.mainApp.core to com.fasterxml.jackson.databind;
