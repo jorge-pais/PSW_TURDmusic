@@ -14,12 +14,13 @@ public class postgresql{
 
         /* Testes com sucesso para uma determinada ligacao */
 
-        Statement stmt = db.newMusicDB(conn, "56", "46");
+
+        Statement stmt = db.newObjectDB(conn, "albuns", "12234", "Renato");
         // Accesses the result
-        int last_inserted_person_id = -1;
+        String last_inserted_person_id = null;
         ResultSet last_inserted_person = stmt.getResultSet();
         if(last_inserted_person.next()) {
-            //last_inserted_person_id = last_inserted_person.getString(1, );
+            last_inserted_person_id = last_inserted_person.getString(1);
         }
         System.out.println(last_inserted_person_id);
 

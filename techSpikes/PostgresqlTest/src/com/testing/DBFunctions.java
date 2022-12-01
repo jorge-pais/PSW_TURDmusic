@@ -50,30 +50,23 @@ public class DBFunctions {
     /* ---------------------- The following functions represent administrative privileges ----------------------- */
     /*                             (adding members, deleting members, updating members)                           */
 
-    /* Permite verificacao da existencia de determinados objetos na base de dados                                 */
-    public Statement SearchDBTable(Connection c, String TableName){
 
-        Statement stmt;
-        try {
-
-            stmt = c.createStatement();
-            String sql = String.format("SELECT * FROM %s;", TableName);
-            stmt.executeQuery(sql);
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+    // Adicionar as ligacoes com outros objetos
+    /* Sera passado o objeto musics. Devemos pesquisar antes de poder adicionar o objeto                          */
+    public Statement newObjectDB(Connection c, String table, String id, String name){
+        String column1, column2;
+        switch (table) {
+            case "musics": column1 = "mid"; column2 = "music_name"; break;
+            case "artists": column1 = "artist_id"; column2 = "artist_name"; break;
+            case "albuns": column1 = "album_id"; column2 = "album_name"; break;
+            default: return null;
         }
 
-        return stmt;
-    }
-
-    /* Sera passado o objeto musics. Devemos pesquisar antes de poder adicionar o objeto                          */
-    public Statement newMusicDB(Connection c, String mid, String music_name){
         Statement stmt;
         try {
 
             stmt = c.createStatement();
-            String sql = String.format("INSERT INTO musics (mid, music_name) VALUES ('%s','%s') RETURNING mid;", mid, music_name);
+            String sql = String.format("INSERT INTO %s (%s, %s) VALUES ('%s','%s') RETURNING %s;", table, column1, column2, id, name, column1);
 
             stmt.execute(sql);
 
@@ -84,15 +77,17 @@ public class DBFunctions {
         return stmt;
     }
 
-    /* Updates already existing member to the table 'person'. return - object statement.                          */
-    public Statement updateMemberDB(Connection c, String nome, String pais, int identifier){
+    // Login
+
+    /* Permite verificacao da existencia de determinados objetos na base de dados                                 */
+    public Statement SearchDBTable(Connection c, String TableName){
 
         Statement stmt;
         try {
 
             stmt = c.createStatement();
-            String sql = String.format("UPDATE person SET name='%s', country='%s' WHERE id = %d;", nome, pais, identifier);
-            stmt.executeUpdate(sql);
+            String sql = String.format("SELECT * FROM %s;", TableName);
+            stmt.executeQuery(sql);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -117,5 +112,22 @@ public class DBFunctions {
         return stmt;
     }
 
+
+    /* Updates already existing member to the table 'person'. return - object statement.                          */
+    public Statement updateMemberDB(Connection c, String nome, String pais, int identifier){
+
+        Statement stmt;
+        try {
+
+            stmt = c.createStatement();
+            String sql = String.format("UPDATE person SET name='%s', country='%s' WHERE id = %d;", nome, pais, identifier);
+            stmt.executeUpdate(sql);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return stmt;
+    }
 }
 
