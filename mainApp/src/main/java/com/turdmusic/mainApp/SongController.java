@@ -22,6 +22,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -70,6 +71,7 @@ public class SongController {
 
     public HBox hBoxPage;
     public VBox vBoxPage;
+    public Text textPage;
     public void initialize(){
         // Allow multiple table items to be selected
         songTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -83,14 +85,33 @@ public class SongController {
 
         updateSongTable();
 
-
-        artistTiles.boundsInParentProperty();
+        //artistTiles.boundsInParentProperty();
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem mi1 = new MenuItem("Delete");
+        //mi1.setOnAction(e -> System.out.println("Item 1"));
+        MenuItem mi2 = new MenuItem("Edit");
+        MenuItem mi3 = new MenuItem("Add to");
+        MenuItem mi4 = new MenuItem("Go to Album");
+        MenuItem mi5 = new MenuItem("Go to Artist");
+        //mi2.setOnAction(e -> System.out.println("Item 2"));
+        contextMenu.getItems().addAll(mi1, mi2, mi3, mi4, mi5);
 
         // Set up table event handlers to open selected songs on double click
         songTable.setOnMouseClicked(mouseEvent -> {
-            if(mouseEvent.getClickCount() == 2){    // Double click
+            MouseButton button = mouseEvent.getButton();
+            if((mouseEvent.getClickCount() == 2) && button==MouseButton.PRIMARY){    // Double click
                 openSelectedSongs();
             }
+            if((button==MouseButton.SECONDARY)){
+                contextMenu.show(songTable, mouseEvent.getScreenX(), mouseEvent.getScreenY());
+            }
+        });
+
+        mi4.setOnAction(mouseEvent -> {
+            hBoxPage.toFront();
+        });
+        mi5.setOnAction(mouseEvent -> {
+            hBoxPage.toFront();
         });
         songTable.setOnKeyPressed(keyEvent -> {
             if(keyEvent.getCode() == KeyCode.ENTER){ // Enter
@@ -98,12 +119,7 @@ public class SongController {
             }
         });
 
-        songTable.setOnMouseClicked(mouseEvent -> {
-            MouseButton button = mouseEvent.getButton();
-            if(button==MouseButton.SECONDARY){;
-                hBoxPage.toFront();
-            }
-        });
+
         // Left pane button event handlers
         songsLabelButton.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getClickCount() == 1){

@@ -238,7 +238,7 @@
                                                       <VBox alignment="CENTER">
                                                          <children>
                                                             <Pane prefHeight="10.0" prefWidth="195.0" />
-                                                            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" textAlignment="CENTER" wrappingWidth="199.91449546813965" />
+                                                            <Text fx:id="textPage" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" textAlignment="CENTER" wrappingWidth="199.91449546813965" />
                                                             <TextArea opacity="0.0" prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: FFFFFF;" />
                                                             <Pane prefHeight="10.0" prefWidth="195.0" />
                                                          </children>
