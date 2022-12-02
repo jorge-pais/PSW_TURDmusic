@@ -11,6 +11,7 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -26,6 +27,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <VBox minHeight="300.0" minWidth="900.0" prefHeight="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.turdmusic.mainApp.SongController">
     <children>
@@ -151,9 +153,9 @@
                             <children>
                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                     <children>
-                                        <ScrollPane fx:id="playlistScroll" fitToHeight="true" fitToWidth="true" prefHeight="518.0" prefWidth="530.6666666666666" style="-fx-background-color: #FFFFFF;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                        <ScrollPane fx:id="playlistScroll" fitToHeight="true" fitToWidth="true" prefHeight="518.0" prefWidth="530.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <content>
-                                                <TilePane fx:id="playlistTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0">
+                                                <TilePane fx:id="playlistTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0" style="-fx-background-color: FFFFFF;">
                                                     <children>
                                                         <VBox alignment="CENTER" layoutX="175.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0">
                                                             <children>
@@ -165,9 +167,9 @@
                                                 </TilePane>
                                             </content>
                                         </ScrollPane>
-                                        <ScrollPane fx:id="artistScroll" fitToHeight="true" fitToWidth="true" prefHeight="518.0" prefWidth="530.6666666666666" style="-fx-background-color: #FFFFFF;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                        <ScrollPane fx:id="artistScroll" fitToHeight="true" fitToWidth="true" prefHeight="518.0" prefWidth="530.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <content>
-                                                <TilePane fx:id="artistTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0">
+                                                <TilePane fx:id="artistTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0" style="-fx-background-color: FFFFFF;">
                                                     <children>
                                                         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="200.0">
                                                             <children>
@@ -189,9 +191,9 @@
                                                 </TilePane>
                                             </content>
                                         </ScrollPane>
-                              <ScrollPane fx:id="albumScroll" fitToHeight="true" fitToWidth="true" layoutX="10.0" layoutY="10.0" prefHeight="528.6666666666666" prefWidth="540.6666666666666" style="-fx-background-color: #FFFFFF;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <ScrollPane fx:id="albumScroll" fitToHeight="true" fitToWidth="true" layoutX="10.0" layoutY="10.0" prefHeight="528.6666666666666" prefWidth="540.6666666666666" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <content>
-                                    <TilePane fx:id="albumTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0">
+                                    <TilePane fx:id="albumTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0" style="-fx-background-color: FFFFFF;">
                                        <children>
                                           <VBox alignment="CENTER" prefHeight="200.0" prefWidth="200.0">
                                              <children>
@@ -224,6 +226,50 @@
                                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                             </columnResizePolicy>
                                         </TableView>
+                              <HBox fx:id="hBoxPage" prefHeight="514.6666666666666" prefWidth="531.3333333333334" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <Pane prefHeight="515.0" prefWidth="10.0" style="-fx-background-color: FFFFFF;" />
+                                    <VBox fx:id="vBoxPage" prefHeight="514.6666666666666" prefWidth="531.3333333333334">
+                                       <children>
+                                          <HBox alignment="CENTER" style="-fx-background-color: FFFFFF;">
+                                             <children>
+                                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="207.0">
+                                                   <children>
+                                                      <VBox alignment="CENTER">
+                                                         <children>
+                                                            <Pane prefHeight="10.0" prefWidth="195.0" />
+                                                            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" textAlignment="CENTER" wrappingWidth="199.91449546813965" />
+                                                            <TextArea opacity="0.0" prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: FFFFFF;" />
+                                                            <Pane prefHeight="10.0" prefWidth="195.0" />
+                                                         </children>
+                                                      </VBox>
+                                                   </children>
+                                                </VBox>
+                                                <Pane prefHeight="200.0" prefWidth="142.0" />
+                                                <ImageView fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@defaultphotos/album_default.png" />
+                                                   </image>
+                                                   <HBox.margin>
+                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                   </HBox.margin>
+                                                </ImageView>
+                                             </children>
+                                          </HBox>
+                                          <TableView editable="true" prefHeight="313.0" prefWidth="531.0">
+                                            <columns>
+                                              <TableColumn prefWidth="75.0" text="Titel" />
+                                              <TableColumn prefWidth="75.0" text="Duration" />
+                                            </columns>
+                                             <columnResizePolicy>
+                                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                             </columnResizePolicy>
+                                          </TableView>
+                                       </children>
+                                    </VBox>
+                                    <Pane layoutX="10.0" layoutY="10.0" prefHeight="515.0" prefWidth="10.0" style="-fx-background-color: FFFFFF;" />
+                                 </children>
+                              </HBox>
                                     </children>
                                 </AnchorPane>
                             </children>
