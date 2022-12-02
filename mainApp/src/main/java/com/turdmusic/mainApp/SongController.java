@@ -16,13 +16,13 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.TilePane;
-import javafx.scene.layout.VBox;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -68,6 +68,9 @@ public class SongController {
     public TilePane artistTiles;
     public TilePane albumTiles;
 
+    public HBox hBoxPage;
+    public VBox vBoxPage;
+    public Text textPage;
     public void initialize(){
         // Allow multiple table items to be selected
         songTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -81,20 +84,40 @@ public class SongController {
 
         updateSongTable();
 
-
-        artistTiles.boundsInParentProperty();
+        //artistTiles.boundsInParentProperty();
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem mi1 = new MenuItem("Delete");
+        //mi1.setOnAction(e -> System.out.println("Item 1"));
+        MenuItem mi2 = new MenuItem("Edit");
+        MenuItem mi3 = new MenuItem("Add to");
+        MenuItem mi4 = new MenuItem("Go to Album");
+        MenuItem mi5 = new MenuItem("Go to Artist");
+        //mi2.setOnAction(e -> System.out.println("Item 2"));
+        contextMenu.getItems().addAll(mi1, mi2, mi3, mi4, mi5);
 
         // Set up table event handlers to open selected songs on double click
         songTable.setOnMouseClicked(mouseEvent -> {
-            if(mouseEvent.getClickCount() == 2){    // Double click
+            MouseButton button = mouseEvent.getButton();
+            if((mouseEvent.getClickCount() == 2) && button==MouseButton.PRIMARY){    // Double click
                 openSelectedSongs();
             }
+            if((button==MouseButton.SECONDARY)){
+                contextMenu.show(songTable, mouseEvent.getScreenX(), mouseEvent.getScreenY());
+            }
+        });
+
+        mi4.setOnAction(mouseEvent -> {
+            hBoxPage.toFront();
+        });
+        mi5.setOnAction(mouseEvent -> {
+            hBoxPage.toFront();
         });
         songTable.setOnKeyPressed(keyEvent -> {
             if(keyEvent.getCode() == KeyCode.ENTER){ // Enter
                 openSelectedSongs();
             }
         });
+
 
         // Left pane button event handlers
         songsLabelButton.setOnMouseClicked(mouseEvent -> {
@@ -146,34 +169,31 @@ public class SongController {
     }
 
     private void changeToSongView(){
+        ChangeView();
         songTable.toFront();
-        albumsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
-        songsLabelButton.setFont(Font.font("System",FontWeight.BOLD, FontPosture.REGULAR, 18));
-        artistsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
-        playlistsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
+        songsLabelButton.setFont(Font.font("System", FontWeight.BOLD, FontPosture.REGULAR, 18));
     }
     private void changeToAlbumView(){
-        albumsLabelButton.setFont(Font.font("System",FontWeight.BOLD, FontPosture.REGULAR, 18));
-        songsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
-        artistsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
-        playlistsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
+        ChangeView();
         albumScroll.toFront();
+        albumsLabelButton.setFont(Font.font("System", FontWeight.BOLD, FontPosture.REGULAR, 18));
     }
     private void changeToArtistView(){
+        ChangeView();
         artistScroll.toFront();
-        albumsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
-        songsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
-        artistsLabelButton.setFont(Font.font("System",FontWeight.BOLD, FontPosture.REGULAR, 18));
-        playlistsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
+        artistsLabelButton.setFont(Font.font("System", FontWeight.BOLD, FontPosture.REGULAR, 18));
     }
     private void changeToPlaylistView(){
+        ChangeView();
         playlistScroll.toFront();
-        albumsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
-        songsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
-        artistsLabelButton.setFont(Font.font("System",FontWeight.NORMAL, FontPosture.REGULAR, 18));
-        playlistsLabelButton.setFont(Font.font("System",FontWeight.BOLD, FontPosture.REGULAR, 18));
+        playlistsLabelButton.setFont(Font.font("System", FontWeight.BOLD, FontPosture.REGULAR, 18));
     }
-
+    private void ChangeView() {
+        albumsLabelButton.setFont(Font.font("System", FontWeight.NORMAL, FontPosture.REGULAR, 18));
+        songsLabelButton.setFont(Font.font("System", FontWeight.NORMAL, FontPosture.REGULAR, 18));
+        artistsLabelButton.setFont(Font.font("System", FontWeight.NORMAL, FontPosture.REGULAR, 18));
+        playlistsLabelButton.setFont(Font.font("System", FontWeight.NORMAL, FontPosture.REGULAR, 18));
+    }
     private void updateSongTable(){
         ObservableList<Music> songsToAdd = FXCollections.observableArrayList();
         songsToAdd.addAll(library.getSongs());
