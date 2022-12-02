@@ -14,6 +14,8 @@ module com.turdmusic.mainApp {
     requires java.prefs;
     requires com.google.gson;
     requires java.sql;
+    //requires org.junit.jupiter;
+
 
     opens com.turdmusic.mainApp to javafx.fxml;
     opens com.turdmusic.mainApp.core to com.fasterxml.jackson.databind;

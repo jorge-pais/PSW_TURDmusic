@@ -129,32 +129,33 @@ public class Library{
                 musicList.addAll(scanResult);
                 songsAdded += scanResult.size();
             }
-            else
-            if(Utils.checkFileExtension(file.getName(), Utils.fileType.Audio)) { // check for a valid music file
-                for (Music i: this.songs) // Prevent songs from being added twice
-                    if(file.getPath().equals(i.getFile().getPath()))
-                        return null;
-                Music song;
+            else {
+                if (Utils.checkFileExtension(file.getName(), Utils.fileType.Audio)) { // check for a valid music file
+                    for (Music i : this.songs) // Prevent songs from being added twice
+                        if (file.getPath().equals(i.getFile().getPath()))
+                            return null;
+                    Music song;
 
-                try { // this is where we get the metadata
-                    song = createSongMetadata(file, songsAdded + startId);
-                } catch (Exception e){
-                    // if the function call fails we can assume that no metadata is defined in the file
-                    //System.out.println("Error getting metadata, using undefined parameters");
-                    if(undefinedArtist == null && undefinedAlbum == null){
-                        undefinedArtist = new Artist("Undefined", this.artists.size());
-                        undefinedAlbum = new Album("Undefined", undefinedArtist, this.albums.size());
-                        undefinedArtist.addAlbum(undefinedAlbum);
-                        this.artists.add(undefinedArtist);
-                        this.albums.add(undefinedAlbum);
+                    try { // this is where we get the metadata
+                        song = createSongMetadata(file, songsAdded + startId);
+                    } catch (Exception e) {
+                        // if the function call fails we can assume that no metadata is defined in the file
+                        //System.out.println("Error getting metadata, using undefined parameters");
+                        if (undefinedArtist == null && undefinedAlbum == null) {
+                            undefinedArtist = new Artist("Undefined", this.artists.size());
+                            undefinedAlbum = new Album("Undefined", undefinedArtist, this.albums.size());
+                            undefinedArtist.addAlbum(undefinedAlbum);
+                            this.artists.add(undefinedArtist);
+                            this.albums.add(undefinedAlbum);
+                        }
+                        int track = undefinedAlbum.getTracklist().size() + 1;
+                        song = new Music(file.getName(), this.songs.size(), file, undefinedArtist, undefinedAlbum, track);
+                        undefinedArtist.getSongs().add(song);
+                        undefinedAlbum.getTracklist().add(song);
                     }
-                    int track = undefinedAlbum.getTracklist().size() + 1;
-                    song = new Music(file.getName(), this.songs.size(), file, undefinedArtist, undefinedAlbum, track);
-                    undefinedArtist.getSongs().add(song);
-                    undefinedAlbum.getTracklist().add(song);
+                    songsAdded++;
+                    musicList.add(song);
                 }
-                songsAdded++;
-                musicList.add(song);
             }
         }
 
