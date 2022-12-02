@@ -16,7 +16,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
-import javafx.embed.swing.SwingFXUtils;
 
 /**
     Album Class which holds all album data and relations with their respective songs and artists
@@ -28,7 +27,7 @@ public class Album {
     public int id;
 
     private String title;
-    private ImageInfo coverArt;
+    private ImageInfo imageInfo;
     private Date releaseDate; // Maybe just save the year, many albums do not include the actual release date
 
     private Artist artist;
@@ -55,9 +54,10 @@ public class Album {
     }
     public void removeSong(Music song){ tracklist.remove(song); }
     public ArrayList<Music> getTracklist(){ return tracklist; }
-    public void setCoverArt(BufferedImage image){
+    @JsonIgnore
+    public void setPicture(BufferedImage image){
         try {
-            this.coverArt = new ImageInfo(image, "album_" + id);
+            this.imageInfo = new ImageInfo(image, "album_" + id);
         }catch (Exception e){
             System.out.println("Error setting coverArt");
             e.printStackTrace();
@@ -65,12 +65,15 @@ public class Album {
     }
     @JsonIgnore
     public Image getCoverArt(){
-        if(coverArt != null)
-            return this.coverArt.getImageObj();
+        if(imageInfo != null)
+            return this.imageInfo.getImageObj();
         else
             return new Image(getClass().getResourceAsStream("/com/turdmusic/mainApp/defaultphotos/album_default.png"));
     }
-    public ImageInfo getImageInfo(){ return this.coverArt; }
+
+    // This get/set pair is used for jackson serializing
+    public ImageInfo getImageInfo(){ return this.imageInfo; }
+    public void setImageInfo(ImageInfo imageInfo){ this.imageInfo = imageInfo; }
 
     /**
         This function sorts the tracklist array
@@ -101,7 +104,7 @@ public class Album {
 
                     int h = image.getHeight(), w = image.getWidth();
                     if (Math.abs((float) (w - h) / w) <= 0.02) { // If the image is at least "98% square"
-                        this.coverArt = new ImageInfo(child);
+                        this.imageInfo = new ImageInfo(child);
                         return;
                     }
                 }
@@ -115,13 +118,11 @@ public class Album {
             Artwork art = tag.getFirstArtwork();
             BufferedImage image = Images.getImage(art);
 
-            assert image != null;
-            setCoverArt(image);
+            setPicture(image);
 
         }catch (Exception e){
             System.out.println("Something went wrong when fetching the images");
-            e.printStackTrace();
-            System.exit(1);
+            this.imageInfo = null;
         }
     }
 }

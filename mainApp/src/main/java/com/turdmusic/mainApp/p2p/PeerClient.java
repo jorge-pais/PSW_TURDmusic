@@ -8,9 +8,9 @@ public class PeerClient {
 
     //Methods
     public ArrayList<MusicShare> getMusicListings;
+/*
+    public MusicShare getFromPeer(String ip, String port){
 
-    //public ArrayList<MusicShare> getMusicFromPeer(String ipAddress, int port, ){
-
-    //}
+    }*/
 
 }

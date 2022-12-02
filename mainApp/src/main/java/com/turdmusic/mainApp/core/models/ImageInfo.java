@@ -31,6 +31,7 @@ public class ImageInfo {
         super();
     }
     // Create an image file within the settings
+    @JsonIgnore
     public ImageInfo(BufferedImage image, String fileName) throws Exception{
         String filePath;
         String osName = System.getProperty("os.name").toLowerCase();
@@ -65,4 +66,5 @@ public class ImageInfo {
     }
 
     public File getPath(){ return this.path; }
+    public void setPath(File path){ this.path = path; }
 }

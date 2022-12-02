@@ -241,7 +241,14 @@ public class SongController {
         library.saveLibrary(path);
     }
     public void loadDefaultLibrary() throws Exception{
-        String path = new String(library.settings.getSavePath() + "library.json");
+        String osName = System.getProperty("os.name").toLowerCase();
+        String path;
+        if(osName.startsWith("windows"))
+            path = new String(library.settings.getSavePath() + "\\library.json");
+        else if (osName.contains("linux"))
+            path = new String(library.settings.getSavePath() + "/library.json");
+        else
+            throw new Exception();
         library = Library.loadLibrary(path);
     }
 
