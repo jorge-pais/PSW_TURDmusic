@@ -48,14 +48,19 @@ public class Library{
     }
 
     public void addPath(String path){
+        if(this.libraryFilePaths.contains(path))
+            return;
         libraryFilePaths.add(path);
 
         ArrayList<Music> scanResult = scanFilePath(path, this.songs.size());
         if(scanResult != null)
             songs.addAll(scanResult);
 
-        for (Album i: this.albums)
+        // Update the album listings
+        for (Album i: this.albums) {
+            i.findAlbumCover();
             i.sortTrackList();
+        }
 
         System.out.println("Path added!");
     }
@@ -212,7 +217,7 @@ public class Library{
         TODO: find a way to reuse the same function without major class alterations
     */
     public ArrayList<Music> searchSongs(String searchTerm){
-        String query = searchTerm.toLowerCase();
+        String query = searchTerm.toLowerCase().replaceFirst("\\s++$", "");
 
         ArrayList<Music> output = new ArrayList<>();
 
@@ -225,7 +230,7 @@ public class Library{
         return null;
     }
     public ArrayList<Album> searchAlbums(String searchTerm){
-        String query = searchTerm.toLowerCase();
+        String query = searchTerm.toLowerCase().replaceFirst("\\s++$", "");
 
         ArrayList<Album> output = new ArrayList<>();
 
@@ -238,7 +243,7 @@ public class Library{
         return null;
     }
     public ArrayList<Artist> searchArtists(String searchTerm){
-        String query = searchTerm.toLowerCase();
+        String query = searchTerm.toLowerCase().replaceFirst("\\s++$", "");
 
         ArrayList<Artist> output = new ArrayList<>();
 
@@ -251,7 +256,7 @@ public class Library{
         return null;
     }
     public ArrayList<Playlist> searchPlaylist(String searchTerm){
-        String query = searchTerm.toLowerCase();
+        String query = searchTerm.toLowerCase().replaceFirst("\\s++$", "");
 
         ArrayList<Playlist> output = new ArrayList<>();
 
@@ -272,6 +277,7 @@ public class Library{
 
         System.out.println("Library saved to file!");
     }
+
 
     // Add a check function upon loading the library
     public static Library loadLibrary(String filePath) throws Exception{

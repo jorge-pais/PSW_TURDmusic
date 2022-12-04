@@ -14,6 +14,7 @@ import org.jaudiotagger.tag.images.Images;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -67,8 +68,11 @@ public class Album {
     public Image getCoverArt(){
         if(imageInfo != null)
             return this.imageInfo.getImageObj();
-        else
-            return new Image(getClass().getResourceAsStream("/com/turdmusic/mainApp/defaultphotos/album_default.png"));
+        else {
+            InputStream imageStream = getClass().getResourceAsStream("/com/turdmusic/mainApp/defaultphotos/album_default.png");
+            assert imageStream != null;
+            return new Image(imageStream);
+        }
     }
 
     // This get/set pair is used for jackson serializing
