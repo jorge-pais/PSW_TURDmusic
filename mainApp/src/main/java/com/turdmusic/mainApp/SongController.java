@@ -1,6 +1,7 @@
 package com.turdmusic.mainApp;
 
 import com.turdmusic.mainApp.core.*;
+import javafx.beans.Observable;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -31,6 +32,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 //
@@ -69,13 +71,17 @@ public class SongController {
     public TilePane artistTiles;
     public TilePane albumTiles;
 
-    public HBox hBoxPage;
-    public VBox vBoxPage;
-    public Text textPage;
+    public HBox pageHBox;
+    public VBox pageVBox;
+    public Text pageText;
+    public TableView<Music> pageTable;
+    public TableColumn<Music, String> pageTitleColumn;
+    public TableColumn<Music, String> pageDurationColumn;
+    public ImageView pageImage;
     public void initialize(){
         // Allow multiple table items to be selected
         songTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        artistTiles.setStyle("-fx-background-color: #FFFFFF;");
+        //artistTiles.setStyle("-fx-background-color: #FFFFFF;");
 
         // Set up the song table columns (really important Lambda expressions)
         titleColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getTitle()));
@@ -83,17 +89,15 @@ public class SongController {
         albumColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getAlbum().getTitle()));
         durationColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getFormattedTrackLength()));
 
+
         updateSongTable();
 
-        //artistTiles.boundsInParentProperty();
         ContextMenu contextMenu = new ContextMenu();
         MenuItem mi1 = new MenuItem("Delete");
-        //mi1.setOnAction(e -> System.out.println("Item 1"));
         MenuItem mi2 = new MenuItem("Edit");
         MenuItem mi3 = new MenuItem("Add to");
         MenuItem mi4 = new MenuItem("Go to Album");
         MenuItem mi5 = new MenuItem("Go to Artist");
-        //mi2.setOnAction(e -> System.out.println("Item 2"));
         contextMenu.getItems().addAll(mi1, mi2, mi3, mi4, mi5);
 
         // Set up table event handlers to open selected songs on double click
@@ -107,18 +111,46 @@ public class SongController {
             }
         });
 
+        //go to album
         mi4.setOnAction(mouseEvent -> {
-            hBoxPage.toFront();
+            pageHBox.toFront();
+            ObservableList<Music> songsSelected = songTable.getSelectionModel().getSelectedItems();
+            if(songsSelected.size()>0){
+                ArrayList<Music> songs = new ArrayList<>(songsSelected);
+                Album i = songs.get(0).getAlbum();
+                //if(i.getCoverArt() == null)
+                //    i.setCoverArt(new Image(getClass().getResourceAsStream("defaultphotos/album_default.png")));
+                pageImage.setImage(i.getCoverArt());
+                pageText.setText(i.getTitle());
+                pageTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+                //pageTitleColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getTitle()));
+                //pageDurationColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getFormattedTrackLength()));
+
+            }
         });
         mi5.setOnAction(mouseEvent -> {
-            hBoxPage.toFront();
+            pageHBox.toFront();
+            ObservableList<Music> songsSelected = songTable.getSelectionModel().getSelectedItems();
+            if(songsSelected.size()>0){
+                ArrayList<Music> songs = new ArrayList<>(songsSelected);
+                Artist i = songs.get(0).getArtist();
+                pageImage.setImage(i.getPicture());
+                pageText.setText(i.getName());
+                //tablePage.
+            }
         });
-        songTable.setOnKeyPressed(keyEvent -> {
+        /*songTable.setOnKeyPressed(keyEvent -> {
             if(keyEvent.getCode() == KeyCode.ENTER){ // Enter
                 openSelectedSongs();
             }
-        });
+        });*/
 
+        albumTiles.setOnMouseClicked(mouseEvent -> {
+            MouseButton button = mouseEvent.getButton();
+            if((button==MouseButton.SECONDARY)){
+                contextMenu.show(songTable, mouseEvent.getScreenX(), mouseEvent.getScreenY());
+            }
+        });
 
         // Left pane button event handlers
         songsLabelButton.setOnMouseClicked(mouseEvent -> {

@@ -53,7 +53,9 @@ public class PathController {
 
         items.removeAll(selectedItems);
         pathList.setItems(items); //Update list
-
+        if(items.isEmpty()){
+            addedFolder = false;
+        }
         for (String i: selectedItems)
             library.removePath(i);
     }

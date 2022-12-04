@@ -17,7 +17,6 @@ public class HelloController {
     protected Scene scene;
     public static Library library;
 
-    //public StackPane stackPane;
 
     public void initialize(){
         // When this controller's scene is loaded into the stage

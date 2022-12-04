@@ -15,10 +15,11 @@ public class PreferenceController {
     public static Library library;
     public static Settings settings;
 
+    public Stage newStage;
     @FXML
     protected void openPathManager() throws IOException {
         // Create a new stage (window) and load the file selection scene
-        Stage newStage = new Stage();
+        newStage = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("pathManager.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load(), 600, 400);
@@ -33,7 +34,11 @@ public class PreferenceController {
         newStage.showAndWait();
     }
 
-    protected void closePathManager() throws IOException{
+    public void closePathManager(){
+        //newStage.close();
+    }
+
+    public void applyPreference(){
 
     }
 
