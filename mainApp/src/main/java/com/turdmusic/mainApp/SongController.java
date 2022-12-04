@@ -4,19 +4,16 @@ import com.turdmusic.mainApp.core.*;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
@@ -27,11 +24,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Objects;
 
 //
 // Song Controller Class
@@ -94,17 +89,7 @@ public class SongController {
         MenuItem mi5 = new MenuItem("Go to Artist");
         //mi2.setOnAction(e -> System.out.println("Item 2"));
         contextMenu.getItems().addAll(mi1, mi2, mi3, mi4, mi5);
-
-        // Set up table event handlers to open selected songs on double click
-        songTable.setOnMouseClicked(mouseEvent -> {
-            MouseButton button = mouseEvent.getButton();
-            if((mouseEvent.getClickCount() == 2) && button==MouseButton.PRIMARY){    // Double click
-                openSelectedSongs();
-            }
-            if((button==MouseButton.SECONDARY)){
-                contextMenu.show(songTable, mouseEvent.getScreenX(), mouseEvent.getScreenY());
-            }
-        });
+        songTable.setContextMenu(contextMenu);
 
         mi4.setOnAction(mouseEvent -> {
             hBoxPage.toFront();
@@ -112,12 +97,23 @@ public class SongController {
         mi5.setOnAction(mouseEvent -> {
             hBoxPage.toFront();
         });
+
+        // Set up table event handlers to open selected songs on double click
+        songTable.setOnMouseClicked(mouseEvent -> {
+            MouseButton button = mouseEvent.getButton();
+            if((mouseEvent.getClickCount() == 2) && button==MouseButton.PRIMARY){    // Double click
+                openSelectedSongs();
+            }
+            /*if((button==MouseButton.SECONDARY)){ // this is not necessary, and adds unnecessary complexity
+                                                   // setContextMenu option works better
+                contextMenu.show(songTable, mouseEvent.getScreenX(), mouseEvent.getScreenY());
+            }*/
+        });
         songTable.setOnKeyPressed(keyEvent -> {
             if(keyEvent.getCode() == KeyCode.ENTER){ // Enter
                 openSelectedSongs();
             }
         });
-
 
         // Left pane button event handlers
         songsLabelButton.setOnMouseClicked(mouseEvent -> {
@@ -147,9 +143,10 @@ public class SongController {
             }
         });
     }
+
     // TODO: FIND WHAT'S MAKING THE TILES WIERD
     // TODO: FIND HOW TO MAKE THE TILEPANE AND SCROLLPANE WORK
-    public VBox makeImageTile(Image image, String label){
+    public VBox makeImageTile(Image image, String labelText){
         VBox vBoxout = new VBox();
         vBoxout.prefHeight(200);
         vBoxout.prefWidth(200);
@@ -164,36 +161,40 @@ public class SongController {
         picture.setFitWidth(150);
         vBoxout.getChildren().add(picture);
 
-        vBoxout.getChildren().add(new Label(label));
+        Label label = new Label(labelText);
+        label.setMaxWidth(150);
+
+        vBoxout.getChildren().add(label);
         return vBoxout;
     }
 
     private void changeToSongView(){
-        ChangeView();
+        changeView();
         songTable.toFront();
         songsLabelButton.setFont(Font.font("System", FontWeight.BOLD, FontPosture.REGULAR, 18));
     }
     private void changeToAlbumView(){
-        ChangeView();
+        changeView();
         albumScroll.toFront();
         albumsLabelButton.setFont(Font.font("System", FontWeight.BOLD, FontPosture.REGULAR, 18));
     }
     private void changeToArtistView(){
-        ChangeView();
+        changeView();
         artistScroll.toFront();
         artistsLabelButton.setFont(Font.font("System", FontWeight.BOLD, FontPosture.REGULAR, 18));
     }
     private void changeToPlaylistView(){
-        ChangeView();
+        changeView();
         playlistScroll.toFront();
         playlistsLabelButton.setFont(Font.font("System", FontWeight.BOLD, FontPosture.REGULAR, 18));
     }
-    private void ChangeView() {
+    private void changeView() {
         albumsLabelButton.setFont(Font.font("System", FontWeight.NORMAL, FontPosture.REGULAR, 18));
         songsLabelButton.setFont(Font.font("System", FontWeight.NORMAL, FontPosture.REGULAR, 18));
         artistsLabelButton.setFont(Font.font("System", FontWeight.NORMAL, FontPosture.REGULAR, 18));
         playlistsLabelButton.setFont(Font.font("System", FontWeight.NORMAL, FontPosture.REGULAR, 18));
     }
+
     private void updateSongTable(){
         ObservableList<Music> songsToAdd = FXCollections.observableArrayList();
         songsToAdd.addAll(library.getSongs());
