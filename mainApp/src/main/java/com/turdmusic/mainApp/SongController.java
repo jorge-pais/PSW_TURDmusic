@@ -110,7 +110,7 @@ public class SongController {
             if((mouseEvent.getClickCount() == 2) && button==MouseButton.PRIMARY){    // Double click
                 openSelectedSongs();
             }
-            /*if((button==MouseButton.SECONDARY)){ // this is not necessary, and adds unnecessary complexity
+            if((button==MouseButton.SECONDARY)){ // this is not necessary, and adds unnecessary complexity
                                                    // setContextMenu option works better
                 contextMenu.show(songTable, mouseEvent.getScreenX(), mouseEvent.getScreenY());
             }
@@ -173,9 +173,6 @@ public class SongController {
             if (mouseEvent.getClickCount() == 1) {
                 updateArtistTiles(library.getArtists());
                 changeToArtistView();
-
-                for (Album i : library.getAlbums())
-                    System.out.println(i.id + "-->" + i.getTitle());
             }
         });
         playlistsLabelButton.setOnMouseClicked(mouseEvent -> {
@@ -236,6 +233,7 @@ public class SongController {
         playlistsLabelButton.setFont(Font.font("System", FontWeight.NORMAL, FontPosture.REGULAR, 18));
     }
 
+    /* TODO: INSTEAD OF ALWAYS UPDATING THE VIEW, CHECK FOR CHANGES */
     private void updateSongTable(){
         ObservableList<Music> songsToAdd = FXCollections.observableArrayList();
         songsToAdd.addAll(library.getSongs());
@@ -247,9 +245,16 @@ public class SongController {
         albumTiles.getChildren().removeAll(albumTiles.getChildren());
 
         for (Album i: albums) {
-            i.findAlbumCover();
-
             VBox tile = makeImageTile(i.getCoverArt(), i.getTitle());
+
+            /*// Maybe add here the handler for each tile
+            tile.setOnMouseClicked(mouseEvent -> {
+                if (mouseEvent.isPrimaryButtonDown()){
+                    updateInnerAlbumView(i);
+                    //changeToInnerAlbumView();
+                }
+            });*/
+
             albumTiles.getChildren().add(tile);
         }
     }
@@ -268,6 +273,10 @@ public class SongController {
     private void updatePlaylistTiles(ArrayList<Playlist> playlists){
         // TODO: IMPLEMENT
     }
+
+    private void updateInnerAlbumView(Album album){}
+    private void updateInnerArtistView(Artist artist){}
+    private void updateInnerPlaylistView(Playlist playlist){}
 
     public void launchPreferences() throws IOException {
         Stage newStage = new Stage();
