@@ -47,7 +47,7 @@ public class MainGUI extends Application {
             else // TODO: update this to utilize library path from preferences
                 library = Library.loadLibrary("teste.json");
 
-            library.settings = settings; // There's probably a more elegant way of doing this
+            Library.settings = settings; // There's probably a more elegant way of doing this
             setLibrary();
         }catch (Exception e){
             System.out.println("Error while loading library");
