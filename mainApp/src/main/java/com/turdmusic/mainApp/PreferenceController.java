@@ -5,6 +5,8 @@ import com.turdmusic.mainApp.core.Settings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -14,12 +16,14 @@ public class PreferenceController {
 
     public static Library library;
     public static Settings settings;
+    private Stage newStage;
 
+    public TextField pathToMediaPlayerText;
     @FXML
-    protected void openPathManager() throws IOException {
+    protected void onMouseClickedOpenPathManager() throws IOException {
         // Create a new stage (window) and load the file selection scene
-        Stage newStage = new Stage();
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("pathManager.fxml"));
+        newStage = new Stage();
+        /*FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("pathManager.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load(), 600, 400);
         newStage.setTitle("Select Folders");
@@ -30,11 +34,23 @@ public class PreferenceController {
         // TODO: investigate context menu buttons
         newStage.initModality(Modality.APPLICATION_MODAL);
 
-        newStage.showAndWait();
+        newStage.showAndWait();*/
+        //Stage newStage = new Stage();
+        MainGUI.openPathManager(newStage);
     }
 
-    protected void closePathManager() throws IOException{
+    public void onMouseClickedClosePathManager(){
+        //newStage.close();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setAlertType(Alert.AlertType.CONFIRMATION);
+        alert.showAndWait();
 
+        newStage = (Stage) pathToMediaPlayerText.getScene().getWindow();
+        MainGUI.closePreferenceController(newStage);
+    }
+
+    public void onMouseClickedApplyPreference(){
+        //in progress
     }
 
 }

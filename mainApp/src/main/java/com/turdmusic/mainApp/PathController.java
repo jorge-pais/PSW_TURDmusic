@@ -5,12 +5,16 @@ import com.turdmusic.mainApp.core.Settings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
     Controller class for the path selection window
@@ -24,6 +28,8 @@ public class PathController {
     public ListView<String> pathList;
     private ObservableList<String> items = FXCollections.observableArrayList();
     public Stage stage;
+
+
 
     public void initialize(){
         addedFolder = false;
@@ -46,6 +52,8 @@ public class PathController {
         addedFolder = true;
     }
 
+
+
     @FXML
     protected void removeFolderClicked(){
         // get the selected items
@@ -53,7 +61,9 @@ public class PathController {
 
         items.removeAll(selectedItems);
         pathList.setItems(items); //Update list
-
+        if(items.isEmpty()){
+            addedFolder = false;
+        }
         for (String i: selectedItems)
             library.removePath(i);
     }
@@ -81,6 +91,7 @@ public class PathController {
     @FXML
     protected void finishButtonClicked() {
         stage = (Stage) pathList.getScene().getWindow();
-        stage.close();
+        //stage.close();
+        MainGUI.closePathManager(stage);
     }
 }

@@ -17,7 +17,6 @@ public class HelloController {
     protected Scene scene;
     public static Library library;
 
-    //public StackPane stackPane;
 
     public void initialize(){
         // When this controller's scene is loaded into the stage
@@ -29,7 +28,7 @@ public class HelloController {
     protected void onMouseClicked() throws IOException {
         // Create a new stage (window) and load the file selection scene
         Stage newStage = new Stage();
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("pathManager.fxml"));
+        /*FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("pathManager.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load(), 600, 400);
         newStage.setTitle("Select Folders");
@@ -40,7 +39,8 @@ public class HelloController {
         // TODO: investigate context menu buttons
         newStage.initModality(Modality.APPLICATION_MODAL);
 
-        newStage.showAndWait();
+        newStage.showAndWait();*/
+        MainGUI.openPathManager(newStage);
 
         if(PathController.addedFolder) {
             // Mark the first launch here
@@ -49,10 +49,11 @@ public class HelloController {
 
             // Change to music view
             try{
-                fxmlLoader = new FXMLLoader(getClass().getResource("songView.fxml"));
+                //fxmlLoader = new FXMLLoader(getClass().getResource("songView.fxml"));
                 Stage stage = (Stage) label1.getScene().getWindow();
-                Scene newScene = new Scene(fxmlLoader.load());
-                stage.setScene(newScene);
+                MainGUI.createStage(stage);
+                /*Scene newScene = new Scene(fxmlLoader.load());
+                stage.setScene(newScene);*/
             } catch (Exception e){
                 e.printStackTrace();
             }
