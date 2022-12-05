@@ -97,12 +97,6 @@ public class SongController {
         contextMenu.getItems().addAll(mi1, mi2, mi3, mi4, mi5);
         songTable.setContextMenu(contextMenu);
 
-        mi4.setOnAction(mouseEvent -> {
-            hBoxPage.toFront();
-        });
-        mi5.setOnAction(mouseEvent -> {
-            hBoxPage.toFront();
-        });
 
         // Set up table event handlers to open selected songs on double click
         songTable.setOnMouseClicked(mouseEvent -> {
@@ -126,10 +120,8 @@ public class SongController {
                 pageImage.setImage(i.getCoverArt());
                 pageText.setText(i.getTitle());
                 pageTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
                 pageTitleColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getTitle()));
                 pageDurationColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getFormattedTrackLength()));
-
             }
         });
         mi5.setOnAction(mouseEvent -> {
@@ -138,7 +130,11 @@ public class SongController {
             if(songsSelected.size()==1){
                 ArrayList<Music> songs = new ArrayList<>(songsSelected);
                 Artist i = songs.get(0).getArtist();
-                pageImage.setImage(i.getPicture());
+                try {
+                    pageImage.setImage(i.getPicture());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                 pageText.setText(i.getName());
                 //tablePage.
             }
