@@ -1,6 +1,7 @@
 package com.turdmusic.mainApp;
 
 import com.turdmusic.mainApp.core.*;
+import com.turdmusic.mainApp.core.models.ImageInfo;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -100,5 +101,6 @@ public class MainGUI extends Application {
         PathController.library = library;
         SongController.library = library;
         PreferenceController.library = library;
+        ImageInfo.settings = settings;
     }
 }

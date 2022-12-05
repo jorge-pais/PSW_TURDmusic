@@ -48,14 +48,19 @@ public class Library{
     }
 
     public void addPath(String path){
+        if(this.libraryFilePaths.contains(path))
+            return;
         libraryFilePaths.add(path);
 
         ArrayList<Music> scanResult = scanFilePath(path, this.songs.size());
         if(scanResult != null)
             songs.addAll(scanResult);
 
-        for (Album i: this.albums)
+        // Update the album listings
+        for (Album i: this.albums) {
+            i.findAlbumCover();
             i.sortTrackList();
+        }
 
         System.out.println("Path added!");
     }
@@ -129,32 +134,33 @@ public class Library{
                 musicList.addAll(scanResult);
                 songsAdded += scanResult.size();
             }
-            else
-            if(Utils.checkFileExtension(file.getName(), Utils.fileType.Audio)) { // check for a valid music file
-                for (Music i: this.songs) // Prevent songs from being added twice
-                    if(file.getPath().equals(i.getFile().getPath()))
-                        return null;
-                Music song;
+            else {
+                if (Utils.checkFileExtension(file.getName(), Utils.fileType.Audio)) { // check for a valid music file
+                    for (Music i : this.songs) // Prevent songs from being added twice
+                        if (file.getPath().equals(i.getFile().getPath()))
+                            return null;
+                    Music song;
 
-                try { // this is where we get the metadata
-                    song = createSongMetadata(file, songsAdded + startId);
-                } catch (Exception e){
-                    // if the function call fails we can assume that no metadata is defined in the file
-                    //System.out.println("Error getting metadata, using undefined parameters");
-                    if(undefinedArtist == null && undefinedAlbum == null){
-                        undefinedArtist = new Artist("Undefined", this.artists.size());
-                        undefinedAlbum = new Album("Undefined", undefinedArtist, this.albums.size());
-                        undefinedArtist.addAlbum(undefinedAlbum);
-                        this.artists.add(undefinedArtist);
-                        this.albums.add(undefinedAlbum);
+                    try { // this is where we get the metadata
+                        song = createSongMetadata(file, songsAdded + startId);
+                    } catch (Exception e) {
+                        // if the function call fails we can assume that no metadata is defined in the file
+                        //System.out.println("Error getting metadata, using undefined parameters");
+                        if (undefinedArtist == null && undefinedAlbum == null) {
+                            undefinedArtist = new Artist("Undefined", this.artists.size());
+                            undefinedAlbum = new Album("Undefined", undefinedArtist, this.albums.size());
+                            undefinedArtist.addAlbum(undefinedAlbum);
+                            this.artists.add(undefinedArtist);
+                            this.albums.add(undefinedAlbum);
+                        }
+                        int track = undefinedAlbum.getTracklist().size() + 1;
+                        song = new Music(file.getName(), this.songs.size(), file, undefinedArtist, undefinedAlbum, track);
+                        undefinedArtist.getSongs().add(song);
+                        undefinedAlbum.getTracklist().add(song);
                     }
-                    int track = undefinedAlbum.getTracklist().size() + 1;
-                    song = new Music(file.getName(), this.songs.size(), file, undefinedArtist, undefinedAlbum, track);
-                    undefinedArtist.getSongs().add(song);
-                    undefinedAlbum.getTracklist().add(song);
+                    songsAdded++;
+                    musicList.add(song);
                 }
-                songsAdded++;
-                musicList.add(song);
             }
         }
 
@@ -211,7 +217,7 @@ public class Library{
         TODO: find a way to reuse the same function without major class alterations
     */
     public ArrayList<Music> searchSongs(String searchTerm){
-        String query = searchTerm.toLowerCase();
+        String query = searchTerm.toLowerCase().replaceFirst("\\s++$", "");
 
         ArrayList<Music> output = new ArrayList<>();
 
@@ -224,7 +230,7 @@ public class Library{
         return null;
     }
     public ArrayList<Album> searchAlbums(String searchTerm){
-        String query = searchTerm.toLowerCase();
+        String query = searchTerm.toLowerCase().replaceFirst("\\s++$", "");
 
         ArrayList<Album> output = new ArrayList<>();
 
@@ -237,7 +243,7 @@ public class Library{
         return null;
     }
     public ArrayList<Artist> searchArtists(String searchTerm){
-        String query = searchTerm.toLowerCase();
+        String query = searchTerm.toLowerCase().replaceFirst("\\s++$", "");
 
         ArrayList<Artist> output = new ArrayList<>();
 
@@ -250,7 +256,7 @@ public class Library{
         return null;
     }
     public ArrayList<Playlist> searchPlaylist(String searchTerm){
-        String query = searchTerm.toLowerCase();
+        String query = searchTerm.toLowerCase().replaceFirst("\\s++$", "");
 
         ArrayList<Playlist> output = new ArrayList<>();
 
@@ -271,6 +277,7 @@ public class Library{
 
         System.out.println("Library saved to file!");
     }
+
 
     // Add a check function upon loading the library
     public static Library loadLibrary(String filePath) throws Exception{

@@ -70,6 +70,7 @@ public class PathController {
 
     @FXML
     protected void scanSelectedPressed(){
+        // TODO: POP-UP NOTIFICATION
         ObservableList<String> selectedItems = pathList.getSelectionModel().getSelectedItems();
 
         for (String i: selectedItems)
@@ -79,6 +80,7 @@ public class PathController {
 
     @FXML
     protected void scanAllPressed(){
+        // TODO: POP-UP NOTIFICATION
         ObservableList<String> allItems = pathList.getItems();
 
         for (String i: allItems)

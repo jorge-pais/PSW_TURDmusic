@@ -1,7 +1,9 @@
 package com.turdmusic.mainApp.core;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.turdmusic.mainApp.core.models.ImageInfo;
 import javafx.scene.image.Image;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -12,9 +14,9 @@ import org.jaudiotagger.tag.images.Images;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
-import javafx.embed.swing.SwingFXUtils;
 
 /**
     Album Class which holds all album data and relations with their respective songs and artists
@@ -26,7 +28,7 @@ public class Album {
     public int id;
 
     private String title;
-    private Image coverArt;
+    private ImageInfo imageInfo;
     private Date releaseDate; // Maybe just save the year, many albums do not include the actual release date
 
     private Artist artist;
@@ -53,10 +55,29 @@ public class Album {
     }
     public void removeSong(Music song){ tracklist.remove(song); }
     public ArrayList<Music> getTracklist(){ return tracklist; }
-    public void setCoverArt(Image image){
-        this.coverArt = image;
+    @JsonIgnore
+    public void setPicture(BufferedImage image){
+        try {
+            this.imageInfo = new ImageInfo(image, "album_" + id);
+        }catch (Exception e){
+            System.out.println("Error setting coverArt");
+            e.printStackTrace();
+        }
     }
-    public Image getCoverArt(){ return this.coverArt;}
+    @JsonIgnore
+    public Image getCoverArt(){
+        if(imageInfo != null)
+            return this.imageInfo.getImageObj();
+        else {
+            InputStream imageStream = getClass().getResourceAsStream("/com/turdmusic/mainApp/defaultphotos/album_default.png");
+            assert imageStream != null;
+            return new Image(imageStream);
+        }
+    }
+
+    // This get/set pair is used for jackson serializing
+    public ImageInfo getImageInfo(){ return this.imageInfo; }
+    public void setImageInfo(ImageInfo imageInfo){ this.imageInfo = imageInfo; }
 
     /**
         This function sorts the tracklist array
@@ -87,36 +108,25 @@ public class Album {
 
                     int h = image.getHeight(), w = image.getWidth();
                     if (Math.abs((float) (w - h) / w) <= 0.02) { // If the image is at least "98% square"
-                        this.coverArt = SwingFXUtils.toFXImage(image, null);
+                        this.imageInfo = new ImageInfo(child);
                         return;
                     }
                 }
             }
-        }catch (Exception e){
-            System.out.println("Something went wrong when loading the images");
-            //e.printStackTrace();
-        }
 
-        System.out.println("No album art found for the album");
+            System.out.println("No album art files found for the album");
 
-        //
-        // try to search the song files for artwork data
-        //
-        try{
             AudioFile fileIn = AudioFileIO.read(tracklist.get(0).getFile());
             Tag tag = fileIn.getTag();
 
             Artwork art = tag.getFirstArtwork();
-            assert art != null;
+            BufferedImage image = Images.getImage(art);
 
-            // Save to file
-            Images.getImage(art);
+            setPicture(image);
 
-        } catch (Exception e){
-            System.out.println("No valid artwork was found within the music files");
-            //e.printStackTrace();
-
-            this.coverArt = null; // Set one of the default album covers
+        }catch (Exception e){
+            System.out.println("Something went wrong when fetching the images");
+            this.imageInfo = null;
         }
     }
 }

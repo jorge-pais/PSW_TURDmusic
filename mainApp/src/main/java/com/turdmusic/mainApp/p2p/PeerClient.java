@@ -1,15 +1,16 @@
 package com.turdmusic.mainApp.p2p;
 
+
 import java.io.File;
 import java.util.ArrayList;
 
 public class PeerClient {
 
     //Methods
-    //public ArrayList<Music> searchListings;
+    public ArrayList<MusicShare> getMusicListings;
+/*
+    public MusicShare getFromPeer(String ip, String port){
 
-    //public ArrayList<MusicShare> getMusicFromPeer(String ipAddress, int port, ){
-
-    //}
+    }*/
 
 }

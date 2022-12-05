@@ -1,9 +1,13 @@
 package com.turdmusic.mainApp.core;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.turdmusic.mainApp.core.models.ImageInfo;
 import javafx.scene.image.Image;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 
 @JsonIdentityInfo(
@@ -12,7 +16,7 @@ import java.util.ArrayList;
 public class Artist {
 
     public int id;
-    private Image picture;
+    private ImageInfo imageInfo;
     private String name;
     private ArrayList<Music> songs;
     private ArrayList<Album> albums;
@@ -24,7 +28,7 @@ public class Artist {
     public Artist(String name, int id){
         this.name = name;
         this.id = id;
-        this.picture = null;
+        this.imageInfo = null;
 
         songs = new ArrayList<>();
         albums = new ArrayList<>();
@@ -33,9 +37,23 @@ public class Artist {
     public String getName(){
         return name;
     }
-    public Image getPicture(){
-        return picture;
+    @JsonIgnore
+    public Image getPicture() throws IOException {
+        if(imageInfo != null)
+            return imageInfo.getImageObj();
+        else
+            return new Image(getClass().getResourceAsStream("/com/turdmusic/mainApp/defaultphotos/artist_default.png"));
     }
+    @JsonIgnore
+    public void setPicture(BufferedImage image){
+        try {
+            this.imageInfo = new ImageInfo(image, "artist_" + id);
+        }catch (Exception e){
+            System.out.println("Error setting artist picture");
+            e.printStackTrace();
+        }
+    }
+
 
     public void addSong(Music song){
         songs.add(song);
@@ -52,7 +70,10 @@ public class Artist {
     }
     public void removeAlbum(Album album){ albums.remove(album); }
 
-    public void setPicture(Image image){
-        this.picture = image;
+    // This get/set pair is used for jackson serializing
+    public ImageInfo getImageInfo(){ return this.imageInfo; }
+    public void setImageInfo(ImageInfo imageInfo){
+        this.imageInfo = imageInfo;
     }
+
 }

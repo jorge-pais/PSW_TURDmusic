@@ -9,6 +9,7 @@ public class MusicShare {
     public String title;
     public String artist;
     public String album;
+    public String ip_port; // <ip_address>:<port>
     public File file;
 
     public MusicShare(Music source){
@@ -16,7 +17,7 @@ public class MusicShare {
         this.title = source.getTitle();
         this.artist = source.getArtist().getName();
         this.album = source.getAlbum().getTitle();
-
-
     }
+
+
 }

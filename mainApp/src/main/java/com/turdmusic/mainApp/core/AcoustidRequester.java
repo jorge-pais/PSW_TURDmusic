@@ -25,26 +25,30 @@ import com.google.gson.Gson;
 //
 // TODO: Instead of searching for fpcalc existance, we should have it in a folder in our app
 // TODO: Manage multiple Artists and Albuns
+// TODO: Completar MusicInfo, ligacao ao cover...  .org/releasegroup/[id]
+// TODO: Ver casos 302, nulls...
 public class AcoustidRequester {
 
     // API key
-    private final String key = "PFjVWjJwPw";
+    private static final String key = "PFjVWjJwPw";
 
     // API request parameters
-    private final String baseURL = "https://api.acoustid.org/v2/lookup";
-    private final String fpcalcPath = "C:\\Users\\David\\Downloads\\fpcalc";
-    private final String os = System.getProperty("os.name").toLowerCase();
+    private static final String baseURL = "https://api.acoustid.org/v2/lookup";
+    private static final String fpcalcPath = "C:\\Users\\David\\Downloads\\fpcalc";
+    private static final String os = System.getProperty("os.name").toLowerCase();
 
 
 
     // Possibly in a different class - with Token for Spotify
-    private String getAPIRequest(String url, String path) throws URISyntaxException, IOException, InterruptedException {
+    private static String getAPIRequest(String url, String path) throws URISyntaxException, IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(new URI(url + path))
                 .GET()
                 .build();
 
-        HttpClient client = HttpClient.newHttpClient();
+        HttpClient client = HttpClient.newBuilder()
+                .followRedirects(HttpClient.Redirect.NORMAL)
+                .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         return response.body();
@@ -52,9 +56,9 @@ public class AcoustidRequester {
 
     // Maps json response to MusicInfo (java class)
     // Returned value has music, artist information
-    private MusicInfo.Result.Record getMusicInfo(String fingerprint, int duration) throws URISyntaxException, IOException, InterruptedException {
+    private static MusicInfo.Result.Record getMusicInfo(String fingerprint, int duration) throws URISyntaxException, IOException, InterruptedException {
         System.out.println("Fetching Data...");
-        String response = getAPIRequest(baseURL,"?client="+key+"&meta=recordings+compress&duration="+duration+"&fingerprint="+fingerprint);
+        String response = getAPIRequest(baseURL,"?client="+key+"&meta=recordings+compress+releasegroups&duration="+duration+"&fingerprint="+fingerprint);
 
         Gson gson = new Gson();
         MusicInfo music = gson.fromJson(response, MusicInfo.class);
@@ -88,7 +92,7 @@ public class AcoustidRequester {
         return musicInformation;
     }
 
-    private String getFingerprint(String filepath) throws Exception{
+    private static String getFingerprint(String filepath) throws Exception{
 
         ProcessBuilder processBuilder = new ProcessBuilder();
 
@@ -125,7 +129,7 @@ public class AcoustidRequester {
     }
 
 
-    public Music fetchMetadata(Music music) throws Exception {
+    public static Music fetchMetadata(Music music) throws Exception {
         String musicPath = music.getFile().getPath();
 
         MusicInfo.Result.Record musicInfo = getMusicInfo(getFingerprint(musicPath), music.getTrackLength());
