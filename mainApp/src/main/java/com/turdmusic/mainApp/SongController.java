@@ -78,6 +78,7 @@ public class SongController {
     public TableColumn<Music, String> pageTitleColumn;
     public TableColumn<Music, String> pageDurationColumn;
     public ImageView pageImage;
+
     public void initialize(){
         // Allow multiple table items to be selected
         songTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -118,20 +119,19 @@ public class SongController {
             if(songsSelected.size()>0){
                 ArrayList<Music> songs = new ArrayList<>(songsSelected);
                 Album i = songs.get(0).getAlbum();
-                //if(i.getCoverArt() == null)
-                //    i.setCoverArt(new Image(getClass().getResourceAsStream("defaultphotos/album_default.png")));
                 pageImage.setImage(i.getCoverArt());
                 pageText.setText(i.getTitle());
                 pageTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-                //pageTitleColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getTitle()));
-                //pageDurationColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getFormattedTrackLength()));
+
+                pageTitleColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getTitle()));
+                pageDurationColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getFormattedTrackLength()));
 
             }
         });
         mi5.setOnAction(mouseEvent -> {
             pageHBox.toFront();
             ObservableList<Music> songsSelected = songTable.getSelectionModel().getSelectedItems();
-            if(songsSelected.size()>0){
+            if(songsSelected.size()==1){
                 ArrayList<Music> songs = new ArrayList<>(songsSelected);
                 Artist i = songs.get(0).getArtist();
                 pageImage.setImage(i.getPicture());
@@ -262,13 +262,14 @@ public class SongController {
 
     public void launchPreferences() throws IOException {
         Stage newStage = new Stage();
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("preferenceView.fxml"));
+        /*FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("preferenceView.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load());
         newStage.setScene(scene);
         newStage.setResizable(false);
         newStage.initModality(Modality.APPLICATION_MODAL);
-        newStage.showAndWait();
+        newStage.showAndWait();*/
+        MainGUI.openPreferences(newStage);
     }
 
 
