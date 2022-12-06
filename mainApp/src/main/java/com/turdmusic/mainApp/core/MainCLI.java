@@ -1,18 +1,19 @@
 package com.turdmusic.mainApp.core;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 import java.awt.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
+
+
 
 public class MainCLI {
     //
     // Basic CLI interface loop
     // We should re-do
     //
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
         System.out.print(
                 "Yet nameless music organizer CLI:\n" +
@@ -82,7 +83,7 @@ public class MainCLI {
 
                     int index = Integer.parseInt(argument[1]);
 
-                    library.getSongs().get(index).getSongAttribute();
+                    //library.getSongs().get(index).getSongAttribute();
                     break;
 
                 case "open":
@@ -120,46 +121,48 @@ public class MainCLI {
 
                 case "saveLibrary":
                     if(argument.length == 1) break;
-
-                    File outputFile = new File(argument[1]);
-                    try{
-                        ObjectMapper objectMapper = new ObjectMapper();
-                        objectMapper.writeValue(outputFile, library);
-
-                        System.out.println("Library saved to file!");
-                    } catch (Exception e){
+                    try {
+                        library.saveLibrary(argument[1]);
+                    }catch (Exception e){
                         e.printStackTrace();
                     }
-
                     break;
 
                 case "loadLibrary":
                     if(argument.length == 1) break;
 
-                    File inputFile = new File(argument[1]);
-                    try{
-                        ObjectMapper objectMapper = new ObjectMapper();
-                        library = objectMapper.readValue(inputFile, Library.class);
+                    try {
+                        library = Library.loadLibrary(argument[1]);
                     }catch (Exception e){
                         e.printStackTrace();
                     }
 
+                    if(library == null)
+                        System.out.println("error");
 
                     break;
 
-                case "getFingerprint":
-                    if(argument.length == 1) break;
+                case "testDavid":
+                    /*String url = "falhou";
+                    for(Music i : library.getSongs()) {
+                        url = test.getFingerprint(i);
+                        break;
+                    }*/
 
-                    AcoustidRequester req = new AcoustidRequester();
-                    Music song = library.getSongs().get(Integer.parseInt(argument[1]));
-                    try{
-                        System.out.println("Fingerprint: " + req.getFingerprint(song, "/usr/bin/fpcalc"));
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
+                    System.out.println(AcoustidRequester.fetchMetadata(library.getSongs().get(0)).getTitle());
 
-                    break;
 
+
+                    /* *********************************************************************** */
+
+                    /*for (MusicInfo.Result result : music.getResults()) {
+                        for(MusicInfo.Result.Record record : result.getRecordings()){
+                            if(record.getTitle() != null) {
+                                System.out.println(record.getTitle());
+                            }
+                        }
+                        System.out.println(result.getScore());
+                    }*/
 
                 /*case "getArtwork": // Test to read album cover as bitmap
                     if(argument[1] == null) break;

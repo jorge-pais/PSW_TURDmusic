@@ -1,18 +1,24 @@
 package com.turdmusic.mainApp.core;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.turdmusic.mainApp.core.models.ImageInfo;
+import javafx.scene.image.Image;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 
-// Maybe change this to a UUID object identifier
 @JsonIdentityInfo(
         generator= ObjectIdGenerators.IntSequenceGenerator.class,
         property="@json_id")
 public class Artist {
 
     public int id;
-    //private Image picture;
+    private ImageInfo imageInfo;
     private String name;
     private ArrayList<Music> songs;
     private ArrayList<Album> albums;
@@ -24,6 +30,7 @@ public class Artist {
     public Artist(String name, int id){
         this.name = name;
         this.id = id;
+        this.imageInfo = null;
 
         songs = new ArrayList<>();
         albums = new ArrayList<>();
@@ -32,6 +39,26 @@ public class Artist {
     public String getName(){
         return name;
     }
+    @JsonIgnore
+    public Image getPicture() {
+        if(imageInfo != null)
+            return imageInfo.getImageObj();
+        else {
+            InputStream imageStream = getClass().getResourceAsStream("/com/turdmusic/mainApp/defaultphotos/artist_default.png");
+            assert imageStream != null;
+            return new Image(imageStream);
+        }
+    }
+    @JsonIgnore
+    public void setPicture(BufferedImage image){
+        try {
+            this.imageInfo = new ImageInfo(image, "artist_" + id);
+        }catch (Exception e){
+            System.out.println("Error setting artist picture");
+            e.printStackTrace();
+        }
+    }
+
 
     public void addSong(Music song){
         songs.add(song);
@@ -47,5 +74,11 @@ public class Artist {
         albums.add(album);
     }
     public void removeAlbum(Album album){ albums.remove(album); }
+
+    // This get/set pair is used for jackson serializing
+    public ImageInfo getImageInfo(){ return this.imageInfo; }
+    public void setImageInfo(ImageInfo imageInfo){
+        this.imageInfo = imageInfo;
+    }
 
 }
