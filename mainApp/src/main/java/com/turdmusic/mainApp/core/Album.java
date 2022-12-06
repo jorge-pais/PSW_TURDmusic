@@ -75,12 +75,10 @@ public class Album {
         }
     }
 
-    // This get/set pair is used for jackson serializing
     public ImageInfo getImageInfo(){ return this.imageInfo; }
     public void setImageInfo(ImageInfo imageInfo){ this.imageInfo = imageInfo; }
 
-    /**
-        This function sorts the tracklist array
+    /** Sorts the tracklist array from the track number of each song
     */
     public void sortTrackList(){
         this.tracklist.sort((m1, m2) -> {
@@ -93,10 +91,8 @@ public class Album {
         });
     }
 
-    /**
-        This function will look for the cover art within the
-        first song's parent directory, or if there is no image file
-        it tries to read from the song metadata
+    /** Find the cover art within the first song's parent directory,
+     * or if there is no image file, try to read from the song metadata
     */
     public void findAlbumCover(){
         try { // First check all children files for any pictures

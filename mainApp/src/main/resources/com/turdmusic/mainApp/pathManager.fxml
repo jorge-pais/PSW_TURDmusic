@@ -4,7 +4,7 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="395.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.turdmusic.mainApp.PathController">
+<AnchorPane prefHeight="395.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.turdmusic.mainApp.FolderSelection">
    <children>
       <ListView fx:id="pathList" layoutX="14.0" layoutY="14.0" prefHeight="364.0" prefWidth="549.0" AnchorPane.bottomAnchor="17.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="138.0" AnchorPane.topAnchor="14.0" />
       <Button layoutX="477.0" layoutY="14.0" mnemonicParsing="false" onAction="#addFolderClicked" prefHeight="27.0" prefWidth="109.0" text="Add Folder" AnchorPane.rightAnchor="13.289049353627618" AnchorPane.topAnchor="14.0" />

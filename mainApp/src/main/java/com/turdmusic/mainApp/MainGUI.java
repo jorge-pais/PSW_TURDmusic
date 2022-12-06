@@ -4,26 +4,26 @@ import com.turdmusic.mainApp.core.*;
 import com.turdmusic.mainApp.core.models.ImageInfo;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 
+/** Contains the main program entry point, along with some GUI methods
+ * utilized by other controller objects
+ * */
 public class MainGUI extends Application {
 
     public static Library library;
     public static Settings settings;
-
-
 
     @Override
     public void start(Stage stage) throws IOException {
         createStage(stage);
     }
 
+    // TODO: alter the function name
     public static void createStage(Stage stage) throws IOException {
         String sceneToOpen;
 
@@ -35,8 +35,8 @@ public class MainGUI extends Application {
         FXMLLoader loader = new FXMLLoader(MainGUI.class.getResource(sceneToOpen));
         Scene scene = new Scene(loader.load());
         stage.setTitle("TURD Music");
-        stage.setMinHeight(300);
-        stage.setMinWidth(600);
+        stage.setMinHeight(600);
+        stage.setMinWidth(900);
         stage.setScene(scene);
         stage.show();
     }
@@ -49,7 +49,6 @@ public class MainGUI extends Application {
 
         // Change the new window's modality
         // block input from all other application windows
-        // TODO: investigate context menu buttons
         newStage.initModality(Modality.APPLICATION_MODAL);
 
         newStage.showAndWait();
@@ -60,6 +59,7 @@ public class MainGUI extends Application {
         Scene scene = new Scene(loaderPreferencesView.load());
         newStage.setScene(scene);
         newStage.setResizable(false);
+
         newStage.initModality(Modality.APPLICATION_MODAL);
         newStage.showAndWait();
     }
@@ -83,10 +83,10 @@ public class MainGUI extends Application {
             if(settings.getFirstLaunch())
                 library = new Library();
             else // TODO: update this to utilize library path from preferences
-                library = Library.loadLibrary("teste.json");
+                library = Library.loadLibrary(settings.getSavePath() + "/library.json");
 
             Library.settings = settings; // There's probably a more elegant way of doing this
-            setLibrary();
+            setLibrary(library);
         }catch (Exception e){
             System.out.println("Error while loading library");
             e.printStackTrace();
@@ -96,10 +96,10 @@ public class MainGUI extends Application {
     }
 
     // Add static library reference to all of JavaFX controllers
-    private static void setLibrary(){
+    private static void setLibrary(Library library){
         HelloController.library = library;
-        PathController.library = library;
-        SongController.library = library;
+        FolderSelection.library = library;
+        MainView.library = library;
         PreferenceController.library = library;
         ImageInfo.settings = settings;
     }

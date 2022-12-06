@@ -2,10 +2,8 @@ package com.turdmusic.mainApp;
 
 import com.turdmusic.mainApp.core.Library;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -42,7 +40,7 @@ public class HelloController {
         newStage.showAndWait();*/
         MainGUI.openPathManager(newStage);
 
-        if(PathController.addedFolder) {
+        if(FolderSelection.addedFolder) {
             // Mark the first launch here
             Library.settings.setFirstLaunch(false);
             System.out.println("Paths have been added");

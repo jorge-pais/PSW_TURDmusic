@@ -8,6 +8,8 @@ import javafx.scene.image.Image;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 
 @JsonIdentityInfo(
@@ -38,11 +40,14 @@ public class Artist {
         return name;
     }
     @JsonIgnore
-    public Image getPicture() throws IOException {
+    public Image getPicture() {
         if(imageInfo != null)
             return imageInfo.getImageObj();
-        else
-            return new Image(getClass().getResourceAsStream("/com/turdmusic/mainApp/defaultphotos/artist_default.png"));
+        else {
+            InputStream imageStream = getClass().getResourceAsStream("/com/turdmusic/mainApp/defaultphotos/artist_default.png");
+            assert imageStream != null;
+            return new Image(imageStream);
+        }
     }
     @JsonIgnore
     public void setPicture(BufferedImage image){
