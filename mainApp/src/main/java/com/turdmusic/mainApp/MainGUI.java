@@ -64,10 +64,6 @@ public class MainGUI extends Application {
         newStage.showAndWait();
     }
 
-    public static void closePathManager(Stage newStage) {
-        newStage.close();
-    }
-
     public static void closePreferenceController(Stage newStage) {
         newStage.close();
     }

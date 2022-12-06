@@ -122,7 +122,7 @@ public class Library{
         this.songs.remove(song);
     }
 
-    /** Scans a given file path for music files, checking subfolders
+    /** Scans a given file path for music files, checking sub-folders
      * also.
      * @param path Path to be scanned
      * @param startId Integer id reference to begin referencing
@@ -138,7 +138,7 @@ public class Library{
 
         ArrayList<Music> musicList = new ArrayList<>();
 
-        int songsAdded = 0; // major spaghetti code due to recursivity
+        int songsAdded = 0; // major spaghetti code due to recursion
 
         if(contents == null) return null;
         for(File file: contents) {
@@ -182,7 +182,7 @@ public class Library{
     }
     /** Reads the metadata on a given music file and creates the
      * appropriate objects. If either the title, artist or album are
-     * missing then a Exception is thrown
+     * missing then an Exception is thrown
      * @param fileHandle Path to the song file
      * @param id Integer id for the song
      * @return Music object with the appropriate artist/album relations
@@ -198,9 +198,9 @@ public class Library{
 
         // regex used to remove whitespace at the end of string
         String artistName = tag.getFirst(FieldKey.ARTIST).replaceFirst("\\s++$", "");
-        String albumTitle = tag.getFirst(FieldKey.ALBUM).replaceFirst("\\s++$", "");;
-        String trackTitle = tag.getFirst(FieldKey.TITLE).replaceFirst("\\s++$", "");;
-        String trackNumber = tag.getFirst(FieldKey.TRACK).replaceFirst("\\s++$", "");;
+        String albumTitle = tag.getFirst(FieldKey.ALBUM).replaceFirst("\\s++$", "");
+        String trackTitle = tag.getFirst(FieldKey.TITLE).replaceFirst("\\s++$", "");
+        String trackNumber = tag.getFirst(FieldKey.TRACK).replaceFirst("\\s++$", "");
 
         Album album = null;
         Artist artist = null;
@@ -344,7 +344,7 @@ public class Library{
             System.out.println("error, unsupported");
 
         try {
-            Process process = processBuilder.start();
+            processBuilder.start();
         }catch (Exception e){
             e.printStackTrace();
         }

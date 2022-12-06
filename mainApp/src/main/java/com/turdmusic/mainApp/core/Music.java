@@ -3,15 +3,10 @@ package com.turdmusic.mainApp.core;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import javafx.beans.property.SimpleObjectProperty;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
-import org.jaudiotagger.tag.Tag;
-import org.jaudiotagger.tag.FieldKey;
-import org.jaudiotagger.tag.images.Artwork;
 
 import java.io.File;
-import java.util.List;
 
 /*
     This class holds all the information of a song
@@ -30,7 +25,6 @@ public class Music {
     private String title;
     private File file;
 
-    private boolean undefined = true;
     private Artist artist; // for now, we'll assume that each song has only one artist
     private Album album;
     private int trackNumber;
