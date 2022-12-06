@@ -2,8 +2,8 @@ package com.turdmusic.mainApp.core;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.turdmusic.mainApp.core.models.ImageInfo;
 
-import java.awt.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,7 +15,7 @@ public class Playlist{
     public int id;
 
     private String title;
-    private Image playlistArt; // maybe?
+    private ImageInfo playlistArt;
     private Date dateCreated;
 
     private ArrayList<Music> tracklist;

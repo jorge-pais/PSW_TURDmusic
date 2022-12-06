@@ -1,7 +1,6 @@
 package com.turdmusic.mainApp.core;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;
@@ -17,11 +16,11 @@ import java.io.File;
 public class Library{
 
     // We can change the library paths from strings to file objects
-    private ArrayList<String> libraryFilePaths;
-    private ArrayList<Music> songs;
-    private ArrayList<Album> albums;
-    private ArrayList<Artist> artists;
-    private ArrayList<Playlist> playlists;
+    private final ArrayList<String> libraryFilePaths;
+    private final ArrayList<Music> songs;
+    private final ArrayList<Album> albums;
+    private final ArrayList<Artist> artists;
+    private final ArrayList<Playlist> playlists;
 
     private Album undefinedAlbum;
     private Artist undefinedArtist;
@@ -47,6 +46,10 @@ public class Library{
         this.undefinedArtist = null;
     }
 
+    /** Adds a given file path to the library and creates all the appropriate
+     * artist/album/music structures
+     * @param path Folder path to be added
+     * */
     public void addPath(String path){
         if(this.libraryFilePaths.contains(path))
             return;
@@ -64,6 +67,9 @@ public class Library{
 
         System.out.println("Path added!");
     }
+    /** Removes all music that are contained within a given path
+     * @param path Path to be removed
+     * */
     public void removePath(String path){
         if(!libraryFilePaths.contains(path)) return;
         libraryFilePaths.remove(path);
@@ -78,17 +84,19 @@ public class Library{
             }
         }
     }
-
+    /** Removes a given music reference from the library
+     * @param song Music object to be removed
+     * */
     public void removeSong(Music song){
         Artist artist = song.getArtist();
         Album album = song.getAlbum();
         album.removeSong(song);
         artist.removeSong(song);
 
-        //
-        // Remove any empty artists and albums; The java garbage
-        // collector should take care of cleaning up memory (hopefully)
-        //
+        /*
+        Remove any empty artists and albums; The java garbage
+        collector should take care of cleaning up memory (hopefully)
+        */
         if(album.getTracklist().size() == 0) {
             artist.removeAlbum(album);
             for (int i = this.albums.indexOf(album)+1; i < this.albums.size(); i++)
@@ -114,7 +122,13 @@ public class Library{
         this.songs.remove(song);
     }
 
-    public ArrayList<Music>scanFilePath(String path, int startId){
+    /** Scans a given file path for music files, checking sub-folders
+     * also.
+     * @param path Path to be scanned
+     * @param startId Integer id reference to begin referencing
+     * @return Array containing all the scanned music objects
+     */
+    private ArrayList<Music>scanFilePath(String path, int startId){
         //
         // Search for music files in a given path and create artist and album
         // entries for each file
@@ -124,7 +138,7 @@ public class Library{
 
         ArrayList<Music> musicList = new ArrayList<>();
 
-        int songsAdded = 0; // major spaghetti code due to recursivity
+        int songsAdded = 0; // major spaghetti code due to recursion
 
         if(contents == null) return null;
         for(File file: contents) {
@@ -142,7 +156,7 @@ public class Library{
                     Music song;
 
                     try { // this is where we get the metadata
-                        song = createSongMetadata(file, songsAdded + startId);
+                        song = readSongMetadata(file, songsAdded + startId);
                     } catch (Exception e) {
                         // if the function call fails we can assume that no metadata is defined in the file
                         //System.out.println("Error getting metadata, using undefined parameters");
@@ -166,8 +180,14 @@ public class Library{
 
         return musicList;
     }
-
-    private Music createSongMetadata(File fileHandle, int id) throws Exception{
+    /** Reads the metadata on a given music file and creates the
+     * appropriate objects. If either the title, artist or album are
+     * missing then an Exception is thrown
+     * @param fileHandle Path to the song file
+     * @param id Integer id for the song
+     * @return Music object with the appropriate artist/album relations
+     */
+    private Music readSongMetadata(File fileHandle, int id) throws Exception{
         //
         // This function gets the metadata from a file and creates
         // artist and album objects for the song, or adds the song
@@ -178,15 +198,16 @@ public class Library{
 
         // regex used to remove whitespace at the end of string
         String artistName = tag.getFirst(FieldKey.ARTIST).replaceFirst("\\s++$", "");
-        String albumTitle = tag.getFirst(FieldKey.ALBUM).replaceFirst("\\s++$", "");;
-        String trackTitle = tag.getFirst(FieldKey.TITLE).replaceFirst("\\s++$", "");;
-        String trackNumber = tag.getFirst(FieldKey.TRACK).replaceFirst("\\s++$", "");;
+        String albumTitle = tag.getFirst(FieldKey.ALBUM).replaceFirst("\\s++$", "");
+        String trackTitle = tag.getFirst(FieldKey.TITLE).replaceFirst("\\s++$", "");
+        String trackNumber = tag.getFirst(FieldKey.TRACK).replaceFirst("\\s++$", "");
 
         Album album = null;
         Artist artist = null;
 
-        // If anything goes wrong
-        if (artistName.length() == 0 || albumTitle.length() == 0 || trackTitle.length() == 0 || trackNumber.length() == 0)
+        // If anything of these fields are missing the undefined
+        // artist and albums will be assigned
+        if (artistName.length() == 0 || albumTitle.length() == 0 || trackTitle.length() == 0)
             throw new Exception();
 
         for (Artist i : this.artists)
@@ -206,15 +227,17 @@ public class Library{
             this.albums.add(album);
         }
 
-        Music song = new Music(trackTitle, id, fileHandle, artist, album, Integer.parseInt(trackNumber));
+        int track = (trackNumber.length() == 0) ? 0 : Integer.parseInt(trackNumber);
+
+        Music song = new Music(trackTitle, id, fileHandle, artist, album, track);
         artist.addSong(song);
         album.addSong(song);
         return song;
     }
 
     /*
-        Repeating functions for simplicity
-        TODO: find a way to reuse the same function without major class alterations
+    Repeating functions for simplicity
+    TODO: find a way to reuse the same function without major class alterations
     */
     public ArrayList<Music> searchSongs(String searchTerm){
         String query = searchTerm.toLowerCase().replaceFirst("\\s++$", "");
@@ -269,26 +292,33 @@ public class Library{
         return null;
     }
 
+    /** Save the current state of the Library object to a .json file
+     * @param filePath Path to the output .json file
+     * */
     public void saveLibrary(String filePath) throws Exception{
         File outputFile = new File(filePath);
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.writeValue(outputFile,this);
 
-        System.out.println("Library saved to file!");
+        //System.out.println("Library saved to file!");
     }
-
-
-    // Add a check function upon loading the library
+    /** Loads a new Library object from a specified .json file
+     * @param filePath Path to the .json Library file
+     * @return Loaded Library object
+     * */
     public static Library loadLibrary(String filePath) throws Exception{
         File inputFile = new File(filePath);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        Library library = objectMapper.readValue(inputFile, Library.class);
 
-        return library;
+        return objectMapper.readValue(inputFile, Library.class);
     }
 
+    /** Open the provided song files on the specified media player
+     * program.
+     * @param songs Array of songs to be opened
+     * */
     public void openSongs(ArrayList<Music> songs){
         ProcessBuilder processBuilder = new ProcessBuilder();
 
@@ -314,7 +344,7 @@ public class Library{
             System.out.println("error, unsupported");
 
         try {
-            Process process = processBuilder.start();
+            processBuilder.start();
         }catch (Exception e){
             e.printStackTrace();
         }

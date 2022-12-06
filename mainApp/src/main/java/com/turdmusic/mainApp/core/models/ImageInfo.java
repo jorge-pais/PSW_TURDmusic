@@ -24,7 +24,6 @@ public class ImageInfo {
     public static Settings settings;
 
     // store the image filePath
-    // This will break when moving for example the
     private File path;
 
     public ImageInfo(){

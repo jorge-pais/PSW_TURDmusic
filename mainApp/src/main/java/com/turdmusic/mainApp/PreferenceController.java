@@ -19,6 +19,9 @@ public class PreferenceController {
     private Stage newStage;
 
     public TextField pathToMediaPlayerText;
+
+    public void initialize(){}
+
     @FXML
     protected void onMouseClickedOpenPathManager() throws IOException {
         // Create a new stage (window) and load the file selection scene

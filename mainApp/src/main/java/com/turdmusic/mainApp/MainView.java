@@ -1,13 +1,10 @@
 package com.turdmusic.mainApp;
 
 import com.turdmusic.mainApp.core.*;
-import javafx.beans.Observable;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -22,28 +19,22 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
 
-//
-// Song Controller Class
-//  This is the main UI/UX controller class, here are all the views for the main
-//  application window, including song/album/artist/playlist views
 
-//
-// TODO: ADD CONTEXT MENU (RIGHT_CLICK) TO SONGS
-// TODO: ADD TOP MENU ITEM BEHAVIOUR
-//
-
-public class SongController {
-    private enum CurrentView {Songs, Albums, Artists, Playlists};
-    private CurrentView state;
+ /** Main View Controller Class
+  * This is the main UI/UX controller class, here are all the views
+  * for the main application window, including
+  * song/album/artist/playlist views
+  * */
+public class MainView {
+    // TODO: REMOVE THIS ENUM IF IT DOESN'T PROVE USEFUL
+    /*private enum CurrentView {SongView, AlbumView, ArtistView, PlaylistView, Album, Artist, Playlist};
+    private CurrentView state;*/
 
     public static Library library;
 
@@ -54,11 +45,11 @@ public class SongController {
     public Label artistsLabelButton;
     public Label playlistsLabelButton;
 
-    public TableView<Music> songTable;
-    public TableColumn<Music, String> titleColumn;
-    public TableColumn<Music, String> artistColumn;
-    public TableColumn<Music, String> albumColumn;
-    public TableColumn<Music, String> durationColumn;
+    public TableView<Music> songViewTable;
+    public TableColumn<Music, String> songViewTitleColumn;
+    public TableColumn<Music, String> songViewArtistColumn;
+    public TableColumn<Music, String> songViewAlbumColumn;
+    public TableColumn<Music, String> songViewDurationColumn;
 
     public ScrollPane playlistScroll;
     public ScrollPane artistScroll;
@@ -66,7 +57,7 @@ public class SongController {
     public TilePane artistTiles;
     public TilePane albumTiles;
 
-    public HBox pageHBox;
+    //public HBox pageHBox;
     public VBox pageVBox;
     public Text pageText;
     public TableView<Music> pageTable;
@@ -76,83 +67,23 @@ public class SongController {
 
     public void initialize(){
         // Allow multiple table items to be selected
-        songTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        //artistTiles.setStyle("-fx-background-color: #FFFFFF;");
-
-        // Set up the song table columns (really important Lambda expressions)
-        titleColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getTitle()));
-        artistColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getArtist().getName()));
-        albumColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getAlbum().getTitle()));
-        durationColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getFormattedTrackLength()));
-
-
+        setupSongTable();
+        setupInnerSongTable();
+        setupSongTableContext();
         updateSongTable();
 
-        ContextMenu contextMenu = new ContextMenu();
-        MenuItem mi1 = new MenuItem("Delete");
-        MenuItem mi2 = new MenuItem("Edit");
-        MenuItem mi3 = new MenuItem("Add to");
-        MenuItem mi4 = new MenuItem("Go to Album");
-        MenuItem mi5 = new MenuItem("Go to Artist");
-        contextMenu.getItems().addAll(mi1, mi2, mi3, mi4, mi5);
-        songTable.setContextMenu(contextMenu);
-
-
-        // Set up table event handlers to open selected songs on double click
-        songTable.setOnMouseClicked(mouseEvent -> {
-            MouseButton button = mouseEvent.getButton();
-            if((mouseEvent.getClickCount() == 2) && button==MouseButton.PRIMARY){    // Double click
-                openSelectedSongs();
-            }
-            if((button==MouseButton.SECONDARY)){ // this is not necessary, and adds unnecessary complexity
-                                                   // setContextMenu option works better
-                contextMenu.show(songTable, mouseEvent.getScreenX(), mouseEvent.getScreenY());
-            }
-        });
-
-        //go to album
-        mi4.setOnAction(mouseEvent -> {
-            pageHBox.toFront();
-            ObservableList<Music> songsSelected = songTable.getSelectionModel().getSelectedItems();
-            if(songsSelected.size()>0){
-                ArrayList<Music> songs = new ArrayList<>(songsSelected);
-                Album i = songs.get(0).getAlbum();
-                pageImage.setImage(i.getCoverArt());
-                pageText.setText(i.getTitle());
-                pageTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-                pageTitleColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getTitle()));
-                pageDurationColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getFormattedTrackLength()));
-            }
-        });
-        mi5.setOnAction(mouseEvent -> {
-            pageHBox.toFront();
-            ObservableList<Music> songsSelected = songTable.getSelectionModel().getSelectedItems();
-            if(songsSelected.size()==1){
-                ArrayList<Music> songs = new ArrayList<>(songsSelected);
-                Artist i = songs.get(0).getArtist();
-                try {
-                    pageImage.setImage(i.getPicture());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                pageText.setText(i.getName());
-                //tablePage.
-            }
-        });
-        /*songTable.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER){ // Enter
-                openSelectedSongs();
-            }
-        });*/
-
-        albumTiles.setOnMouseClicked(mouseEvent -> {
+        /* albumTiles.setOnMouseClicked(mouseEvent -> {
             MouseButton button = mouseEvent.getButton();
             if((button==MouseButton.SECONDARY)){
-                contextMenu.show(songTable, mouseEvent.getScreenX(), mouseEvent.getScreenY());
+                songContext.show(songViewTable, mouseEvent.getScreenX(), mouseEvent.getScreenY());
             }
-        });
+        }); */
 
-        // Left pane button event handlers
+        setupLeftPanel();
+    }
+
+    /** Sets up the left pane button event handlers */
+    private void setupLeftPanel(){
         songsLabelButton.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getClickCount() == 1){
                 updateSongTable();
@@ -178,8 +109,87 @@ public class SongController {
         });
     }
 
-    // TODO: FIND WHAT'S MAKING THE TILES WIERD
-    // TODO: FIND HOW TO MAKE THE TILEPANE AND SCROLLPANE WORK
+    // This context menu is shared across all the song tables
+    // Setup event handling for song view context menu
+    private void setupSongTableContext(){
+        ContextMenu songContext = new ContextMenu();
+
+        MenuItem mi1 = new MenuItem("Delete");
+        MenuItem mi2 = new MenuItem("Edit");
+        MenuItem mi3 = new MenuItem("Add to");
+        MenuItem mi4 = new MenuItem("Go to Album");
+        MenuItem mi5 = new MenuItem("Go to Artist");
+
+        songContext.getItems().addAll(mi1, mi2, mi3, mi4, mi5);
+        songViewTable.setContextMenu(songContext);
+
+        songViewTable.setOnMousePressed(mouseEvent -> {
+            ObservableList<Music> songsSelected = songViewTable.getSelectionModel().getSelectedItems();
+            // Perhaps change the conditions to verify if all the selected songs have the same artist/album
+            boolean cond = (songsSelected.size() != 1);
+
+            if(mouseEvent.isSecondaryButtonDown()){
+                mi4.setDisable(cond);
+                mi5.setDisable(cond);
+            }
+        });
+
+        mi4.setOnAction(mouseEvent -> {
+            pageVBox.toFront();
+            ObservableList<Music> songsSelected = songViewTable.getSelectionModel().getSelectedItems();
+            if(songsSelected.size()>0){
+                ArrayList<Music> songs = new ArrayList<>(songsSelected);
+                Album i = songs.get(0).getAlbum();
+                updateInnerAlbumView(i);
+            }
+        });
+        /*mi5.setOnAction(mouseEvent -> {
+            pageVBox.toFront();
+            ObservableList<Music> songsSelected = songViewTable.getSelectionModel().getSelectedItems();
+            if(songsSelected.size()==1){
+                ArrayList<Music> songs = new ArrayList<>(songsSelected);
+                Artist i = songs.get(0).getArtist();
+                pageImage.setImage(i.getPicture());
+                pageText.setText(i.getName());
+                //tablePage.
+            }
+        });*/
+    }
+    private void setupSongTable(){
+        songViewTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        //artistTiles.setStyle("-fx-background-color: #FFFFFF;");
+
+        // Set up the song table columns (really important Lambda expressions)
+        songViewTitleColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getTitle()));
+        songViewArtistColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getArtist().getName()));
+        songViewAlbumColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getAlbum().getTitle()));
+        songViewDurationColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getFormattedTrackLength()));
+
+        // Set up table event handlers to open selected songs on double click
+        songViewTable.setOnMouseClicked(mouseEvent -> {
+            if((mouseEvent.getClickCount() == 2) && mouseEvent.getButton() == MouseButton.PRIMARY)
+                openSelectedSongs(songViewTable);
+        });
+        songViewTable.setOnKeyPressed(keyEvent -> {
+            if(keyEvent.getCode() == KeyCode.ENTER) // Enter
+                openSelectedSongs(songViewTable);
+        });
+    }
+    private void setupInnerSongTable(){
+        pageTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        pageTitleColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getTitle()));
+        pageDurationColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getFormattedTrackLength()));
+
+        pageTable.setOnMouseClicked(mouseEvent -> {
+            if((mouseEvent.getClickCount() == 2) && mouseEvent.getButton() == MouseButton.PRIMARY)
+                openSelectedSongs(pageTable);
+        });
+        pageTable.setOnKeyPressed(keyEvent -> {
+            if(keyEvent.getCode() == KeyCode.ENTER) // Enter
+                openSelectedSongs(pageTable);
+        });
+    }
+
     public VBox makeImageTile(Image image, String labelText){
         VBox vBoxout = new VBox();
         vBoxout.prefHeight(200);
@@ -204,7 +214,7 @@ public class SongController {
 
     private void changeToSongView(){
         changeView();
-        songTable.toFront();
+        songViewTable.toFront();
         songsLabelButton.setFont(Font.font("System", FontWeight.BOLD, FontPosture.REGULAR, 18));
     }
     private void changeToAlbumView(){
@@ -229,13 +239,13 @@ public class SongController {
         playlistsLabelButton.setFont(Font.font("System", FontWeight.NORMAL, FontPosture.REGULAR, 18));
     }
 
-    /* TODO: INSTEAD OF ALWAYS UPDATING THE VIEW, CHECK FOR CHANGES */
+    // TODO: INSTEAD OF ALWAYS UPDATING THE VIEW, CHECK FOR CHANGES
     private void updateSongTable(){
         ObservableList<Music> songsToAdd = FXCollections.observableArrayList();
         songsToAdd.addAll(library.getSongs());
 
         if(songsToAdd.size() > 0)
-            songTable.setItems(songsToAdd);
+            songViewTable.setItems(songsToAdd);
     }
     private void updateAlbumTiles(ArrayList<Album> albums){
         albumTiles.getChildren().removeAll(albumTiles.getChildren());
@@ -243,14 +253,13 @@ public class SongController {
         for (Album i: albums) {
             VBox tile = makeImageTile(i.getCoverArt(), i.getTitle());
 
-            /*// Maybe add here the handler for each tile
+            // Maybe add here the handler for each tile
             tile.setOnMouseClicked(mouseEvent -> {
-                if (mouseEvent.isPrimaryButtonDown()){
+                if (mouseEvent.getClickCount() == 1){
                     updateInnerAlbumView(i);
-                    //changeToInnerAlbumView();
+                    pageVBox.toFront();
                 }
-            });*/
-
+            });
             albumTiles.getChildren().add(tile);
         }
     }
@@ -270,19 +279,21 @@ public class SongController {
         // TODO: IMPLEMENT
     }
 
-    private void updateInnerAlbumView(Album album){}
+    private void updateInnerAlbumView(Album album){
+        ObservableList<Music> songsToAdd = FXCollections.observableArrayList();
+        songsToAdd.addAll(album.getTracklist());
+
+        pageImage.setImage(album.getCoverArt());
+        pageText.setText(album.getTitle());
+
+        pageTable.setItems(songsToAdd);
+    }
     private void updateInnerArtistView(Artist artist){}
     private void updateInnerPlaylistView(Playlist playlist){}
 
     public void launchPreferences() throws IOException {
         Stage newStage = new Stage();
-        /*FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("preferenceView.fxml"));
 
-        Scene scene = new Scene(fxmlLoader.load());
-        newStage.setScene(scene);
-        newStage.setResizable(false);
-        newStage.initModality(Modality.APPLICATION_MODAL);
-        newStage.showAndWait();*/
         MainGUI.openPreferences(newStage);
     }
 
@@ -295,15 +306,15 @@ public class SongController {
 
         String osName = System.getProperty("os.name").toLowerCase();
         if(osName.startsWith("windows"))
-            filePath = library.settings.getSavePath() + "\\";
+            filePath = Library.settings.getSavePath() + "\\";
         else if (osName.contains("linux"))
-            filePath = library.settings.getSavePath() + "/";
+            filePath = Library.settings.getSavePath() + "/";
         else // Unsupported OS
             throw new Exception();
 
         File folder = new File(filePath);
-        folder.mkdirs();
-
+        if(folder.mkdirs())
+            System.out.println("Save path already exists!");
         String path = filePath + "library.json";
 
         library.saveLibrary(path);
@@ -311,13 +322,20 @@ public class SongController {
     public void loadDefaultLibrary() throws Exception{
         String osName = System.getProperty("os.name").toLowerCase();
         String path;
-        if(osName.startsWith("windows"))
-            path = new String(library.settings.getSavePath() + "\\library.json");
-        else if (osName.contains("linux"))
-            path = new String(library.settings.getSavePath() + "/library.json");
-        else
-            throw new Exception();
-        library = Library.loadLibrary(path);
+        try {
+            if (osName.startsWith("windows"))
+                path = Library.settings.getSavePath() + "\\library.json";
+            else if (osName.contains("linux"))
+                path = Library.settings.getSavePath() + "/library.json";
+            else
+                throw new Exception();
+
+            library = Library.loadLibrary(path);
+        }catch (Exception e){
+            e.printStackTrace();
+            System.exit(1);
+        }
+
     }
 
     public void exportLibrary() throws Exception{
@@ -331,9 +349,8 @@ public class SongController {
         library = Library.loadLibrary(file.getPath());
     }
 
-
-    private void openSelectedSongs(){
-        ObservableList<Music> songsSelected = songTable.getSelectionModel().getSelectedItems();
+    private void openSelectedSongs(TableView<Music> table){
+        ObservableList<Music> songsSelected = table.getSelectionModel().getSelectedItems();
         if(songsSelected.size()>0){
             ArrayList<Music> songsToPlay = new ArrayList<>(songsSelected);
             library.openSongs(songsToPlay);
