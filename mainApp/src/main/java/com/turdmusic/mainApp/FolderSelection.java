@@ -22,7 +22,7 @@ public class FolderSelection {
     public static Settings settings;
 
     public ListView<String> pathList;
-    private ObservableList<String> items = FXCollections.observableArrayList();
+    private final ObservableList<String> items = FXCollections.observableArrayList();
     public Stage stage;
 
 
@@ -47,8 +47,6 @@ public class FolderSelection {
         pathList.setItems(items); // Update list
         addedFolder = true;
     }
-
-
 
     @FXML
     protected void removeFolderClicked(){

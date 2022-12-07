@@ -35,14 +35,14 @@ public class ImageInfo {
         String filePath;
         String osName = System.getProperty("os.name").toLowerCase();
         if(osName.startsWith("windows"))
-            filePath = new String(settings.getSavePath() + "\\images\\");
+            filePath = settings.getSavePath() + "\\images\\";
         else if (osName.contains("linux"))
-            filePath = new String(settings.getSavePath() + "/images/");
+            filePath = settings.getSavePath() + "/images/";
         else // Unsupported OS
             throw new Exception();
         
         File folder = new File(filePath);
-        folder.mkdirs();
+        System.out.println(folder.mkdirs());
 
         this.path = new File(filePath + fileName + ".jpg");
         ImageIO.write(image, "jpg", this.path);

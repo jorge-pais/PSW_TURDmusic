@@ -22,8 +22,8 @@ public class Library{
     private final ArrayList<Artist> artists;
     private final ArrayList<Playlist> playlists;
 
-    private Album undefinedAlbum;
-    private Artist undefinedArtist;
+    private Album undefinedAlbum = null;
+    private Artist undefinedArtist = null;
 
     public static Settings settings;
 
@@ -34,6 +34,8 @@ public class Library{
     public ArrayList<Artist> getArtists(){ return artists; }
     public ArrayList<Album> getAlbums(){ return albums; }
     public ArrayList<Playlist> getPlaylists(){ return playlists; }
+    public Album getUndefinedAlbum(){ return undefinedAlbum; }
+    public Artist getUndefinedArtist(){ return undefinedArtist; }
 
     public Library() {
         // Initialize all lists
@@ -145,8 +147,11 @@ public class Library{
             // check children folders recursively
             if(!file.isFile()) {
                 ArrayList<Music> scanResult = scanFilePath(file.getPath(), (startId + songsAdded));
+                assert scanResult != null;
+
                 musicList.addAll(scanResult);
                 songsAdded += scanResult.size();
+
             }
             else {
                 if (Utils.checkFileExtension(file.getName(), Utils.fileType.Audio)) { // check for a valid music file
