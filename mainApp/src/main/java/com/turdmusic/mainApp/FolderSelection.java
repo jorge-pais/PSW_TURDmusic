@@ -2,13 +2,15 @@ package com.turdmusic.mainApp;
 
 import com.turdmusic.mainApp.core.Library;
 import com.turdmusic.mainApp.core.Settings;
+import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.File;
 
@@ -25,7 +27,7 @@ public class FolderSelection {
     private final ObservableList<String> items = FXCollections.observableArrayList();
     public Stage stage;
 
-
+    public Label scannedLabel;
 
     public void initialize(){
         addedFolder = false;
@@ -36,7 +38,6 @@ public class FolderSelection {
         pathList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
-    @FXML
     public void addFolderClicked(){
         DirectoryChooser directoryChooser = new DirectoryChooser();
 
@@ -48,8 +49,7 @@ public class FolderSelection {
         addedFolder = true;
     }
 
-    @FXML
-    protected void removeFolderClicked(){
+    public void removeFolderClicked(){
         // get the selected items
         ObservableList<String> selectedItems = pathList.getSelectionModel().getSelectedItems();
 
@@ -62,30 +62,43 @@ public class FolderSelection {
             library.removePath(i);
     }
 
-    @FXML
-    protected void scanSelectedPressed(){
-        // TODO: POP-UP NOTIFICATION
+    public void scanSelectedPressed(){
+        // TODO: POP-UP NOTIFICATION OR FADEOUT LABEL
         ObservableList<String> selectedItems = pathList.getSelectionModel().getSelectedItems();
 
         for (String i: selectedItems)
             library.addPath(i);
         addedFolder = true;
+        showAndFadeLabel();
     }
 
-    @FXML
-    protected void scanAllPressed(){
+    public void scanAllPressed(){
         // TODO: POP-UP NOTIFICATION
         ObservableList<String> allItems = pathList.getItems();
 
         for (String i: allItems)
             library.addPath(i);
         addedFolder = true;
+        showAndFadeLabel();
     }
 
-    @FXML
-    protected void finishButtonClicked() {
+    public void finishButtonClicked() {
         stage = (Stage) pathList.getScene().getWindow();
         stage.close();
         //MainGUI.closePathManager(stage);
+    }
+    // Fade label for visual feedback
+    private void showAndFadeLabel(){
+        FadeTransition fade = new FadeTransition();
+        fade.setDuration(Duration.millis(2000));
+
+        fade.setFromValue(1);
+        fade.setToValue(0);
+        fade.setCycleCount(1);
+
+        fade.setNode(scannedLabel);
+        scannedLabel.setVisible(true);
+
+        fade.play();
     }
 }

@@ -2,17 +2,11 @@ package com.turdmusic.mainApp;
 
 import com.turdmusic.mainApp.core.Library;
 import com.turdmusic.mainApp.core.Settings;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseButton;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -31,7 +25,8 @@ public class PreferenceController {
     public void initialize(){
         setupTextFields();
 
-        mediaPlayerText.setOnMouseClicked(mouseEvent -> {
+        // FIXME there might be a way to reuse the same lambda in different spots
+        mediaPlayerText.setOnMouseClicked((mouseEvent) -> {
             if(mouseEvent.getClickCount() == 2){
                 FileChooser fileChooser = new FileChooser();
                 File file = fileChooser.showOpenDialog(null);
@@ -56,13 +51,14 @@ public class PreferenceController {
             }
         });
     }
+
     private void setupTextFields(){
         mediaPlayerText.setText(settings.getMediaPlayerExecutable());
         fpcalcText.setText(settings.getFpcalcExecutable());
         libraryPathText.setText(settings.getSavePath());
     }
-    @FXML
-    protected void onMouseClickedOpenPathManager() throws IOException {
+
+    public void onMouseClickedOpenPathManager() throws IOException {
         newStage = new Stage();
         MainGUI.openPathManager(newStage);
     }

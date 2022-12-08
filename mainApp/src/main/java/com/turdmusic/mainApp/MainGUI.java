@@ -30,7 +30,7 @@ public class MainGUI extends Application {
         if(settings.getFirstLaunch())
             sceneToOpen = "helloPage.fxml";
         else
-            sceneToOpen = "songView.fxml";
+            sceneToOpen = "mainView.fxml";
 
         FXMLLoader loader = new FXMLLoader(MainGUI.class.getResource(sceneToOpen));
         Scene scene = new Scene(loader.load());
@@ -43,7 +43,9 @@ public class MainGUI extends Application {
 
     public static void openPathManager(Stage newStage) throws IOException {
         FXMLLoader loaderPathManager = new FXMLLoader(MainGUI.class.getResource("pathManager.fxml"));
-        Scene scene = new Scene(loaderPathManager.load(), 600, 400);
+        Scene scene = new Scene(loaderPathManager.load(), 700, 400);
+
+        newStage.setResizable(false);
         newStage.setTitle("Select Folders");
         newStage.setScene(scene);
 
@@ -65,9 +67,7 @@ public class MainGUI extends Application {
         newStage.showAndWait();
     }
 
-    public static void closePreferenceController(Stage newStage) {
-        newStage.close();
-    }
+    //public static void closePreferenceController(Stage newStage) {newStage.close();}
     public static void main(String[] args) {
 
         // Load the settings object containing the preferences

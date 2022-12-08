@@ -1,6 +1,7 @@
 package com.turdmusic.mainApp;
 
 import com.turdmusic.mainApp.core.*;
+import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,6 +26,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+// Add multiple options to a single menu item?
+// https://stackoverflow.com/questions/69200063/contextmenu-sub-menus-from-a-list-of-strings
 
  /** Main View Controller Class
   * This is the main UI/UX controller class, here are all the views
@@ -57,27 +60,30 @@ public class MainView {
     public TilePane artistTiles;
     public TilePane albumTiles;
 
-    //public HBox pageHBox;
-    public VBox pageVBox;
+    public VBox pageBox;
     public Text pageText;
-    public TableView<Music> pageTable;
-    public TableColumn<Music, String> pageTitleColumn;
-    public TableColumn<Music, String> pageDurationColumn;
     public ImageView pageImage;
 
+    public TableView<Music> pageTable;
+    public TableColumn<Music, Number> pageTrackColumn;
+    public TableColumn<Music, String> pageTitleColumn;
+    public TableColumn<Music, String> pageArtistColumn;
+    public TableColumn<Music, String> pageAlbumColumn;
+    public TableColumn<Music, String> pageDurationColumn;
+
     public void initialize(){
-        // Allow multiple table items to be selected
+        // Setup both tableView elements
         setupSongTable();
         setupInnerSongTable();
-        setupSongTableContext();
-        updateSongTable();
 
-        /* albumTiles.setOnMouseClicked(mouseEvent -> {
-            MouseButton button = mouseEvent.getButton();
-            if((button==MouseButton.SECONDARY)){
-                songContext.show(songViewTable, mouseEvent.getScreenX(), mouseEvent.getScreenY());
-            }
-        }); */
+        // Setup context menus for each
+        setupTableContext(songViewTable);
+        setupTableContext(pageTable);
+
+        // Update the contents for each view
+        updateSongTable(library.getSongs());
+        updateAlbumTiles(library.getAlbums());
+        updateArtistTiles(library.getArtists());
 
         setupLeftPanel();
     }
@@ -86,19 +92,16 @@ public class MainView {
     private void setupLeftPanel(){
         songsLabelButton.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getClickCount() == 1){
-                updateSongTable();
                 changeToSongView();
             }
         });
         albumsLabelButton.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getClickCount() == 1){
-                updateAlbumTiles(library.getAlbums());
                 changeToAlbumView();
             }
         });
         artistsLabelButton.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getClickCount() == 1) {
-                updateArtistTiles(library.getArtists());
                 changeToArtistView();
             }
         });
@@ -109,51 +112,63 @@ public class MainView {
         });
     }
 
-    // This context menu is shared across all the song tables
-    // Setup event handling for song view context menu
-    private void setupSongTableContext(){
+    // Setup event handling for the different song tables
+    private void setupTableContext(TableView<Music> tableView){
         ContextMenu songContext = new ContextMenu();
 
-        MenuItem mi1 = new MenuItem("Delete");
+        MenuItem mi1 = new MenuItem("Remove from library");
         MenuItem mi2 = new MenuItem("Edit");
         MenuItem mi3 = new MenuItem("Add to");
         MenuItem mi4 = new MenuItem("Go to Album");
         MenuItem mi5 = new MenuItem("Go to Artist");
 
-        songContext.getItems().addAll(mi1, mi2, mi3, mi4, mi5);
-        songViewTable.setContextMenu(songContext);
+        tableView.setContextMenu(songContext);
 
-        songViewTable.setOnMousePressed(mouseEvent -> {
-            ObservableList<Music> songsSelected = songViewTable.getSelectionModel().getSelectedItems();
-            // Perhaps change the conditions to verify if all the selected songs have the same artist/album
-            boolean cond = (songsSelected.size() != 1);
+        // Disable options for multiple song conditions
+        tableView.setOnMousePressed(mouseEvent -> {
+            ObservableList<Music> songsSelected = tableView.getSelectionModel().getSelectedItems();
 
+
+            boolean goToAlbum = false, goToArtist = false;
             if(mouseEvent.isSecondaryButtonDown()){
-                mi4.setDisable(cond);
-                mi5.setDisable(cond);
+                Album album = songsSelected.get(0).getAlbum();
+                Artist artist = songsSelected.get(0).getArtist();
+
+                mi2.setDisable(songsSelected.size() > 1);
+
+                for (int i = 1; i < songsSelected.size(); i++) {
+                    if (!songsSelected.get(i).getAlbum().equals(album))
+                        goToAlbum = true;
+                    if(!songsSelected.get(i).getArtist().equals(artist)){
+                        goToArtist = true;
+                        break;
+                    }
+                }
+                mi4.setDisable(goToAlbum);
+                mi5.setDisable(goToArtist);
             }
         });
 
-        mi4.setOnAction(mouseEvent -> {
-            pageVBox.toFront();
-            ObservableList<Music> songsSelected = songViewTable.getSelectionModel().getSelectedItems();
+        mi4.setOnAction(mouseEvent -> { // Go to album
+            pageBox.toFront();
+            ObservableList<Music> songsSelected = tableView.getSelectionModel().getSelectedItems();
             if(songsSelected.size()>0){
                 ArrayList<Music> songs = new ArrayList<>(songsSelected);
-                Album i = songs.get(0).getAlbum();
-                updateInnerAlbumView(i);
+                Album album = songs.get(0).getAlbum();
+                updateInnerAlbumView(album);
             }
         });
-        /*mi5.setOnAction(mouseEvent -> {
-            pageVBox.toFront();
-            ObservableList<Music> songsSelected = songViewTable.getSelectionModel().getSelectedItems();
-            if(songsSelected.size()==1){
+        mi5.setOnAction(mouseEvent -> { // Go to Artist
+            pageBox.toFront();
+            ObservableList<Music> songsSelected = tableView.getSelectionModel().getSelectedItems();
+            if(songsSelected.size()>0){
                 ArrayList<Music> songs = new ArrayList<>(songsSelected);
-                Artist i = songs.get(0).getArtist();
-                pageImage.setImage(i.getPicture());
-                pageText.setText(i.getName());
-                //tablePage.
+                Artist artist = songs.get(0).getArtist();
+                updateInnerArtistView(artist);
             }
-        });*/
+        });
+
+        songContext.getItems().addAll(mi1, mi2, mi3, mi4, mi5);
     }
     private void setupSongTable(){
         songViewTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -179,6 +194,9 @@ public class MainView {
         pageTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         pageTitleColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getTitle()));
         pageDurationColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getFormattedTrackLength()));
+        pageTrackColumn.setCellValueFactory(param -> new ReadOnlyIntegerWrapper(param.getValue().getTrackNumber()));
+        pageArtistColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getArtist().getName()));
+        pageAlbumColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getAlbum().getTitle()));
 
         pageTable.setOnMouseClicked(mouseEvent -> {
             if((mouseEvent.getClickCount() == 2) && mouseEvent.getButton() == MouseButton.PRIMARY)
@@ -240,9 +258,9 @@ public class MainView {
     }
 
     // TODO: INSTEAD OF ALWAYS UPDATING THE VIEW, CHECK FOR CHANGES
-    private void updateSongTable(){
+    private void updateSongTable(ArrayList<Music> music){
         ObservableList<Music> songsToAdd = FXCollections.observableArrayList();
-        songsToAdd.addAll(library.getSongs());
+        songsToAdd.addAll(music);
 
         if(songsToAdd.size() > 0)
             songViewTable.setItems(songsToAdd);
@@ -257,7 +275,7 @@ public class MainView {
             tile.setOnMouseClicked(mouseEvent -> {
                 if (mouseEvent.getClickCount() == 1){
                     updateInnerAlbumView(i);
-                    pageVBox.toFront();
+                    pageBox.toFront();
                 }
             });
             albumTiles.getChildren().add(tile);
@@ -266,13 +284,16 @@ public class MainView {
     private void updateArtistTiles(ArrayList<Artist> artists){
         artistTiles.getChildren().removeAll(artistTiles.getChildren()); //Clear
 
-        try{
-            for(Artist i: artists){
-                VBox tile = makeImageTile(i.getPicture(), i.getName());
-                artistTiles.getChildren().add(tile);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
+        for(Artist i: artists){
+            VBox tile = makeImageTile(i.getPicture(), i.getName());
+
+            tile.setOnMouseClicked(mouseEvent -> {
+                if(mouseEvent.getClickCount() == 1){
+                    updateInnerArtistView(i);
+                    pageBox.toFront();
+                }
+            });
+            artistTiles.getChildren().add(tile);
         }
     }
     private void updatePlaylistTiles(ArrayList<Playlist> playlists){
@@ -280,6 +301,12 @@ public class MainView {
     }
 
     private void updateInnerAlbumView(Album album){
+        pageDurationColumn.setVisible(true);
+        pageTitleColumn.setVisible(true);
+        pageAlbumColumn.setVisible(false);
+        pageArtistColumn.setVisible(false);
+        pageTrackColumn.setVisible(true);
+
         ObservableList<Music> songsToAdd = FXCollections.observableArrayList();
         songsToAdd.addAll(album.getTracklist());
 
@@ -288,7 +315,22 @@ public class MainView {
 
         pageTable.setItems(songsToAdd);
     }
-    private void updateInnerArtistView(Artist artist){}
+    private void updateInnerArtistView(Artist artist){
+        ObservableList<Music> songsToAdd = FXCollections.observableArrayList();
+        songsToAdd.addAll(artist.getSongs());
+
+        pageDurationColumn.setVisible(true);
+        pageTitleColumn.setVisible(true);
+        pageAlbumColumn.setVisible(true);
+        pageArtistColumn.setVisible(false);
+        pageTrackColumn.setVisible(false);
+
+        pageImage.setImage(artist.getPicture());
+        pageText.setText(artist.getName());
+
+        pageTable.setItems(songsToAdd);
+
+    }
     private void updateInnerPlaylistView(Playlist playlist){}
 
     public void launchPreferences() throws IOException {
