@@ -123,22 +123,22 @@
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <Label fx:id="songsLabelButton" alignment="CENTER" contentDisplay="BOTTOM" minWidth="60.0" prefHeight="40.0" prefWidth="220.0" style="&#10;" text="Songs" wrapText="false">
+                                <Label fx:id="songsLabelButton" alignment="CENTER" contentDisplay="BOTTOM" minWidth="60.0" onMouseClicked="#changeToSongView" prefHeight="40.0" prefWidth="220.0" style="&#10;" text="Songs" wrapText="false">
                                     <font>
                                         <Font name="System Bold" size="18.0" fx:id="x1" />
                                     </font>
                                 </Label>
-                                <Label fx:id="albumsLabelButton" alignment="CENTER" contentDisplay="BOTTOM" minWidth="60.0" prefHeight="40.0" prefWidth="220.0" style="&#10;" text="Albums" wrapText="false" GridPane.rowIndex="1">
+                                <Label fx:id="albumsLabelButton" alignment="CENTER" contentDisplay="BOTTOM" minWidth="60.0" onMouseClicked="#changeToAlbumView" prefHeight="40.0" prefWidth="220.0" style="&#10;" text="Albums" wrapText="false" GridPane.rowIndex="1">
                                     <font>
                                         <Font size="18.0" fx:id="x11" />
                                     </font>
                                 </Label>
-                                <Label fx:id="artistsLabelButton" alignment="CENTER" contentDisplay="BOTTOM" minWidth="60.0" prefHeight="41.0" prefWidth="220.0" style="&#10;" text="Artists" wrapText="false" GridPane.rowIndex="2">
+                                <Label fx:id="artistsLabelButton" alignment="CENTER" contentDisplay="BOTTOM" minWidth="60.0" onMouseClicked="#changeToArtistView" prefHeight="41.0" prefWidth="220.0" style="&#10;" text="Artists" wrapText="false" GridPane.rowIndex="2">
                                     <font>
                                         <Font size="18.0" fx:id="x111" />
                                     </font>
                                 </Label>
-                                <Label fx:id="playlistsLabelButton" alignment="CENTER" contentDisplay="BOTTOM" minWidth="60.0" prefHeight="39.0" prefWidth="222.0" style="&#10;" text="Playlists" wrapText="false" GridPane.rowIndex="3">
+                                <Label fx:id="playlistsLabelButton" alignment="CENTER" contentDisplay="BOTTOM" minWidth="60.0" onMouseClicked="#changeToPlaylistView" prefHeight="39.0" prefWidth="222.0" style="&#10;" text="Playlists" wrapText="false" GridPane.rowIndex="3">
                                     <font>
                                         <Font size="18.0" fx:id="x1111" />
                                     </font>

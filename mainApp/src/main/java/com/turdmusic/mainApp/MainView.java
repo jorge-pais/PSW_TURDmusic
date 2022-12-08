@@ -28,7 +28,8 @@ import java.util.ArrayList;
 
 // Add multiple options to a single menu item?
 // https://stackoverflow.com/questions/69200063/contextmenu-sub-menus-from-a-list-of-strings
-
+//TODO: Change name to: MainController
+//TODO: Change name of scence to: mainPage
  /** Main View Controller Class
   * This is the main UI/UX controller class, here are all the views
   * for the main application window, including
@@ -85,31 +86,7 @@ public class MainView {
         updateAlbumTiles(library.getAlbums());
         updateArtistTiles(library.getArtists());
 
-        setupLeftPanel();
-    }
-
-    /** Sets up the left pane button event handlers */
-    private void setupLeftPanel(){
-        songsLabelButton.setOnMouseClicked(mouseEvent -> {
-            if (mouseEvent.getClickCount() == 1){
-                changeToSongView();
-            }
-        });
-        albumsLabelButton.setOnMouseClicked(mouseEvent -> {
-            if (mouseEvent.getClickCount() == 1){
-                changeToAlbumView();
-            }
-        });
-        artistsLabelButton.setOnMouseClicked(mouseEvent -> {
-            if (mouseEvent.getClickCount() == 1) {
-                changeToArtistView();
-            }
-        });
-        playlistsLabelButton.setOnMouseClicked(mouseEvent -> {
-            if (mouseEvent.getClickCount() == 1){
-                changeToPlaylistView();
-            }
-        });
+        //setupLeftPanel();
     }
 
     // Setup event handling for the different song tables
@@ -151,6 +128,7 @@ public class MainView {
 
         mi4.setOnAction(mouseEvent -> { // Go to album
             pageBox.toFront();
+            changeView();
             ObservableList<Music> songsSelected = tableView.getSelectionModel().getSelectedItems();
             if(songsSelected.size()>0){
                 ArrayList<Music> songs = new ArrayList<>(songsSelected);
@@ -160,6 +138,7 @@ public class MainView {
         });
         mi5.setOnAction(mouseEvent -> { // Go to Artist
             pageBox.toFront();
+            changeView();
             ObservableList<Music> songsSelected = tableView.getSelectionModel().getSelectedItems();
             if(songsSelected.size()>0){
                 ArrayList<Music> songs = new ArrayList<>(songsSelected);
@@ -230,22 +209,22 @@ public class MainView {
         return vBoxout;
     }
 
-    private void changeToSongView(){
+    public void changeToSongView(){
         changeView();
         songViewTable.toFront();
         songsLabelButton.setFont(Font.font("System", FontWeight.BOLD, FontPosture.REGULAR, 18));
     }
-    private void changeToAlbumView(){
+    public void changeToAlbumView(){
         changeView();
         albumScroll.toFront();
         albumsLabelButton.setFont(Font.font("System", FontWeight.BOLD, FontPosture.REGULAR, 18));
     }
-    private void changeToArtistView(){
+    public void changeToArtistView(){
         changeView();
         artistScroll.toFront();
         artistsLabelButton.setFont(Font.font("System", FontWeight.BOLD, FontPosture.REGULAR, 18));
     }
-    private void changeToPlaylistView(){
+    public void changeToPlaylistView(){
         changeView();
         playlistScroll.toFront();
         playlistsLabelButton.setFont(Font.font("System", FontWeight.BOLD, FontPosture.REGULAR, 18));
@@ -276,6 +255,7 @@ public class MainView {
                 if (mouseEvent.getClickCount() == 1){
                     updateInnerAlbumView(i);
                     pageBox.toFront();
+                    changeView();
                 }
             });
             albumTiles.getChildren().add(tile);

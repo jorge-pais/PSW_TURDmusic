@@ -14,6 +14,9 @@ import javafx.util.Duration;
 
 import java.io.File;
 
+// TODO: Change name to: FolderController
+// TODO: Change name of scence to: FolderPage
+
 /**
     Controller class for the path selection window
 */
