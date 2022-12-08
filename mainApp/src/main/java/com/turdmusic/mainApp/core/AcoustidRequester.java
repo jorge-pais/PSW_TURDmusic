@@ -11,6 +11,7 @@ import java.net.*;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -102,45 +103,6 @@ public class AcoustidRequester {
         }
     }
 
-    // Maps json response to MusicInfo (java class)
-    // Returned value has music, artist information
-    private static List<MusicInfo.Result.Record> getMusicInfo(String fingerprint, int duration) throws URISyntaxException, IOException, InterruptedException {
-        System.out.println("Fetching Data...");
-        String response = getAPIRequest(baseURL_acosticid,"?client="+key+"&meta=recordings+compress+releasegroups&duration="+duration+"&fingerprint="+fingerprint);
-        // TODO: return null if response is not ok
-
-        Gson gson = new Gson();
-        MusicInfo music = gson.fromJson(response, MusicInfo.class);
-
-        if(!music.getStatus().equals("ok")){
-            return null;
-        }
-
-        System.out.println("Data Fetched...");
-        // Chooses the recording with the highest score
-        double THRESHOLD = 0.6;
-        MusicInfo.Result filteredResult = music.getResults().stream()
-                .filter(e -> e.getScore() > THRESHOLD)
-                .max((val1, val2) -> (int) (val1.getScore()*10000 - val2.getScore()*10000))
-                .orElse(null);
-
-        if(filteredResult==null){return null;}
-
-        List<MusicInfo.Result.Record> filteredRecord = filteredResult.getRecordings();
-        Map<String, Long> recordsName = filteredRecord.stream()
-                .filter(record -> record.getTitle()!=null)
-                .collect(Collectors.groupingBy(MusicInfo.Result.Record::getTitle, Collectors.counting()));
-
-        String musicName = recordsName.entrySet().stream()
-                .max(Map.Entry.comparingByValue()).get().getKey();
-
-        // List of record
-        List<MusicInfo.Result.Record> musicInformation = filteredRecord.stream()
-                .filter(record -> record.getTitle()!=null && record.getTitle().equals(musicName))
-                .collect(Collectors.toList());
-
-        return musicInformation;
-    }
 
     private static String getCoverURL(MusicInfo.Result.Record.ReleaseGroup releaseGroup) throws URISyntaxException, IOException, InterruptedException {
         System.out.println("Fetching Data...");
@@ -168,28 +130,50 @@ public class AcoustidRequester {
         // TODO: Understand the name to be given
     }
 
-    public static Music fetchMetadata(Music music) throws Exception {
+    // Maps json response to MusicInfo (java class)
+    // Returned value has music, artist information
+    public static List<MusicInfo.Result.Record> getMusicInfo(Music music) throws Exception {
         String musicPath = music.getFile().getPath();
 
-        List<MusicInfo.Result.Record> musicInfo = getMusicInfo(getFingerprint(musicPath), music.getTrackLength());
+        String fingerprint = getFingerprint(musicPath);
+        int duration = music.getTrackLength();
 
-        /*assert musicInfo != null;
-        String aux = getCoverURL(musicInfo.getReleaseGroups().get(0));
+        System.out.println("Fetching Data...");
+        String response = getAPIRequest(baseURL_acosticid,"?client="+key+"&meta=recordings+compress+releasegroups&duration="+duration+"&fingerprint="+fingerprint);
+        // TODO: return null if response is not ok
 
-        downloadCover(aux);
+        Gson gson = new Gson();
+        MusicInfo musicInfo = gson.fromJson(response, MusicInfo.class);
 
-        music.setTitle(musicInfo.getTitle());*/
-        //music.setArtist();
-        //music.setAlbuns();
+        if(!musicInfo.getStatus().equals("ok")){
+            return null;
+        }
 
+        System.out.println("Data Fetched...");
+        // Chooses the recording with the highest score
+        double THRESHOLD = 0.6;
+        MusicInfo.Result filteredResult = musicInfo.getResults().stream()
+                .filter(e -> e.getScore() > THRESHOLD)
+                .max((val1, val2) -> (int) (val1.getScore()*10000 - val2.getScore()*10000))
+                .orElse(null);
 
-        //C:\Users\David\Downloads
-        //System.out.println(music.getArtists().get(0).getName());
-        //System.out.println(music.getTitle());
+        if(filteredResult==null){return null;}
 
-        return music;
+        List<MusicInfo.Result.Record> filteredRecord = filteredResult.getRecordings();
+        Map<String, Long> recordsName = filteredRecord.stream()
+                .filter(record -> record.getTitle()!=null)
+                .collect(Collectors.groupingBy(MusicInfo.Result.Record::getTitle, Collectors.counting()));
+
+        String musicName = recordsName.entrySet().stream()
+                .max(Map.Entry.comparingByValue()).get().getKey();
+
+        // List of record
+        List<MusicInfo.Result.Record> musicInformation = filteredRecord.stream()
+                .filter(record -> record.getTitle()!=null && record.getTitle().equals(musicName))
+                .collect(Collectors.toList());
+
+        return musicInformation;
     }
-
 
 }
 
