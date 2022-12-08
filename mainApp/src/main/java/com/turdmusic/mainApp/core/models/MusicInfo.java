@@ -49,15 +49,23 @@ public class MusicInfo {
         public class Record{
             private List<Artist> artists;
             private String title;
+            private List<ReleaseGroup> releasegroups;
 
             @Override
             public String toString() {
                 return "Record{" +
                         "artists=" + artists +
                         ", title='" + title + '\'' +
+                        ", releasegroups=" + releasegroups +
                         '}';
             }
 
+            public List<ReleaseGroup> getReleaseGroups() {
+                return releasegroups;
+            }
+            public void setReleaseGroups(List<ReleaseGroup> releasegroups) {
+                this.releasegroups = releasegroups;
+            }
             public List<Artist> getArtists() {
                 return artists;
             }
@@ -84,6 +92,32 @@ public class MusicInfo {
                 }
                 public void setName(String name) {
                     this.name = name;
+                }
+            }
+
+            public class ReleaseGroup{
+                private String id;
+                private String title;
+
+                @Override
+                public String toString() {
+                    return "ReleaseGroup{" +
+                            "id='" + id + '\'' +
+                            ", title='" + title + '\'' +
+                            '}';
+                }
+
+                public String getId() {
+                    return id;
+                }
+                public void setId(String id) {
+                    this.id = id;
+                }
+                public String getTitle() {
+                    return title;
+                }
+                public void setTitle(String title) {
+                    this.title = title;
                 }
             }
         }

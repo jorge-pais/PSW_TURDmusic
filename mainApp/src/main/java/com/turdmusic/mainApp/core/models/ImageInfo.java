@@ -40,7 +40,7 @@ public class ImageInfo {
             filePath = settings.getSavePath() + "/images/";
         else // Unsupported OS
             throw new Exception();
-        
+
         File folder = new File(filePath);
         System.out.println(folder.mkdirs());
 
