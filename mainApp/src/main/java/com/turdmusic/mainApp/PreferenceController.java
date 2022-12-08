@@ -58,9 +58,9 @@ public class PreferenceController {
         libraryPathText.setText(settings.getSavePath());
     }
 
-    public void onMouseClickedOpenPathManager() throws IOException {
+    public void launchPathManager() throws IOException {
         newStage = new Stage();
-        MainGUI.openPathManager(newStage);
+        MainGUI.openFolderPage(newStage);
     }
 
     public void onMouseClickedCancel(){

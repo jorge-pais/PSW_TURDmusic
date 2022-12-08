@@ -86,7 +86,6 @@ public class MainView {
         updateAlbumTiles(library.getAlbums());
         updateArtistTiles(library.getArtists());
 
-        //setupLeftPanel();
     }
 
     // Setup event handling for the different song tables
@@ -95,16 +94,18 @@ public class MainView {
 
         MenuItem mi1 = new MenuItem("Remove from library");
         MenuItem mi2 = new MenuItem("Edit");
-        MenuItem mi3 = new MenuItem("Add to");
+        Menu mi3 = new Menu("Add to");
         MenuItem mi4 = new MenuItem("Go to Album");
         MenuItem mi5 = new MenuItem("Go to Artist");
 
+        setupTableContextPlaylist(mi3);
+
+        songContext.getItems().addAll(mi1, mi2, mi3, mi4, mi5);
         tableView.setContextMenu(songContext);
 
         // Disable options for multiple song conditions
         tableView.setOnMousePressed(mouseEvent -> {
             ObservableList<Music> songsSelected = tableView.getSelectionModel().getSelectedItems();
-
 
             boolean goToAlbum = false, goToArtist = false;
             if(mouseEvent.isSecondaryButtonDown()){
@@ -147,9 +148,18 @@ public class MainView {
             }
         });
 
-        songContext.getItems().addAll(mi1, mi2, mi3, mi4, mi5);
     }
-    private void setupSongTable(){
+
+     private void setupTableContextPlaylist(Menu menu) {
+         MenuItem mi0 = new MenuItem("New Playlist");
+         SeparatorMenuItem sptr = new SeparatorMenuItem();
+         menu.getItems().addAll(mi0, sptr);
+
+         MenuItem mi1 = new MenuItem("Playlist 1");
+         menu.getItems().add(mi1);
+     }
+
+     private void setupSongTable(){
         songViewTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         //artistTiles.setStyle("-fx-background-color: #FFFFFF;");
 
@@ -237,14 +247,21 @@ public class MainView {
     }
 
     // TODO: INSTEAD OF ALWAYS UPDATING THE VIEW, CHECK FOR CHANGES
-    private void updateSongTable(ArrayList<Music> music){
+    public void updateAll(){
+        // Update the contents for each view
+        updateSongTable(library.getSongs());
+        updateAlbumTiles(library.getAlbums());
+        updateArtistTiles(library.getArtists());
+    }
+    public void updateSongTable(ArrayList<Music> music){
         ObservableList<Music> songsToAdd = FXCollections.observableArrayList();
         songsToAdd.addAll(music);
 
+        songViewTitleColumn.setVisible(false);
         if(songsToAdd.size() > 0)
             songViewTable.setItems(songsToAdd);
     }
-    private void updateAlbumTiles(ArrayList<Album> albums){
+    public void updateAlbumTiles(ArrayList<Album> albums){
         albumTiles.getChildren().removeAll(albumTiles.getChildren());
 
         for (Album i: albums) {
@@ -261,7 +278,7 @@ public class MainView {
             albumTiles.getChildren().add(tile);
         }
     }
-    private void updateArtistTiles(ArrayList<Artist> artists){
+    public void updateArtistTiles(ArrayList<Artist> artists){
         artistTiles.getChildren().removeAll(artistTiles.getChildren()); //Clear
 
         for(Artist i: artists){
@@ -276,7 +293,7 @@ public class MainView {
             artistTiles.getChildren().add(tile);
         }
     }
-    private void updatePlaylistTiles(ArrayList<Playlist> playlists){
+    public void updatePlaylistTiles(ArrayList<Playlist> playlists){
         // TODO: IMPLEMENT
     }
 
@@ -315,10 +332,13 @@ public class MainView {
 
     public void launchPreferences() throws IOException {
         Stage newStage = new Stage();
-
         MainGUI.openPreferences(newStage);
     }
 
+     public void launchFolder() throws IOException {
+         Stage newStage = new Stage();
+         MainGUI.openFolderPage(newStage);
+     }
 /*
     Save and load methods save/load the library
     to the defined savePath as library.json
