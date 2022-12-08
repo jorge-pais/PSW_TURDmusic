@@ -1,6 +1,10 @@
 package com.turdmusic.mainApp.core;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
@@ -11,8 +15,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.turdmusic.mainApp.core.models.CoverInfo;
+import com.turdmusic.mainApp.core.models.ImageInfo;
 import com.turdmusic.mainApp.core.models.MusicInfo;
 import com.google.gson.Gson;
+
+import javax.imageio.ImageIO;
 
 
 //
@@ -27,13 +35,17 @@ import com.google.gson.Gson;
 // TODO: Manage multiple Artists and Albuns
 // TODO: Completar MusicInfo, ligacao ao cover...  .org/releasegroup/[id]
 // TODO: Ver casos 302, nulls...
+// TODO: Verificar se existe ligacao a internet
+// TODO: Verificar todos os albuns do Nome musica maioritario
 public class AcoustidRequester {
 
     // API key
     private static final String key = "PFjVWjJwPw";
 
     // API request parameters
-    private static final String baseURL = "https://api.acoustid.org/v2/lookup";
+    private static final String baseURL_acosticid = "https://api.acoustid.org/v2/lookup";
+    private static final String baseURL_coverarch = "https://coverartarchive.org/release-group";
+    // TODO: Have fpcalc inside the project
     private static final String fpcalcPath = "C:\\Users\\David\\Downloads\\fpcalc";
     private static final String os = System.getProperty("os.name").toLowerCase();
 
@@ -54,46 +66,7 @@ public class AcoustidRequester {
         return response.body();
     }
 
-    // Maps json response to MusicInfo (java class)
-    // Returned value has music, artist information
-    private static MusicInfo.Result.Record getMusicInfo(String fingerprint, int duration) throws URISyntaxException, IOException, InterruptedException {
-        System.out.println("Fetching Data...");
-        String response = getAPIRequest(baseURL,"?client="+key+"&meta=recordings+compress+releasegroups&duration="+duration+"&fingerprint="+fingerprint);
-
-        Gson gson = new Gson();
-        MusicInfo music = gson.fromJson(response, MusicInfo.class);
-
-        if(!music.getStatus().equals("ok")){
-            return null;
-        }
-
-        System.out.println("Data Fetched...");
-        double THRESHOLD = 0.6;
-        MusicInfo.Result filteredResult = music.getResults().stream()
-                .filter(e -> e.getScore() > THRESHOLD)
-                .max((val1, val2) -> (int) (val1.getScore()*10000 - val2.getScore()*10000))
-                .orElse(null);
-
-
-        List<MusicInfo.Result.Record> filteredRecord = filteredResult.getRecordings();
-        Map<String, Long> recordsName = filteredRecord.stream()
-                .filter(record -> record.getTitle()!=null)
-                .collect(Collectors.groupingBy(MusicInfo.Result.Record::getTitle, Collectors.counting()));
-
-        String musicName = recordsName.entrySet().stream()
-                .max(Map.Entry.comparingByValue()).get().getKey();
-
-
-        MusicInfo.Result.Record musicInformation = filteredRecord.stream()
-                .filter(record -> record.getTitle()!=null && record.getTitle().equals(musicName))
-                .findFirst()
-                .orElse(null);
-
-        return musicInformation;
-    }
-
     private static String getFingerprint(String filepath) throws Exception{
-
         ProcessBuilder processBuilder = new ProcessBuilder();
 
 
@@ -104,6 +77,7 @@ public class AcoustidRequester {
             processBuilder.command("bash" , "-c", fpcalcPath + " -plain '" + filepath + "'");
         } else {
             System.out.println("Operative system is not supported");
+            return null;
         }
 
         Process process = processBuilder.start();
@@ -119,27 +93,97 @@ public class AcoustidRequester {
 
         int exitVal = process.waitFor();
         switch (exitVal) {
-        case 0:
-            System.out.println("Success");
-            return output.toString();
-        default:
-            System.out.println("Something went wrong");
-            return null;
+            case 0:
+                System.out.println("Success");
+                return output.toString();
+            default:
+                System.out.println("Something went wrong");
+                return null;
         }
     }
 
+    // Maps json response to MusicInfo (java class)
+    // Returned value has music, artist information
+    private static List<MusicInfo.Result.Record> getMusicInfo(String fingerprint, int duration) throws URISyntaxException, IOException, InterruptedException {
+        System.out.println("Fetching Data...");
+        String response = getAPIRequest(baseURL_acosticid,"?client="+key+"&meta=recordings+compress+releasegroups&duration="+duration+"&fingerprint="+fingerprint);
+        // TODO: return null if response is not ok
+
+        Gson gson = new Gson();
+        MusicInfo music = gson.fromJson(response, MusicInfo.class);
+
+        if(!music.getStatus().equals("ok")){
+            return null;
+        }
+
+        System.out.println("Data Fetched...");
+        // Chooses the recording with the highest score
+        double THRESHOLD = 0.6;
+        MusicInfo.Result filteredResult = music.getResults().stream()
+                .filter(e -> e.getScore() > THRESHOLD)
+                .max((val1, val2) -> (int) (val1.getScore()*10000 - val2.getScore()*10000))
+                .orElse(null);
+
+        if(filteredResult==null){return null;}
+
+        List<MusicInfo.Result.Record> filteredRecord = filteredResult.getRecordings();
+        Map<String, Long> recordsName = filteredRecord.stream()
+                .filter(record -> record.getTitle()!=null)
+                .collect(Collectors.groupingBy(MusicInfo.Result.Record::getTitle, Collectors.counting()));
+
+        String musicName = recordsName.entrySet().stream()
+                .max(Map.Entry.comparingByValue()).get().getKey();
+
+        // List of record
+        List<MusicInfo.Result.Record> musicInformation = filteredRecord.stream()
+                .filter(record -> record.getTitle()!=null && record.getTitle().equals(musicName))
+                .collect(Collectors.toList());
+
+        return musicInformation;
+    }
+
+    private static String getCoverURL(MusicInfo.Result.Record.ReleaseGroup releaseGroup) throws URISyntaxException, IOException, InterruptedException {
+        System.out.println("Fetching Data...");
+        String response = getAPIRequest(baseURL_coverarch, "/" + releaseGroup.getId());
+
+        Gson gson = new Gson();
+        CoverInfo covers = gson.fromJson(response, CoverInfo.class);
+        System.out.println("Data Fetched...");
+
+        // TODO: Verify if it exists
+        String urlCover = covers.getImages().get(0).getThumbnails().get("250");
+
+        // TODO: Add selection of one thumbnail (sizewise) from the map, if any. Return String
+        //
+        // (another function/method should use the link to download the image)
+
+        return urlCover;
+    }
+    private static ImageInfo downloadCover(String linkImage) throws Exception {
+        // Chamar APIRequester
+        // Exemplo do URL: "http://coverartarchive.org/release/a73ceee4-7992-4371-bbe1-5f2621a9742a/29884614890-250.jpg"
+        URL url = new URL(linkImage);
+        BufferedImage image = ImageIO.read(url);
+        return (new ImageInfo(image, "teste"));
+        // TODO: Understand the name to be given
+    }
 
     public static Music fetchMetadata(Music music) throws Exception {
         String musicPath = music.getFile().getPath();
 
-        MusicInfo.Result.Record musicInfo = getMusicInfo(getFingerprint(musicPath), music.getTrackLength());
+        List<MusicInfo.Result.Record> musicInfo = getMusicInfo(getFingerprint(musicPath), music.getTrackLength());
 
-        music.setTitle(musicInfo.getTitle());
+        /*assert musicInfo != null;
+        String aux = getCoverURL(musicInfo.getReleaseGroups().get(0));
+
+        downloadCover(aux);
+
+        music.setTitle(musicInfo.getTitle());*/
         //music.setArtist();
         //music.setAlbuns();
 
-        System.out.println();
 
+        //C:\Users\David\Downloads
         //System.out.println(music.getArtists().get(0).getName());
         //System.out.println(music.getTitle());
 

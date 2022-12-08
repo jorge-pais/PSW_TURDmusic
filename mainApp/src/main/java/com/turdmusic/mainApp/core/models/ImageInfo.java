@@ -34,13 +34,14 @@ public class ImageInfo {
     public ImageInfo(BufferedImage image, String fileName) throws Exception{
         String filePath;
         String osName = System.getProperty("os.name").toLowerCase();
-        if(osName.startsWith("windows"))
-            filePath = new String(settings.getSavePath() + "\\images\\");
+        // TODO: Colocar em todos Contains
+        if(osName.contains("windows"))
+            filePath = new String("C:\\Users\\David\\Music" + "\\images\\");
         else if (osName.contains("linux"))
             filePath = new String(settings.getSavePath() + "/images/");
         else // Unsupported OS
             throw new Exception();
-        
+
         File folder = new File(filePath);
         folder.mkdirs();
 
