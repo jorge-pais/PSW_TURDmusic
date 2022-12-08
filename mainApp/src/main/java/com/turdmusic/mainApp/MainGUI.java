@@ -30,7 +30,7 @@ public class MainGUI extends Application {
         if(settings.getFirstLaunch())
             sceneToOpen = "helloPage.fxml";
         else
-            sceneToOpen = "songView.fxml";
+            sceneToOpen = "mainView.fxml";
 
         FXMLLoader loader = new FXMLLoader(MainGUI.class.getResource(sceneToOpen));
         Scene scene = new Scene(loader.load());
@@ -43,7 +43,9 @@ public class MainGUI extends Application {
 
     public static void openPathManager(Stage newStage) throws IOException {
         FXMLLoader loaderPathManager = new FXMLLoader(MainGUI.class.getResource("pathManager.fxml"));
-        Scene scene = new Scene(loaderPathManager.load(), 600, 400);
+        Scene scene = new Scene(loaderPathManager.load(), 700, 400);
+
+        newStage.setResizable(false);
         newStage.setTitle("Select Folders");
         newStage.setScene(scene);
 
@@ -60,20 +62,19 @@ public class MainGUI extends Application {
         newStage.setScene(scene);
         newStage.setResizable(false);
 
+        newStage.setTitle("Preferences");
         newStage.initModality(Modality.APPLICATION_MODAL);
         newStage.showAndWait();
     }
 
-    public static void closePreferenceController(Stage newStage) {
-        newStage.close();
-    }
+    //public static void closePreferenceController(Stage newStage) {newStage.close();}
     public static void main(String[] args) {
 
         // Load the settings object containing the preferences
         settings = new Settings();
 
         // Test from the first launch
-        settings.setFirstLaunch(true);
+        //settings.setFirstLaunch(true);
 
         try{
             if(settings.getFirstLaunch())
@@ -81,22 +82,25 @@ public class MainGUI extends Application {
             else // TODO: update this to utilize library path from preferences
                 library = Library.loadLibrary(settings.getSavePath() + "/library.json");
 
-            Library.settings = settings; // There's probably a more elegant way of doing this
-            setLibrary(library);
         }catch (Exception e){
-            System.out.println("Error while loading library");
-            e.printStackTrace();
+            library = new Library();
+            settings.setFirstLaunch(true);
+            System.out.println("Error while loading library, reverting to default settings");
+            //e.printStackTrace();
         }
+        setControllerReferences(library, settings);
 
         launch();
     }
 
     // Add static library reference to all of JavaFX controllers
-    private static void setLibrary(Library library){
+    private static void setControllerReferences(Library library, Settings settings){
         HelloController.library = library;
         FolderSelection.library = library;
         MainView.library = library;
         PreferenceController.library = library;
+        PreferenceController.settings = settings;
+        Library.settings = settings;
         ImageInfo.settings = settings;
     }
 }
