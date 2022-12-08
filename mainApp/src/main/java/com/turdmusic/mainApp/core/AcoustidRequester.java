@@ -103,8 +103,7 @@ public class AcoustidRequester {
         }
     }
 
-
-    private static String getCoverURL(MusicInfo.Result.Record.ReleaseGroup releaseGroup) throws URISyntaxException, IOException, InterruptedException {
+    public static List<String> getCoversURL(MusicInfo.Result.Record.ReleaseGroup releaseGroup) throws URISyntaxException, IOException, InterruptedException {
         System.out.println("Fetching Data...");
         String response = getAPIRequest(baseURL_coverarch, "/" + releaseGroup.getId());
 
@@ -112,14 +111,21 @@ public class AcoustidRequester {
         CoverInfo covers = gson.fromJson(response, CoverInfo.class);
         System.out.println("Data Fetched...");
 
+        //List<Value> list = new ArrayList<Value>(map.values());
         // TODO: Verify if it exists
-        String urlCover = covers.getImages().get(0).getThumbnails().get("250");
+        List<Map<String, String>> urlCover = covers.getImages().stream()
+                .map(CoverInfo.Image::getThumbnails)
+                .collect(Collectors.toList());
+
+        List<String> totalURLsmall = urlCover.stream()
+                .map(w->w.get("250"))
+                .collect(Collectors.toList());
 
         // TODO: Add selection of one thumbnail (sizewise) from the map, if any. Return String
         //
         // (another function/method should use the link to download the image)
 
-        return urlCover;
+        return totalURLsmall;
     }
     private static ImageInfo downloadCover(String linkImage) throws Exception {
         // Chamar APIRequester
