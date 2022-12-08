@@ -63,6 +63,7 @@ public class MainView {
 
     public VBox pageBox;
     public Text pageText;
+    public TextArea pageArea;
     public ImageView pageImage;
 
     public TableView<Music> pageTable;
@@ -81,10 +82,11 @@ public class MainView {
         setupTableContext(songViewTable);
         setupTableContext(pageTable);
 
-        // Update the contents for each view
+        updateAll();
+        /*// Update the contents for each view
         updateSongTable(library.getSongs());
         updateAlbumTiles(library.getAlbums());
-        updateArtistTiles(library.getArtists());
+        updateArtistTiles(library.getArtists());*/
 
     }
 
@@ -98,7 +100,7 @@ public class MainView {
         MenuItem mi4 = new MenuItem("Go to Album");
         MenuItem mi5 = new MenuItem("Go to Artist");
 
-        setupTableContextPlaylist(mi3);
+        setupTableContextPlaylist(mi3, tableView);
 
         songContext.getItems().addAll(mi1, mi2, mi3, mi4, mi5);
         tableView.setContextMenu(songContext);
@@ -150,16 +152,28 @@ public class MainView {
 
     }
 
-     private void setupTableContextPlaylist(Menu menu) {
-         MenuItem mi0 = new MenuItem("New Playlist");
-         SeparatorMenuItem sptr = new SeparatorMenuItem();
-         menu.getItems().addAll(mi0, sptr);
+    private void setupTableContextPlaylist(Menu menu, TableView tableView) {
+        MenuItem mi0 = new MenuItem("New Playlist");
+        SeparatorMenuItem sptr = new SeparatorMenuItem();
+        menu.getItems().addAll(mi0, sptr);
+        for (Playlist i: library.getPlaylists()){
+            MenuItem mi1 = new MenuItem(i.getTitle());
+            menu.getItems().add(mi1);
+            mi1.setOnAction(mouseEvent -> {
+                ObservableList<Music> songsSelected = tableView.getSelectionModel().getSelectedItems();
+                if(songsSelected.size()>0){
+                    ArrayList<Music> songs = new ArrayList<>(songsSelected);
+                    //Nao esta a funcionar ainda:
+                    //i.getTracklist().add(songs);
+                }
+            });
+        }
 
-         MenuItem mi1 = new MenuItem("Playlist 1");
-         menu.getItems().add(mi1);
-     }
+        MenuItem mi2 = new MenuItem("Playlist 1");
+        menu.getItems().add(mi2);
+    }
 
-     private void setupSongTable(){
+    private void setupSongTable(){
         songViewTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         //artistTiles.setStyle("-fx-background-color: #FFFFFF;");
 

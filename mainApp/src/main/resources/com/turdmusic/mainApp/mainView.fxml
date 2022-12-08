@@ -226,7 +226,7 @@
                                                       <Font size="20.0" />
                                                    </font>
                                                 </Text>
-                                                <TextArea opacity="0.0" prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: FFFFFF;" />
+                                                <TextArea fx:id="pageArea" opacity="0.0" prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: FFFFFF;" />
                                                 <Pane prefHeight="10.0" prefWidth="195.0" />
                                              </children>
                                           </VBox>
