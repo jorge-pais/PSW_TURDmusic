@@ -67,35 +67,40 @@ public class FolderSelection {
         // TODO: POP-UP NOTIFICATION OR FADEOUT LABEL
         ObservableList<String> selectedItems = pathList.getSelectionModel().getSelectedItems();
 
-        for (String i: selectedItems)
+        for (String i: selectedItems){
             library.addPath(i);
-        addedFolder = true;
-        showAndFadeLabel();
+            addedFolder = true;
+            showAndFadeLabel();
+        }
     }
 
     public void scanAllPressed(){
         // TODO: POP-UP NOTIFICATION
         ObservableList<String> allItems = pathList.getItems();
 
-        for (String i: allItems)
+        for (String i: allItems){
             library.addPath(i);
-        addedFolder = true;
-        showAndFadeLabel();
+            addedFolder = true;
+            showAndFadeLabel();
+        }
     }
 
     public void finishButtonClicked() {
-        if(addedFolder==false){
+        if(addedFolder==true){
+            stage = (Stage) pathList.getScene().getWindow();
+            stage.close();
+        }
+        else {
             ButtonType cancel = new ButtonType("Cancel");
             ButtonType yes = new ButtonType("Yes");
             Alert alert = new Alert(Alert.AlertType.WARNING, "You don't have scan paths. Are you sure you want exit", cancel, yes);
             alert.showAndWait().ifPresent(response -> {
-                if (response == cancel) {
-                    return;
+                if (response == yes) {
+                    stage = (Stage) pathList.getScene().getWindow();
+                    stage.close();
                 }
             });
         }
-        stage = (Stage) pathList.getScene().getWindow();
-        stage.close();
     }
     // Fade label for visual feedback
     private void showAndFadeLabel(){

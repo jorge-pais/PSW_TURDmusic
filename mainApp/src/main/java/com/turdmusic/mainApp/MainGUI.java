@@ -5,10 +5,12 @@ import com.turdmusic.mainApp.core.models.ImageInfo;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 /** Contains the main program entry point, along with some GUI methods
  * utilized by other controller objects
@@ -35,10 +37,18 @@ public class MainGUI extends Application {
         FXMLLoader loader = new FXMLLoader(MainGUI.class.getResource(sceneToOpen));
         Scene scene = new Scene(loader.load());
         stage.setTitle("TURD Music");
+        stage.getIcons().add(getAppIcon());
         stage.setMinHeight(600);
         stage.setMinWidth(900);
         stage.setScene(scene);
         stage.show();
+    }
+
+    private static Image getAppIcon() {
+        InputStream imageStream = MainGUI.class.getResourceAsStream("/com/turdmusic/mainApp/icons/logo.png");
+        assert imageStream != null;
+        Image image = new Image(imageStream);
+        return image;
     }
 
     public static void openFolderPage(Stage newStage) throws IOException {
@@ -47,6 +57,7 @@ public class MainGUI extends Application {
 
         newStage.setResizable(false);
         newStage.setTitle("Select Folders");
+        newStage.getIcons().add(getAppIcon());
         newStage.setScene(scene);
 
         // Change the new window's modality
@@ -63,6 +74,7 @@ public class MainGUI extends Application {
         newStage.setResizable(false);
 
         newStage.setTitle("Preferences");
+        newStage.getIcons().add(getAppIcon());
         newStage.initModality(Modality.APPLICATION_MODAL);
         newStage.showAndWait();
     }

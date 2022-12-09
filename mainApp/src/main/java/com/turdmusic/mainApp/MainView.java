@@ -215,7 +215,7 @@ public class MainView {
         VBox vBoxout = new VBox();
         vBoxout.prefHeight(200);
         vBoxout.prefWidth(200);
-        vBoxout.setStyle("-fx-border-color: #000000;");
+        //vBoxout.setStyle("-fx-border-color: #000000;");
         vBoxout.setAlignment(Pos.CENTER);
         vBoxout.setLayoutX(10);
         vBoxout.setLayoutY(10);
@@ -228,6 +228,7 @@ public class MainView {
 
         Label label = new Label(labelText);
         label.setMaxWidth(150);
+        label.setAlignment(Pos.CENTER);
 
         vBoxout.getChildren().add(label);
         return vBoxout;
@@ -271,7 +272,7 @@ public class MainView {
         ObservableList<Music> songsToAdd = FXCollections.observableArrayList();
         songsToAdd.addAll(music);
 
-        songViewTitleColumn.setVisible(false);
+        //songViewTitleColumn.setVisible(false);
         if(songsToAdd.size() > 0)
             songViewTable.setItems(songsToAdd);
     }
