@@ -33,7 +33,8 @@ public class FolderController {
     public void initialize(){
         addedFolder = false;
         items.setAll(library.getLibraryPaths());
-        pathList.setItems(items);
+        //pathList.setItems(items);
+        updatePathList();
 
         // Allow multiple items to be selected
         pathList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -93,7 +94,7 @@ public class FolderController {
         // TODO: POP-UP NOTIFICATION OR FADEOUT LABEL
         ObservableList<String> selectedItems = pathList.getSelectionModel().getSelectedItems();
 
-        //Check if the path is on newItems
+        //Check if the path is on newItems and scan
         for (String i: selectedItems) {
             for (String j : newItems) {
                 if (Objects.equals(i, j)) {
@@ -131,7 +132,7 @@ public class FolderController {
     public void finishButtonClicked() {
         if (items.isEmpty()){
             ButtonType cancel = new ButtonType("Cancel");
-            ButtonType yes = new ButtonType("Yes");
+            ButtonType yes = new ButtonType("Exit");
             Alert alert = new Alert(Alert.AlertType.WARNING, "You don't have scan paths. Are you sure you want exit", cancel, yes);
             alert.showAndWait().ifPresent(response -> {
                 if (response == yes) {
@@ -146,10 +147,12 @@ public class FolderController {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The paths are not save. Scan all new paths first or they will be remove", cancel, yes);
             alert.showAndWait().ifPresent(response -> {
                 if (response == yes) {
+                    newItems.removeAll(newItems);
                     stage = (Stage) pathList.getScene().getWindow();
                     stage.close();
                 }
             });
+            //TODO: Is missing come back to the heloPage
             //settings.setFirstLaunch(false);
         }
         else {
@@ -175,7 +178,7 @@ public class FolderController {
         fade.play();
     }
     private void updatePathList() {
-        allItems.removeAll();
+        allItems.removeAll(allItems);
         allItems.addAll(items);
         allItems.addAll(newItems);
         pathList.setItems(allItems);
