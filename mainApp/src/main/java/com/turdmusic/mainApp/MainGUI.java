@@ -41,7 +41,7 @@ public class MainGUI extends Application {
         stage.show();
     }
 
-    public static void openPathManager(Stage newStage) throws IOException {
+    public static void openFolderPage(Stage newStage) throws IOException {
         FXMLLoader loaderPathManager = new FXMLLoader(MainGUI.class.getResource("pathManager.fxml"));
         Scene scene = new Scene(loaderPathManager.load(), 700, 400);
 

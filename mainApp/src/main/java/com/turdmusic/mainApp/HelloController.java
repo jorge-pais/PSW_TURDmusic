@@ -26,7 +26,7 @@ public class HelloController {
     protected void onMouseClicked() throws IOException {
         // Create a new stage (window) and load the file selection scene
         Stage newStage = new Stage();
-        MainGUI.openPathManager(newStage);
+        MainGUI.openFolderPage(newStage);
 
         if(FolderSelection.addedFolder) {
             // Mark the first launch here

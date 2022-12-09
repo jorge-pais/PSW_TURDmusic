@@ -5,9 +5,7 @@ import com.turdmusic.mainApp.core.Settings;
 import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
+import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -49,7 +47,7 @@ public class FolderSelection {
 
         items.add(path.getPath());
         pathList.setItems(items); // Update list
-        addedFolder = true;
+        //addedFolder = true;
     }
 
     public void removeFolderClicked(){
@@ -86,9 +84,18 @@ public class FolderSelection {
     }
 
     public void finishButtonClicked() {
+        if(addedFolder==false){
+            ButtonType cancel = new ButtonType("Cancel");
+            ButtonType yes = new ButtonType("Yes");
+            Alert alert = new Alert(Alert.AlertType.WARNING, "You don't have scan paths. Are you sure you want exit", cancel, yes);
+            alert.showAndWait().ifPresent(response -> {
+                if (response == cancel) {
+                    return;
+                }
+            });
+        }
         stage = (Stage) pathList.getScene().getWindow();
         stage.close();
-        //MainGUI.closePathManager(stage);
     }
     // Fade label for visual feedback
     private void showAndFadeLabel(){
