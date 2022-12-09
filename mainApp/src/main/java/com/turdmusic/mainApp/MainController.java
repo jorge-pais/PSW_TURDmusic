@@ -1,7 +1,6 @@
 package com.turdmusic.mainApp;
 
 import com.turdmusic.mainApp.core.*;
-import com.turdmusic.mainApp.core.models.MusicInfo;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
@@ -28,20 +27,17 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.List;
 
 // Add multiple options to a single menu item?
 // https://stackoverflow.com/questions/69200063/contextmenu-sub-menus-from-a-list-of-strings
-//TODO: Change name to: MainController
-//TODO: Change name of scence to: mainPage
+
  /** Main View Controller Class
   * This is the main UI/UX controller class, here are all the views
   * for the main application window, including
   * song/album/artist/playlist views
   * */
-public class MainView {
+public class MainController {
     // TODO: REMOVE THIS ENUM IF IT DOESN'T PROVE USEFUL
     private enum CurrentView {SongView, AlbumView, ArtistView, PlaylistView, Album, Artist, Playlist};
     private CurrentView state;

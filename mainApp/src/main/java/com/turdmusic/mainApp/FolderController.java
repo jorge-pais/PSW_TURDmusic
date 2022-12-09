@@ -12,13 +12,10 @@ import javafx.util.Duration;
 
 import java.io.File;
 
-// TODO: Change name to: FolderController
-// TODO: Change name of scence to: FolderPage
-
 /**
     Controller class for the path selection window
 */
-public class FolderSelection {
+public class FolderController {
 
     public static boolean addedFolder; // This tells the hello view that folder have been added and scanned
     public static Library library;
