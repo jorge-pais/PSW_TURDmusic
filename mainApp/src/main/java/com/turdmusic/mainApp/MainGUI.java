@@ -102,5 +102,6 @@ public class MainGUI extends Application {
         PreferenceController.settings = settings;
         Library.settings = settings;
         ImageInfo.settings = settings;
+        AcoustidRequester.settings = settings;
     }
 }

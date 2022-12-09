@@ -1,11 +1,14 @@
 package com.turdmusic.mainApp;
 
 import com.turdmusic.mainApp.core.*;
+import com.turdmusic.mainApp.core.models.MusicInfo;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -20,11 +23,14 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.List;
 
 // Add multiple options to a single menu item?
 // https://stackoverflow.com/questions/69200063/contextmenu-sub-menus-from-a-list-of-strings
@@ -88,6 +94,7 @@ public class MainView {
         updateAlbumTiles(library.getAlbums());
         updateArtistTiles(library.getArtists());*/
 
+        //setupLeftPanel();
     }
 
     // Setup event handling for the different song tables
@@ -95,7 +102,7 @@ public class MainView {
         ContextMenu songContext = new ContextMenu();
 
         MenuItem mi1 = new MenuItem("Remove from library");
-        MenuItem mi2 = new MenuItem("Edit");
+        MenuItem mi2 = new MenuItem("Find missing data");
         Menu mi3 = new Menu("Add to");
         MenuItem mi4 = new MenuItem("Go to Album");
         MenuItem mi5 = new MenuItem("Go to Artist");
@@ -108,6 +115,7 @@ public class MainView {
         // Disable options for multiple song conditions
         tableView.setOnMousePressed(mouseEvent -> {
             ObservableList<Music> songsSelected = tableView.getSelectionModel().getSelectedItems();
+
 
             boolean goToAlbum = false, goToArtist = false;
             if(mouseEvent.isSecondaryButtonDown()){
@@ -150,6 +158,28 @@ public class MainView {
             }
         });
 
+        mi2.setOnAction(mouseEvent -> {
+            Music music = tableView.getSelectionModel().getSelectedItems().get(0);
+            System.out.println("aaaaa" + music.getTitle());
+            try {
+                MetaFetchController.results = AcoustidRequester.getMusicInfo(music);
+
+                Stage stage = new Stage();
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("metaFetch.fxml"));
+                Scene scene = new Scene(fxmlLoader.load(), 370, 400);
+
+                stage.setTitle("Select metadata result");
+                stage.setScene(scene);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.showAndWait();
+                // Get the result
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "No results could be found for the selected song.");
+                alert.show();
+            }
+        });
+
+        songContext.getItems().addAll(mi1, mi2, mi3, mi4, mi5);
     }
 
     private void setupTableContextPlaylist(Menu menu, TableView tableView) {
@@ -346,7 +376,9 @@ public class MainView {
 
     public void launchPreferences() throws IOException {
         Stage newStage = new Stage();
+
         MainGUI.openPreferences(newStage);
+
     }
 
      public void launchFolder() throws IOException {

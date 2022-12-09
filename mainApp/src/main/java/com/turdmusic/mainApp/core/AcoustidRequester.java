@@ -40,17 +40,15 @@ import javax.imageio.ImageIO;
 // TODO: Verificar todos os albuns do Nome musica maioritario
 public class AcoustidRequester {
 
+    public static Settings settings;
+
     // API key
     private static final String key = "PFjVWjJwPw";
 
     // API request parameters
     private static final String baseURL_acosticid = "https://api.acoustid.org/v2/lookup";
     private static final String baseURL_coverarch = "https://coverartarchive.org/release-group";
-    // TODO: Have fpcalc inside the project
-    private static final String fpcalcPath = "C:\\Users\\David\\Downloads\\fpcalc";
     private static final String os = System.getProperty("os.name").toLowerCase();
-
-
 
     // Possibly in a different class - with Token for Spotify
     private static String getAPIRequest(String url, String path) throws URISyntaxException, IOException, InterruptedException {
@@ -70,6 +68,8 @@ public class AcoustidRequester {
     private static String getFingerprint(String filepath) throws Exception{
         ProcessBuilder processBuilder = new ProcessBuilder();
 
+        // TODO: Have fpcalc inside the project
+        String fpcalcPath = settings.getFpcalcExecutable();
 
         // Cross-platform compatibility
         if (os.contains("windows")) {

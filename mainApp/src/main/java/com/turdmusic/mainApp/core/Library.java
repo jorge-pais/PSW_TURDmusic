@@ -66,6 +66,10 @@ public class Library{
             i.findAlbumCover();
             i.sortTrackList();
         }
+        /*for (Music i: this.songs) { // DEBUG
+            System.out.println(i.getFile().getPath());
+            System.out.println("---" + i.getTitle() + "---" + i.getArtist().getName() + "---" + i.getAlbum().getTitle());
+        }*/
 
         System.out.println("Path added!");
     }
@@ -192,12 +196,8 @@ public class Library{
      * @param id Integer id for the song
      * @return Music object with the appropriate artist/album relations
      */
-    private Music readSongMetadata(File fileHandle, int id) throws Exception{
-        //
-        // This function gets the metadata from a file and creates
-        // artist and album objects for the song, or adds the song
-        // to an existing album of artist
-        //
+    private Music readSongMetadata(File fileHandle, int id) throws Exception{ // FIXME
+
         AudioFile f = AudioFileIO.read(fileHandle);
         Tag tag = f.getTag();
 
@@ -233,8 +233,8 @@ public class Library{
         }
 
         int track = (trackNumber.length() == 0) ? 0 : Integer.parseInt(trackNumber);
-
         Music song = new Music(trackTitle, id, fileHandle, artist, album, track);
+
         artist.addSong(song);
         album.addSong(song);
         return song;
