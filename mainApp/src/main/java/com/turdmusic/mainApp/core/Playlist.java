@@ -38,5 +38,4 @@ public class Playlist{
     public ArrayList<Music> getTracklist(){ return tracklist; }
     public String getTitle(){ return title; }
     public Date getDateCreated(){ return dateCreated; }
-
 }

@@ -9,7 +9,7 @@ public class TestUtils {
     /**
      * This function returns a percentage indicating how
      * different two images are
-     * */
+     */
     public static double compareTwoImages(File fileA, File fileB){
         BufferedImage imgA = null, imgB = null;
 

@@ -149,7 +149,7 @@ public class MainCLI {
                         break;
                     }*/
 
-                    System.out.println(AcoustidRequester.fetchMetadata(library.getSongs().get(0)).getTitle());
+                    //System.out.println(AcoustidRequester.fetchMetadata(library.getSongs().get(0)).getTitle());
 
 
 

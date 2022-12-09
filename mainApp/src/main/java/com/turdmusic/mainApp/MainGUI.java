@@ -74,7 +74,7 @@ public class MainGUI extends Application {
         settings = new Settings();
 
         // Test from the first launch
-        settings.setFirstLaunch(true);
+        //settings.setFirstLaunch(true);
 
         try{
             if(settings.getFirstLaunch())
@@ -102,5 +102,6 @@ public class MainGUI extends Application {
         PreferenceController.settings = settings;
         Library.settings = settings;
         ImageInfo.settings = settings;
+        AcoustidRequester.settings = settings;
     }
 }

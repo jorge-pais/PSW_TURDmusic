@@ -89,7 +89,7 @@
         </MenuBar>
         <HBox id="HBox" alignment="CENTER_LEFT" prefHeight="39.0" prefWidth="900.0" spacing="5.0" VBox.vgrow="NEVER">
             <children>
-                <TextField minWidth="140.0" prefHeight="27.0" prefWidth="191.0" promptText="Search" HBox.hgrow="NEVER">
+                <TextField fx:id="searchField" minWidth="140.0" prefHeight="27.0" prefWidth="191.0" promptText="Search" HBox.hgrow="NEVER">
                     <HBox.margin>
                         <Insets left="10.0" />
                     </HBox.margin>
