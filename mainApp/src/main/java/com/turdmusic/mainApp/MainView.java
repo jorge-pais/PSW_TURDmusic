@@ -43,8 +43,8 @@ import java.util.List;
   * */
 public class MainView {
     // TODO: REMOVE THIS ENUM IF IT DOESN'T PROVE USEFUL
-    /*private enum CurrentView {SongView, AlbumView, ArtistView, PlaylistView, Album, Artist, Playlist};
-    private CurrentView state;*/
+    private enum CurrentView {SongView, AlbumView, ArtistView, PlaylistView, Album, Artist, Playlist};
+    private CurrentView state;
 
     public static Library library;
 
@@ -109,7 +109,7 @@ public class MainView {
 
         setupTableContextPlaylist(mi3, tableView);
 
-        songContext.getItems().addAll(mi1, mi2, mi3, mi4, mi5);
+        //songContext.getItems().addAll(mi1, mi2, mi3, mi4, mi5);
         tableView.setContextMenu(songContext);
 
         // Disable options for multiple song conditions
@@ -183,7 +183,7 @@ public class MainView {
     }
 
     private void setupTableContextPlaylist(Menu menu, TableView tableView) {
-        MenuItem mi0 = new MenuItem("New Playlist");
+        /*MenuItem mi0 = new MenuItem("New Playlist");
         SeparatorMenuItem sptr = new SeparatorMenuItem();
         menu.getItems().addAll(mi0, sptr);
         for (Playlist i: library.getPlaylists()){
@@ -200,7 +200,7 @@ public class MainView {
         }
 
         MenuItem mi2 = new MenuItem("Playlist 1");
-        menu.getItems().add(mi2);
+        menu.getItems().add(mi2);*/
     }
 
     private void setupSongTable(){
@@ -301,7 +301,7 @@ public class MainView {
         ObservableList<Music> songsToAdd = FXCollections.observableArrayList();
         songsToAdd.addAll(music);
 
-        songViewTitleColumn.setVisible(false);
+        //songViewTitleColumn.setVisible(false);
         if(songsToAdd.size() > 0)
             songViewTable.setItems(songsToAdd);
     }
