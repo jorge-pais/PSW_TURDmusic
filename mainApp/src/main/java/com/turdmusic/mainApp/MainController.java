@@ -5,7 +5,9 @@ import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -20,6 +22,7 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -28,17 +31,16 @@ import java.util.ArrayList;
 
 // Add multiple options to a single menu item?
 // https://stackoverflow.com/questions/69200063/contextmenu-sub-menus-from-a-list-of-strings
-//TODO: Change name to: MainController
-//TODO: Change name of scence to: mainPage
+
  /** Main View Controller Class
   * This is the main UI/UX controller class, here are all the views
   * for the main application window, including
   * song/album/artist/playlist views
   * */
-public class MainView {
+public class MainController {
     // TODO: REMOVE THIS ENUM IF IT DOESN'T PROVE USEFUL
-    /*private enum CurrentView {SongView, AlbumView, ArtistView, PlaylistView, Album, Artist, Playlist};
-    private CurrentView state;*/
+    private enum CurrentView {SongView, AlbumView, ArtistView, PlaylistView, Album, Artist, Playlist};
+    private CurrentView state;
 
     public static Library library;
 
@@ -88,6 +90,7 @@ public class MainView {
         updateAlbumTiles(library.getAlbums());
         updateArtistTiles(library.getArtists());*/
 
+        //setupLeftPanel();
     }
 
     // Setup event handling for the different song tables
@@ -95,19 +98,20 @@ public class MainView {
         ContextMenu songContext = new ContextMenu();
 
         MenuItem mi1 = new MenuItem("Remove from library");
-        MenuItem mi2 = new MenuItem("Edit");
+        MenuItem mi2 = new MenuItem("Find missing data");
         Menu mi3 = new Menu("Add to");
         MenuItem mi4 = new MenuItem("Go to Album");
         MenuItem mi5 = new MenuItem("Go to Artist");
 
         setupTableContextPlaylist(mi3, tableView);
 
-        songContext.getItems().addAll(mi1, mi2, mi3, mi4, mi5);
+        //songContext.getItems().addAll(mi1, mi2, mi3, mi4, mi5);
         tableView.setContextMenu(songContext);
 
         // Disable options for multiple song conditions
         tableView.setOnMousePressed(mouseEvent -> {
             ObservableList<Music> songsSelected = tableView.getSelectionModel().getSelectedItems();
+
 
             boolean goToAlbum = false, goToArtist = false;
             if(mouseEvent.isSecondaryButtonDown()){
@@ -150,10 +154,32 @@ public class MainView {
             }
         });
 
+        mi2.setOnAction(mouseEvent -> {
+            Music music = tableView.getSelectionModel().getSelectedItems().get(0);
+            System.out.println("aaaaa" + music.getTitle());
+            try {
+                MetaFetchController.results = AcoustidRequester.getMusicInfo(music);
+
+                Stage stage = new Stage();
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("metaFetch.fxml"));
+                Scene scene = new Scene(fxmlLoader.load(), 370, 400);
+
+                stage.setTitle("Select metadata result");
+                stage.setScene(scene);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.showAndWait();
+                // Get the result
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "No results could be found for the selected song.");
+                alert.show();
+            }
+        });
+
+        songContext.getItems().addAll(mi1, mi2, mi3, mi4, mi5);
     }
 
     private void setupTableContextPlaylist(Menu menu, TableView tableView) {
-        MenuItem mi0 = new MenuItem("New Playlist");
+        /*MenuItem mi0 = new MenuItem("New Playlist");
         SeparatorMenuItem sptr = new SeparatorMenuItem();
         menu.getItems().addAll(mi0, sptr);
         for (Playlist i: library.getPlaylists()){
@@ -170,7 +196,7 @@ public class MainView {
         }
 
         MenuItem mi2 = new MenuItem("Playlist 1");
-        menu.getItems().add(mi2);
+        menu.getItems().add(mi2);*/
     }
 
     private void setupSongTable(){
@@ -347,7 +373,9 @@ public class MainView {
 
     public void launchPreferences() throws IOException {
         Stage newStage = new Stage();
+
         MainGUI.openPreferences(newStage);
+
     }
 
      public void launchFolder() throws IOException {

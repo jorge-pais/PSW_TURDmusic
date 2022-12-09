@@ -28,7 +28,7 @@ public class HelloController {
         Stage newStage = new Stage();
         MainGUI.openFolderPage(newStage);
 
-        if(FolderSelection.addedFolder) {
+        if(FolderController.addedFolder) {
             // Mark the first launch here
             Library.settings.setFirstLaunch(false);
             System.out.println("Paths have been added");

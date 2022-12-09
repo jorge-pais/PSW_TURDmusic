@@ -5,8 +5,8 @@ import java.util.List;
 
 /* Class with music metadata retrieved from AcousticID */
 public class MusicInfo {
-    private String status;
-    private List<Result> results;
+    public String status;
+    public List<Result> results;
 
     public List<Result> getResults() {
         return results;
@@ -23,8 +23,8 @@ public class MusicInfo {
 
     public class Result{
         // Substituir por uma classe Record
-        private List<Record> recordings;
-        private float score;
+        public List<Record> recordings;
+        public float score;
 
         @Override
         public String toString() {
@@ -47,9 +47,9 @@ public class MusicInfo {
 
 
         public class Record{
-            private List<Artist> artists;
-            private String title;
-            private List<ReleaseGroup> releasegroups;
+            public List<Artist> artists;
+            public String title;
+            public List<ReleaseGroup> releasegroups;
 
             @Override
             public String toString() {
@@ -80,7 +80,7 @@ public class MusicInfo {
             }
 
             public class Artist{
-                private String name;
+                public String name;
 
                 @Override
                 public String toString() {
@@ -96,8 +96,8 @@ public class MusicInfo {
             }
 
             public class ReleaseGroup{
-                private String id;
-                private String title;
+                public String id;
+                public String title;
 
                 @Override
                 public String toString() {

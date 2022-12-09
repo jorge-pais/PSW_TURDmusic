@@ -32,7 +32,7 @@ public class MainGUI extends Application {
         if(settings.getFirstLaunch())
             sceneToOpen = "helloPage.fxml";
         else
-            sceneToOpen = "mainView.fxml";
+            sceneToOpen = "mainPage.fxml";
 
         FXMLLoader loader = new FXMLLoader(MainGUI.class.getResource(sceneToOpen));
         Scene scene = new Scene(loader.load());
@@ -52,7 +52,7 @@ public class MainGUI extends Application {
     }
 
     public static void openFolderPage(Stage newStage) throws IOException {
-        FXMLLoader loaderPathManager = new FXMLLoader(MainGUI.class.getResource("pathManager.fxml"));
+        FXMLLoader loaderPathManager = new FXMLLoader(MainGUI.class.getResource("folderPage.fxml"));
         Scene scene = new Scene(loaderPathManager.load(), 700, 400);
 
         newStage.setResizable(false);
@@ -86,7 +86,7 @@ public class MainGUI extends Application {
         settings = new Settings();
 
         // Test from the first launch
-        settings.setFirstLaunch(true);
+        //settings.setFirstLaunch(true);
 
         try{
             if(settings.getFirstLaunch())
@@ -108,11 +108,12 @@ public class MainGUI extends Application {
     // Add static library reference to all of JavaFX controllers
     private static void setControllerReferences(Library library, Settings settings){
         HelloController.library = library;
-        FolderSelection.library = library;
-        MainView.library = library;
+        FolderController.library = library;
+        MainController.library = library;
         PreferenceController.library = library;
         PreferenceController.settings = settings;
         Library.settings = settings;
         ImageInfo.settings = settings;
+        AcoustidRequester.settings = settings;
     }
 }
