@@ -22,11 +22,11 @@ public class MainGUI extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        createStage(stage);
+        createMainStage(stage);
     }
 
     // TODO: alter the function name
-    public static void createStage(Stage stage) throws IOException {
+    public static void createMainStage(Stage stage) throws IOException {
         String sceneToOpen;
 
         if(settings.getFirstLaunch())
@@ -79,6 +79,18 @@ public class MainGUI extends Application {
         newStage.showAndWait();
     }
 
+    public static void openEditMenu(Stage newStage) throws IOException{
+        FXMLLoader fxmlLoader = new FXMLLoader(MainGUI.class.getResource("songEdit.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 302, 214);
+        newStage.setScene(scene);
+        newStage.setResizable(false);
+
+        newStage.setTitle("Edit song entry");
+        newStage.getIcons().add(getAppIcon());
+        newStage.initModality(Modality.APPLICATION_MODAL);
+        newStage.showAndWait();
+    }
+
     //public static void closePreferenceController(Stage newStage) {newStage.close();}
     public static void main(String[] args) {
 
@@ -86,7 +98,7 @@ public class MainGUI extends Application {
         settings = new Settings();
 
         // Test from the first launch
-        //settings.setFirstLaunch(true);
+        settings.setFirstLaunch(true);
 
         try{
             if(settings.getFirstLaunch())
@@ -115,5 +127,6 @@ public class MainGUI extends Application {
         Library.settings = settings;
         ImageInfo.settings = settings;
         AcoustidRequester.settings = settings;
+        SongEditController.library = library;
     }
 }

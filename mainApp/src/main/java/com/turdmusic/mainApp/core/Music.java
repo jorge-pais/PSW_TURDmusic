@@ -40,7 +40,7 @@ public class Music {
     public int getTrackNumber(){ return trackNumber; }
     @JsonIgnore
     public String getFormattedTrackLength(){
-        return String.format("%d:%d", trackLength/60, trackLength%60);
+        return String.format("%d:%02d", trackLength/60, trackLength%60);
     }
     public int getTrackLength(){ return trackLength; }
 

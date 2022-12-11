@@ -215,6 +215,17 @@ public class Library{
         if (artistName.length() == 0 || albumTitle.length() == 0 || trackTitle.length() == 0)
             throw new Exception();
 
+        int track = (trackNumber.length() == 0) ? 0 : Integer.parseInt(trackNumber);
+
+        return createSongEntry(artistName, albumTitle, trackTitle, fileHandle, id, track);
+    }
+
+    /** Creates a new song entry and create in the library the
+     * appropriate artist/album structure
+     * */
+    public Music createSongEntry(String artistName, String albumName, String title, File fileHandle, int id, int track){
+        Album album = null; Artist artist = null;
+
         for (Artist i : this.artists)
             if (i.getName().equals(artistName))
                 artist = i;
@@ -223,27 +234,22 @@ public class Library{
             this.artists.add(artist);
         }
 
-        for (Album i : this.albums)
-            if(i.getTitle().equals(albumTitle))
+        for (Album i : artist.getAlbums())
+            if(i.getTitle().equals(albumName))
                 album = i;
         if(album == null){
-            album = new Album(albumTitle, artist, this.albums.size());
+            album = new Album(albumName, artist, this.albums.size());
             artist.addAlbum(album);
             this.albums.add(album);
         }
-
-        int track = (trackNumber.length() == 0) ? 0 : Integer.parseInt(trackNumber);
-        Music song = new Music(trackTitle, id, fileHandle, artist, album, track);
-
+        Music song = new Music(title, id, fileHandle, artist, album, track);
         artist.addSong(song);
         album.addSong(song);
+
         return song;
     }
 
-    /*
-    Repeating functions for simplicity
-    TODO: find a way to reuse the same function without major class alterations
-    */
+    // Repeating functions for simplicity
     public ArrayList<Music> searchSongs(String searchTerm){
         String query = searchTerm.toLowerCase().replaceFirst("\\s++$", "");
 
