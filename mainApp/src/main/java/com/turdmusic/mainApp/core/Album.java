@@ -68,6 +68,7 @@ public class Album {
     @JsonIgnore
     public Image getCoverArt(){
         if(imageInfo != null)
+            //if(imageInfo.getImageObj() != null)
             return this.imageInfo.getImageObj();
         else {
             InputStream imageStream = getClass().getResourceAsStream("/com/turdmusic/mainApp/defaultphotos/album_default.png");

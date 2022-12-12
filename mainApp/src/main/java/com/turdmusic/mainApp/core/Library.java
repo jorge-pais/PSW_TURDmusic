@@ -209,13 +209,12 @@ public class Library{
         String trackTitle = tag.getFirst(FieldKey.TITLE).replaceFirst("\\s++$", "");
         String trackNumber = tag.getFirst(FieldKey.TRACK).replaceFirst("\\s++$", "");
 
-        Album album = null;
-        Artist artist = null;
-
         // If anything of these fields are missing the undefined
         // artist and albums will be assigned
         if (artistName.length() == 0 || albumTitle.length() == 0 || trackTitle.length() == 0)
             throw new Exception();
+
+        System.out.println(artistName + "---" + trackTitle);
 
         int track = (trackNumber.length() == 0) ? 0 : Integer.parseInt(trackNumber);
 

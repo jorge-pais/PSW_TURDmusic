@@ -52,7 +52,7 @@ public class Music {
         this.title = songTitle;
         this.file = fileHandle;
         this.id = id;
-        if(artist == null || album == null || trackNumber == 0)
+        if(artist == null || album == null)
             return;
 
         this.artist = artist;
