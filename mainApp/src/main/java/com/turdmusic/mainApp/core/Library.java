@@ -196,6 +196,8 @@ public class Library{
      * @param id Integer id for the song
      * @return Music object with the appropriate artist/album relations
      */
+	// FIXME it seems that songs with the character & make this function throw an
+	// Exception (or maybe displayling that name)
     private Music readSongMetadata(File fileHandle, int id) throws Exception{ // FIXME
 
         AudioFile f = AudioFileIO.read(fileHandle);
