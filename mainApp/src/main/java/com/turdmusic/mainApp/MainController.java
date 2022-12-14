@@ -15,6 +15,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
@@ -44,25 +45,34 @@ public class MainController {
 
     public static Library library;
 
-    public MenuItem optionsPreferences;
+    public VBox allPage;
+    //public MenuItem optionsPreferences;
 
+    //Button
     public Label songsLabelButton;
     public Label albumsLabelButton;
     public Label artistsLabelButton;
     public Label playlistsLabelButton;
 
+    //SongView
     public TableView<Music> songViewTable;
     public TableColumn<Music, String> songViewTitleColumn;
     public TableColumn<Music, String> songViewArtistColumn;
     public TableColumn<Music, String> songViewAlbumColumn;
     public TableColumn<Music, String> songViewDurationColumn;
 
-    public ScrollPane playlistScroll;
-    public ScrollPane artistScroll;
+    //AlbumView
     public ScrollPane albumScroll;
-    public TilePane artistTiles;
     public TilePane albumTiles;
 
+    //ArtistView
+    public ScrollPane artistScroll;
+    public TilePane artistTiles;
+
+    //PlaylistView
+    public ScrollPane playlistScroll;
+
+    //IndividualView:  Album, Artist, Playlist
     public VBox pageBox;
     public Text pageText;
     public TextArea pageArea;
@@ -76,127 +86,19 @@ public class MainController {
     public TableColumn<Music, String> pageDurationColumn;
 
     public void initialize(){
-        // Setup both tableView elements
+        // Setup both table elements
         setupSongTable();
         setupInnerSongTable();
 
-        // Setup context menus for each
+        // Setup short-menus for each table
         setupTableContext(songViewTable);
         setupTableContext(pageTable);
 
+        // Update the contents for each view
         updateAll();
-        /*// Update the contents for each view
-        updateSongTable(library.getSongs());
-        updateAlbumTiles(library.getAlbums());
-        updateArtistTiles(library.getArtists());*/
 
-        //setupLeftPanel();
-    }
-
-    // Setup event handling for the different song tables
-    private void setupTableContext(TableView<Music> tableView){
-        ContextMenu songContext = new ContextMenu();
-
-        MenuItem mi1 = new MenuItem("Remove from library");
-        MenuItem mi2 = new MenuItem("Find missing data");
-        Menu mi3 = new Menu("Add to");
-        MenuItem mi4 = new MenuItem("Go to Album");
-        MenuItem mi5 = new MenuItem("Go to Artist");
-
-        setupTableContextPlaylist(mi3, tableView);
-
-        //songContext.getItems().addAll(mi1, mi2, mi3, mi4, mi5);
-        tableView.setContextMenu(songContext);
-
-        // Disable options for multiple song conditions
-        tableView.setOnMousePressed(mouseEvent -> {
-            ObservableList<Music> songsSelected = tableView.getSelectionModel().getSelectedItems();
-
-
-            boolean goToAlbum = false, goToArtist = false;
-            if(mouseEvent.isSecondaryButtonDown()){
-                Album album = songsSelected.get(0).getAlbum();
-                Artist artist = songsSelected.get(0).getArtist();
-
-                mi2.setDisable(songsSelected.size() > 1);
-
-                for (int i = 1; i < songsSelected.size(); i++) {
-                    if (!songsSelected.get(i).getAlbum().equals(album))
-                        goToAlbum = true;
-                    if(!songsSelected.get(i).getArtist().equals(artist)){
-                        goToArtist = true;
-                        break;
-                    }
-                }
-                mi4.setDisable(goToAlbum);
-                mi5.setDisable(goToArtist);
-            }
-        });
-
-        mi4.setOnAction(mouseEvent -> { // Go to album
-            pageBox.toFront();
-            changeView();
-            ObservableList<Music> songsSelected = tableView.getSelectionModel().getSelectedItems();
-            if(songsSelected.size()>0){
-                ArrayList<Music> songs = new ArrayList<>(songsSelected);
-                Album album = songs.get(0).getAlbum();
-                updateInnerAlbumView(album);
-            }
-        });
-        mi5.setOnAction(mouseEvent -> { // Go to Artist
-            pageBox.toFront();
-            changeView();
-            ObservableList<Music> songsSelected = tableView.getSelectionModel().getSelectedItems();
-            if(songsSelected.size()>0){
-                ArrayList<Music> songs = new ArrayList<>(songsSelected);
-                Artist artist = songs.get(0).getArtist();
-                updateInnerArtistView(artist);
-            }
-        });
-
-        mi2.setOnAction(mouseEvent -> {
-            Music music = tableView.getSelectionModel().getSelectedItems().get(0);
-            System.out.println("aaaaa" + music.getTitle());
-            try {
-                MetaFetchController.results = AcoustidRequester.getMusicInfo(music);
-
-                Stage stage = new Stage();
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("metaFetch.fxml"));
-                Scene scene = new Scene(fxmlLoader.load(), 370, 400);
-
-                stage.setTitle("Select metadata result");
-                stage.setScene(scene);
-                stage.initModality(Modality.APPLICATION_MODAL);
-                stage.showAndWait();
-                // Get the result
-            } catch (Exception e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "No results could be found for the selected song.");
-                alert.show();
-            }
-        });
-
-        songContext.getItems().addAll(mi1, mi2, mi3, mi4, mi5);
-    }
-
-    private void setupTableContextPlaylist(Menu menu, TableView tableView) {
-        /*MenuItem mi0 = new MenuItem("New Playlist");
-        SeparatorMenuItem sptr = new SeparatorMenuItem();
-        menu.getItems().addAll(mi0, sptr);
-        for (Playlist i: library.getPlaylists()){
-            MenuItem mi1 = new MenuItem(i.getTitle());
-            menu.getItems().add(mi1);
-            mi1.setOnAction(mouseEvent -> {
-                ObservableList<Music> songsSelected = tableView.getSelectionModel().getSelectedItems();
-                if(songsSelected.size()>0){
-                    ArrayList<Music> songs = new ArrayList<>(songsSelected);
-                    //Nao esta a funcionar ainda:
-                    //i.getTracklist().add(songs);
-                }
-            });
-        }
-
-        MenuItem mi2 = new MenuItem("Playlist 1");
-        menu.getItems().add(mi2);*/
+        // Setup F5 to force update
+        setupKeyF5();
     }
 
     private void setupSongTable(){
@@ -237,7 +139,124 @@ public class MainController {
         });
     }
 
-    public VBox makeImageTile(Image image, String labelText){
+    // Setup event handling for the different song tables
+    private void setupTableContext(TableView<Music> tableView){
+        //Create the short-menu
+        ContextMenu songContext = new ContextMenu();
+        MenuItem mi1 = new MenuItem("Remove from library");
+        MenuItem mi2 = new MenuItem("Find missing data");
+        Menu mi3 = new Menu("Add to");
+        setupTableContextPlaylist(mi3);
+        MenuItem mi4 = new MenuItem("Go to Album");
+        MenuItem mi5 = new MenuItem("Go to Artist");
+
+        //Add the item to the menu
+        songContext.getItems().addAll(mi1, mi2, mi3, mi4, mi5);
+        tableView.setContextMenu(songContext);
+
+        // Define the menu function
+        mi2.setOnAction(mouseEvent -> {
+            findMissData(tableView);
+        });
+        mi4.setOnAction(mouseEvent -> {
+            setIndividualViewAlbum(tableView);
+        });
+        mi5.setOnAction(mouseEvent -> {
+            setIndividualViewArtist(tableView);
+        });
+
+        // Disable options for multiple song conditions
+        tableView.setOnMousePressed(mouseEvent -> {
+            ObservableList<Music> songsSelected = tableView.getSelectionModel().getSelectedItems();
+            boolean goToAlbum = false, goToArtist = false;
+            if(mouseEvent.isSecondaryButtonDown()){
+                Album album = songsSelected.get(0).getAlbum();
+                Artist artist = songsSelected.get(0).getArtist();
+
+                mi2.setDisable(songsSelected.size() > 1);
+
+                for (int i = 1; i < songsSelected.size(); i++) {
+                    if (!songsSelected.get(i).getAlbum().equals(album))
+                        goToAlbum = true;
+                    if(!songsSelected.get(i).getArtist().equals(artist)){
+                        goToArtist = true;
+                    break;
+                    }
+                }
+                mi4.setDisable(goToAlbum);
+                mi5.setDisable(goToArtist);
+                }
+        });
+
+
+
+    }
+
+     private void findMissData(TableView<Music> tableView) {
+         Music music = tableView.getSelectionModel().getSelectedItems().get(0);
+         System.out.println("aaaaa" + music.getTitle());
+         try {
+             MetaFetchController.results = AcoustidRequester.getMusicInfo(music);
+
+             Stage stage = new Stage();
+             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("metaFetch.fxml"));
+             Scene scene = new Scene(fxmlLoader.load(), 370, 400);
+
+             stage.setTitle("Select metadata result");
+             stage.setScene(scene);
+             stage.initModality(Modality.APPLICATION_MODAL);
+             stage.showAndWait();
+             // Get the result
+         } catch (Exception e) {
+             Alert alert = new Alert(Alert.AlertType.ERROR, "No results could be found for the selected song.");
+             alert.show();
+         }
+     }
+
+     private void setIndividualViewArtist(TableView<Music> tableView) {
+         pageBox.toFront();
+         changeView();
+         ObservableList<Music> songsSelected = tableView.getSelectionModel().getSelectedItems();
+         if(songsSelected.size()>0){
+             ArrayList<Music> songs = new ArrayList<>(songsSelected);
+             Artist artist = songs.get(0).getArtist();
+             updateInnerArtistView(artist);
+         }
+     }
+     private void setIndividualViewAlbum(TableView<Music> tableView) {
+         pageBox.toFront();
+         changeView();
+         ObservableList<Music> songsSelected = tableView.getSelectionModel().getSelectedItems();
+         if(songsSelected.size()>0){
+             ArrayList<Music> songs = new ArrayList<>(songsSelected);
+             Album album = songs.get(0).getAlbum();
+             updateInnerAlbumView(album);
+         }
+     }
+
+     private void setupTableContextPlaylist(Menu menu) {
+        MenuItem mi0 = new MenuItem("New Playlist");
+        SeparatorMenuItem sptr = new SeparatorMenuItem();
+        menu.getItems().addAll(mi0, sptr);
+        /*for (Playlist i: library.getPlaylists()){
+            MenuItem mi1 = new MenuItem(i.getTitle());
+            menu.getItems().add(mi1);
+            mi1.setOnAction(mouseEvent -> {
+            ObservableList<Music> songsSelected = tableView.getSelectionModel().getSelectedItems();
+            if(songsSelected.size()>0){
+                ArrayList<Music> songs = new ArrayList<>(songsSelected);
+                //Nao esta a funcionar ainda:
+                //i.getTracklist().add(songs);
+                }
+            });
+        }*/
+
+        MenuItem mi2 = new MenuItem("Playlist 1");
+        menu.getItems().add(mi2);
+    }
+
+
+     public VBox makeImageTile(Image image, String labelText){
         VBox vBoxout = new VBox();
         vBoxout.prefHeight(200);
         vBoxout.prefWidth(200);
@@ -337,6 +356,13 @@ public class MainController {
     public void updatePlaylistTiles(ArrayList<Playlist> playlists){
         // TODO: IMPLEMENT
     }
+    public void setupKeyF5() {
+         //Force the update page
+         allPage.addEventFilter(KeyEvent.KEY_RELEASED, event -> {
+             if (event.getCode() == KeyCode.F5)
+                 updateAll();
+         });
+    }
 
     private void updateInnerAlbumView(Album album){
         pageDurationColumn.setVisible(true);
@@ -373,12 +399,11 @@ public class MainController {
 
     public void launchPreferences() throws IOException {
         Stage newStage = new Stage();
-
         MainGUI.openPreferences(newStage);
 
     }
 
-     public void launchFolder() throws IOException {
+    public void launchFolder() throws IOException {
          Stage newStage = new Stage();
          MainGUI.openFolderPage(newStage);
      }
@@ -441,4 +466,10 @@ public class MainController {
             library.openSongs(songsToPlay);
         }
     }
+
+    public void finishButtonClicked(){
+        Stage stage = (Stage) songViewTable.getScene().getWindow();
+        stage.close();
+    }
+
 }
