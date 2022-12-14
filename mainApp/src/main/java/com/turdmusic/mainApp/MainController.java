@@ -15,6 +15,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
@@ -44,26 +45,35 @@ public class MainController {
 
     public static Library library;
 
-    public MenuItem optionsPreferences;
+    public VBox allPage;
+    //public MenuItem optionsPreferences;
 
+    //Button
     public Label songsLabelButton;
     public Label albumsLabelButton;
     public Label artistsLabelButton;
     public Label playlistsLabelButton;
 
+    //SongView
     public TableView<Music> songViewTable;
     public TableColumn<Music, String> songViewTitleColumn;
     public TableColumn<Music, String> songViewArtistColumn;
     public TableColumn<Music, String> songViewAlbumColumn;
     public TableColumn<Music, String> songViewDurationColumn;
 
-    public ScrollPane playlistScroll;
-    public ScrollPane artistScroll;
+    //AlbumView
     public ScrollPane albumScroll;
-    public TilePane artistTiles;
     public TilePane albumTiles;
     public TilePane playlistTiles;
 
+    //ArtistView
+    public ScrollPane artistScroll;
+    public TilePane artistTiles;
+
+    //PlaylistView
+    public ScrollPane playlistScroll;
+
+    //IndividualView:  Album, Artist, Playlist
     public VBox pageBox;
     public Text pageTitleText;
     public TextArea pageDescriptionText;
@@ -77,23 +87,63 @@ public class MainController {
     public TableColumn<Music, String> pageDurationColumn;
 
     public void initialize(){
-        // Setup both tableView elements
+        // Setup both table elements
         setupSongTable();
         setupInnerSongTable();
 
-        // Setup context menus for each
+        // Setup short-menus for each table
         setupTableContext(songViewTable);
         setupTableContext(pageTable);
 
+        // Update the contents for each view
         updateAll();
 
-        //setupLeftPanel();
+        // Setup F5 to force update
+        setupKeyF5();
+    }
+
+    private void setupSongTable(){
+        songViewTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        //artistTiles.setStyle("-fx-background-color: #FFFFFF;");
+
+        // Set up the song table columns (really important Lambda expressions)
+        songViewTitleColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getTitle()));
+        songViewArtistColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getArtist().getName()));
+        songViewAlbumColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getAlbum().getTitle()));
+        songViewDurationColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getFormattedTrackLength()));
+
+        // Set up table event handlers to open selected songs on double click
+        songViewTable.setOnMouseClicked(mouseEvent -> {
+            if((mouseEvent.getClickCount() == 2) && mouseEvent.getButton() == MouseButton.PRIMARY)
+                openSelectedSongs(songViewTable);
+        });
+        songViewTable.setOnKeyPressed(keyEvent -> {
+            if(keyEvent.getCode() == KeyCode.ENTER) // Enter
+                openSelectedSongs(songViewTable);
+        });
+    }
+    private void setupInnerSongTable(){
+        pageTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        pageTitleColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getTitle()));
+        pageDurationColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getFormattedTrackLength()));
+        pageTrackColumn.setCellValueFactory(param -> new ReadOnlyIntegerWrapper(param.getValue().getTrackNumber()));
+        pageArtistColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getArtist().getName()));
+        pageAlbumColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getAlbum().getTitle()));
+
+        pageTable.setOnMouseClicked(mouseEvent -> {
+            if((mouseEvent.getClickCount() == 2) && mouseEvent.getButton() == MouseButton.PRIMARY)
+                openSelectedSongs(pageTable);
+        });
+        pageTable.setOnKeyPressed(keyEvent -> {
+            if(keyEvent.getCode() == KeyCode.ENTER) // Enter
+                openSelectedSongs(pageTable);
+        });
     }
 
     // Setup event handling for the different song tables
     private void setupTableContext(TableView<Music> tableView){
+        //Create the short-menu
         ContextMenu songContext = new ContextMenu();
-
         MenuItem mi1 = new MenuItem("Remove from library");
         MenuItem mi2 = new MenuItem("Find missing data");
         MenuItem mi3 = new MenuItem("Edit");
@@ -122,12 +172,12 @@ public class MainController {
                         goToAlbum = true;
                     if(!songsSelected.get(i).getArtist().equals(artist)){
                         goToArtist = true;
-                        break;
+                    break;
                     }
                 }
                 mi4.setDisable(goToAlbum);
                 mi5.setDisable(goToArtist);
-            }
+                }
         });
 
         // Go to album page
@@ -238,45 +288,8 @@ public class MainController {
         }
     }
 
-    private void setupSongTable(){
-        songViewTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        //artistTiles.setStyle("-fx-background-color: #FFFFFF;");
 
-        // Set up the song table columns (really important Lambda expressions)
-        songViewTitleColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getTitle()));
-        songViewArtistColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getArtist().getName()));
-        songViewAlbumColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getAlbum().getTitle()));
-        songViewDurationColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getFormattedTrackLength()));
-
-        // Set up table event handlers to open selected songs on double click
-        songViewTable.setOnMouseClicked(mouseEvent -> {
-            if((mouseEvent.getClickCount() == 2) && mouseEvent.getButton() == MouseButton.PRIMARY)
-                openSelectedSongs(songViewTable);
-        });
-        songViewTable.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER) // Enter
-                openSelectedSongs(songViewTable);
-        });
-    }
-    private void setupInnerSongTable(){
-        pageTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        pageTitleColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getTitle()));
-        pageDurationColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getFormattedTrackLength()));
-        pageTrackColumn.setCellValueFactory(param -> new ReadOnlyIntegerWrapper(param.getValue().getTrackNumber()));
-        pageArtistColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getArtist().getName()));
-        pageAlbumColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getAlbum().getTitle()));
-
-        pageTable.setOnMouseClicked(mouseEvent -> {
-            if((mouseEvent.getClickCount() == 2) && mouseEvent.getButton() == MouseButton.PRIMARY)
-                openSelectedSongs(pageTable);
-        });
-        pageTable.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER) // Enter
-                openSelectedSongs(pageTable);
-        });
-    }
-
-    public VBox makeImageTile(Image image, String labelText){
+     public VBox makeImageTile(Image image, String labelText){
         VBox vBoxout = new VBox();
         vBoxout.prefHeight(200);
         vBoxout.prefWidth(200);
@@ -388,6 +401,13 @@ public class MainController {
             playlistTiles.getChildren().add(tile);
         }
     }
+    public void setupKeyF5() {
+         //Force the update page
+         allPage.addEventFilter(KeyEvent.KEY_RELEASED, event -> {
+             if (event.getCode() == KeyCode.F5)
+                 updateAll();
+         });
+    }
 
     private void updateInnerAlbumView(Album album){
         pageDurationColumn.setVisible(true);
@@ -438,7 +458,6 @@ public class MainController {
 
     public void launchPreferences() throws IOException {
         Stage newStage = new Stage();
-
         MainGUI.openPreferences(newStage);
 
     }
@@ -506,4 +525,10 @@ public class MainController {
             library.openSongs(songsToPlay);
         }
     }
+
+    public void finishButtonClicked(){
+        Stage stage = (Stage) songViewTable.getScene().getWindow();
+        stage.close();
+    }
+
 }

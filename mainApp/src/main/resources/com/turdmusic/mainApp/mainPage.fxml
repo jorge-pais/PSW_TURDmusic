@@ -27,7 +27,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox minHeight="300.0" minWidth="900.0" prefHeight="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.turdmusic.mainApp.MainController">
+<VBox fx:id="allPage" minHeight="300.0" minWidth="900.0" prefHeight="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.turdmusic.mainApp.MainController">
     <children>
         <MenuBar VBox.vgrow="NEVER">
             <menus>
@@ -45,7 +45,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#launchPreferences" text="Preferences…" />
                   <MenuItem mnemonicParsing="false" onAction="#launchFolder" text="Manage Folders" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Quit" />
+                        <MenuItem mnemonicParsing="false" onAction="#finishButtonClicked" text="Quit" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
