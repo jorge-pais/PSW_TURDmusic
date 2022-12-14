@@ -40,8 +40,8 @@ import java.util.ArrayList;
   * */
 public class MainController {
     // TODO: REMOVE THIS ENUM IF IT DOESN'T PROVE USEFUL
-    private enum CurrentView {SongView, AlbumView, ArtistView, PlaylistView, Album, Artist, Playlist};
-    private CurrentView state;
+    /*private enum CurrentView {SongView, AlbumView, ArtistView, PlaylistView, Album, Artist, Playlist};
+    private CurrentView state;*/
 
     public static Library library;
 
@@ -64,6 +64,7 @@ public class MainController {
     //AlbumView
     public ScrollPane albumScroll;
     public TilePane albumTiles;
+    public TilePane playlistTiles;
 
     //ArtistView
     public ScrollPane artistScroll;
@@ -74,8 +75,8 @@ public class MainController {
 
     //IndividualView:  Album, Artist, Playlist
     public VBox pageBox;
-    public Text pageText;
-    public TextArea pageArea;
+    public Text pageTitleText;
+    public TextArea pageDescriptionText;
     public ImageView pageImage;
 
     public TableView<Music> pageTable;
@@ -145,35 +146,26 @@ public class MainController {
         ContextMenu songContext = new ContextMenu();
         MenuItem mi1 = new MenuItem("Remove from library");
         MenuItem mi2 = new MenuItem("Find missing data");
-        Menu mi3 = new Menu("Add to");
-        setupTableContextPlaylist(mi3);
+        MenuItem mi3 = new MenuItem("Edit");
+        Menu playlistOptions = new Menu("Add to");
         MenuItem mi4 = new MenuItem("Go to Album");
         MenuItem mi5 = new MenuItem("Go to Artist");
 
-        //Add the item to the menu
-        songContext.getItems().addAll(mi1, mi2, mi3, mi4, mi5);
+        updatePlaylistContext(playlistOptions, tableView);
+
         tableView.setContextMenu(songContext);
 
-        // Define the menu function
-        mi2.setOnAction(mouseEvent -> {
-            findMissData(tableView);
-        });
-        mi4.setOnAction(mouseEvent -> {
-            setIndividualViewAlbum(tableView);
-        });
-        mi5.setOnAction(mouseEvent -> {
-            setIndividualViewArtist(tableView);
-        });
-
-        // Disable options for multiple song conditions
+        // Disable options for multiple selected songs conditions
         tableView.setOnMousePressed(mouseEvent -> {
             ObservableList<Music> songsSelected = tableView.getSelectionModel().getSelectedItems();
+
             boolean goToAlbum = false, goToArtist = false;
             if(mouseEvent.isSecondaryButtonDown()){
                 Album album = songsSelected.get(0).getAlbum();
                 Artist artist = songsSelected.get(0).getArtist();
 
                 mi2.setDisable(songsSelected.size() > 1);
+                mi3.setDisable(songsSelected.size() > 1);
 
                 for (int i = 1; i < songsSelected.size(); i++) {
                     if (!songsSelected.get(i).getAlbum().equals(album))
@@ -188,71 +180,112 @@ public class MainController {
                 }
         });
 
-
-
-    }
-
-     private void findMissData(TableView<Music> tableView) {
-         Music music = tableView.getSelectionModel().getSelectedItems().get(0);
-         System.out.println("aaaaa" + music.getTitle());
-         try {
-             MetaFetchController.results = AcoustidRequester.getMusicInfo(music);
-
-             Stage stage = new Stage();
-             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("metaFetch.fxml"));
-             Scene scene = new Scene(fxmlLoader.load(), 370, 400);
-
-             stage.setTitle("Select metadata result");
-             stage.setScene(scene);
-             stage.initModality(Modality.APPLICATION_MODAL);
-             stage.showAndWait();
-             // Get the result
-         } catch (Exception e) {
-             Alert alert = new Alert(Alert.AlertType.ERROR, "No results could be found for the selected song.");
-             alert.show();
-         }
-     }
-
-     private void setIndividualViewArtist(TableView<Music> tableView) {
-         pageBox.toFront();
-         changeView();
-         ObservableList<Music> songsSelected = tableView.getSelectionModel().getSelectedItems();
-         if(songsSelected.size()>0){
-             ArrayList<Music> songs = new ArrayList<>(songsSelected);
-             Artist artist = songs.get(0).getArtist();
-             updateInnerArtistView(artist);
-         }
-     }
-     private void setIndividualViewAlbum(TableView<Music> tableView) {
-         pageBox.toFront();
-         changeView();
-         ObservableList<Music> songsSelected = tableView.getSelectionModel().getSelectedItems();
-         if(songsSelected.size()>0){
-             ArrayList<Music> songs = new ArrayList<>(songsSelected);
-             Album album = songs.get(0).getAlbum();
-             updateInnerAlbumView(album);
-         }
-     }
-
-     private void setupTableContextPlaylist(Menu menu) {
-        MenuItem mi0 = new MenuItem("New Playlist");
-        SeparatorMenuItem sptr = new SeparatorMenuItem();
-        menu.getItems().addAll(mi0, sptr);
-        /*for (Playlist i: library.getPlaylists()){
-            MenuItem mi1 = new MenuItem(i.getTitle());
-            menu.getItems().add(mi1);
-            mi1.setOnAction(mouseEvent -> {
+        // Go to album page
+        mi4.setOnAction(actionEvent -> {
+            pageBox.toFront();
+            changeView();
             ObservableList<Music> songsSelected = tableView.getSelectionModel().getSelectedItems();
             if(songsSelected.size()>0){
                 ArrayList<Music> songs = new ArrayList<>(songsSelected);
-                //Nao esta a funcionar ainda:
-                //i.getTracklist().add(songs);
-                }
-            });
-        }*/
+                Album album = songs.get(0).getAlbum();
+                updateInnerAlbumView(album);
+            }
+        });
+        // Go to Artist page
+        mi5.setOnAction(actionEvent -> {
+            pageBox.toFront();
+            changeView();
+            ObservableList<Music> songsSelected = tableView.getSelectionModel().getSelectedItems();
+            if(songsSelected.size()>0){
+                ArrayList<Music> songs = new ArrayList<>(songsSelected);
+                Artist artist = songs.get(0).getArtist();
+                updateInnerArtistView(artist);
+            }
+        });
+        // Find missing data
+        mi2.setOnAction(actionEvent -> {
+            Music music = tableView.getSelectionModel().getSelectedItems().get(0);
+            try {
+                MetaFetchController.results = AcoustidRequester.getMusicInfo(music);
 
-        MenuItem mi2 = new MenuItem("Playlist 1");
-        menu.getItems().add(mi2);
+                Stage stage = new Stage();
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("metaFetch.fxml"));
+                Scene scene = new Scene(fxmlLoader.load(), 370, 400);
+
+                stage.setTitle("Select metadata result");
+                stage.setScene(scene);
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.showAndWait();
+
+                // TODO Get the result
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "No results could be found for the selected song.");
+                alert.show();
+            }
+        });
+        // Edit song
+        mi3.setOnAction(actionEvent -> {
+            Music music = tableView.getSelectionModel().getSelectedItems().get(0);
+            try {
+                Stage stage = new Stage();
+
+                SongEditController.music = music;
+                MainGUI.openEditMenu(stage);
+
+                updateAll();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        });
+
+        songContext.getItems().addAll(mi1, mi2, playlistOptions, mi3, mi4, mi5);
+    }
+
+    private void updatePlaylistContext(Menu menu, TableView<Music> tableView) {
+        menu.getItems().removeAll(menu.getItems()); //Clear
+
+        MenuItem mi0 = new MenuItem("New Playlist");
+
+        mi0.setOnAction(actionEvent -> {
+            ObservableList<Music> songsToAdd = tableView.getSelectionModel().getSelectedItems();
+            ArrayList<Music> music = new ArrayList<>(songsToAdd);
+
+            TextInputDialog textInputDialog = new TextInputDialog();
+            textInputDialog.setHeaderText("Enter your new playlist's title");
+            textInputDialog.showAndWait();
+
+            String name = textInputDialog.getResult();
+            if (name != null) {
+                Playlist playlist = new Playlist(name, music);
+                library.getPlaylists().add(playlist);
+
+                updatePlaylistTiles(library.getPlaylists());
+
+                // Refresh the context menu
+                setupTableContext(songViewTable); //Major event handler Spaghetti code
+                setupTableContext(pageTable);
+            }
+        });
+
+        menu.getItems().add(mi0);
+        if(library.getPlaylists().size() == 0) return;
+
+        // Add the remaining playlist items
+        SeparatorMenuItem separatorMenuItem = new SeparatorMenuItem();
+        menu.getItems().add(separatorMenuItem);
+
+        for(Playlist i: library.getPlaylists()){
+            MenuItem item = new MenuItem(i.getTitle());
+
+            item.setOnAction(actionEvent -> {
+                ObservableList<Music> songsSelected = tableView.getSelectionModel().getSelectedItems();
+                i.getTracklist().addAll(new ArrayList<>(songsSelected));
+
+                updatePlaylistTiles(library.getPlaylists());
+            });
+
+            menu.getItems().add(item);
+        }
     }
 
 
@@ -354,7 +387,19 @@ public class MainController {
         }
     }
     public void updatePlaylistTiles(ArrayList<Playlist> playlists){
-        // TODO: IMPLEMENT
+        playlistTiles.getChildren().removeAll(playlistTiles.getChildren());
+
+        for (Playlist i: playlists){
+            VBox tile = makeImageTile(i.getPlaylistPicture(), i.getTitle());
+
+            tile.setOnMouseClicked(mouseEvent -> {
+                if(mouseEvent.getClickCount() == 1){
+                    updateInnerPlaylistView(i);
+                    pageBox.toFront();
+                }
+            });
+            playlistTiles.getChildren().add(tile);
+        }
     }
     public void setupKeyF5() {
          //Force the update page
@@ -375,7 +420,7 @@ public class MainController {
         songsToAdd.addAll(album.getTracklist());
 
         pageImage.setImage(album.getCoverArt());
-        pageText.setText(album.getTitle());
+        pageTitleText.setText(album.getTitle());
 
         pageTable.setItems(songsToAdd);
     }
@@ -390,12 +435,26 @@ public class MainController {
         pageTrackColumn.setVisible(false);
 
         pageImage.setImage(artist.getPicture());
-        pageText.setText(artist.getName());
+        pageTitleText.setText(artist.getName());
 
         pageTable.setItems(songsToAdd);
 
     }
-    private void updateInnerPlaylistView(Playlist playlist){}
+    private void updateInnerPlaylistView(Playlist playlist){
+        ObservableList<Music> songsToAdd = FXCollections.observableArrayList();
+        songsToAdd.addAll(playlist.getTracklist());
+
+        pageDurationColumn.setVisible(true);
+        pageTitleColumn.setVisible(true);
+        pageAlbumColumn.setVisible(true);
+        pageArtistColumn.setVisible(true);
+        pageTrackColumn.setVisible(false);
+
+        pageImage.setImage(playlist.getPlaylistPicture());
+        pageTitleText.setText(playlist.getTitle());
+
+        pageTable.setItems(songsToAdd);
+    }
 
     public void launchPreferences() throws IOException {
         Stage newStage = new Stage();

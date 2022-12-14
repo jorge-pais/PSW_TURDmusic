@@ -24,7 +24,6 @@
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
-<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
@@ -154,36 +153,12 @@
                                     <children>
                                         <ScrollPane fx:id="playlistScroll" fitToHeight="true" fitToWidth="true" prefHeight="514.6666666666666" prefWidth="541.3333333333334" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <content>
-                                                <TilePane fx:id="playlistTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0" style="-fx-background-color: FFFFFF;">
-                                                    <children>
-                                                        <VBox alignment="CENTER" layoutX="175.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0">
-                                                            <children>
-                                                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="150.0" stroke="BLACK" strokeType="INSIDE" width="150.0" />
-                                                                <Label text="Just Queen" />
-                                                            </children>
-                                                        </VBox>
-                                                    </children>
-                                                </TilePane>
+                                                <TilePane fx:id="playlistTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0" style="-fx-background-color: FFFFFF;" />
                                             </content>
                                         </ScrollPane>
                                         <ScrollPane fx:id="artistScroll" fitToHeight="true" fitToWidth="true" prefHeight="514.6666666666666" prefWidth="541.3333333333334" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <content>
                                                 <TilePane fx:id="artistTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0" style="-fx-background-color: FFFFFF;">
-                                                    <children>
-                                                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="200.0">
-                                                            <children>
-                                                                <ImageView fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
-                                                                    <VBox.margin>
-                                                                        <Insets left="10.0" right="10.0" />
-                                                                    </VBox.margin>
-                                                                    <image>
-                                                                        <Image url="@defaultphotos/Abbey_Road.jpg" />
-                                                                    </image>
-                                                                </ImageView>
-                                                                <Label text="Allbey Queen" />
-                                                            </children>
-                                                        </VBox>
-                                                    </children>
                                        <padding>
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                        </padding>
@@ -193,27 +168,23 @@
                               <ScrollPane fx:id="albumScroll" fitToHeight="true" fitToWidth="true" layoutX="10.0" layoutY="10.0" prefHeight="514.6666666666666" prefWidth="541.3333333333334" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <content>
                                     <TilePane fx:id="albumTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0" style="-fx-background-color: FFFFFF;">
-                                       <children>
-                                          <VBox alignment="CENTER" prefHeight="200.0" prefWidth="200.0">
-                                             <children>
-                                                <ImageView fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
-                                                   <VBox.margin>
-                                                      <Insets left="10.0" right="10.0" />
-                                                   </VBox.margin>
-                                                   <image>
-                                                      <Image url="@defaultphotos/Abbey_Road.jpg" />
-                                                   </image>
-                                                </ImageView>
-                                                <Label text="Allbey Queen" />
-                                             </children>
-                                          </VBox>
-                                       </children>
                                        <padding>
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                        </padding>
                                     </TilePane>
                                  </content>
                               </ScrollPane>
+                                        <TableView fx:id="songViewTable" editable="true" prefHeight="514.6666666666666" prefWidth="541.3333333333334" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <columns>
+                                                <TableColumn fx:id="songViewTitleColumn" prefWidth="163.0" text="Title" />
+                                                <TableColumn fx:id="songViewArtistColumn" minWidth="0.0" prefWidth="144.0" text="Artist" />
+                                                <TableColumn fx:id="songViewAlbumColumn" prefWidth="153.5" text="Album" />
+                                                <TableColumn fx:id="songViewDurationColumn" editable="false" maxWidth="67.0" minWidth="67.0" prefWidth="67.0" text="Duration" />
+                                            </columns>
+                                            <columnResizePolicy>
+                                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                            </columnResizePolicy>
+                                        </TableView>
                               <VBox fx:id="pageBox" prefHeight="514.6666666666666" prefWidth="541.3333333333334" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
                                     <HBox alignment="CENTER" style="-fx-background-color: FFFFFF;">
@@ -221,13 +192,12 @@
                                           <VBox alignment="CENTER" prefHeight="200.0" prefWidth="207.0">
                                              <children>
                                                 <Pane prefHeight="38.0" prefWidth="207.0" />
-                                                <Text fx:id="pageText" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="156.41449546813965">
+                                                <Text fx:id="pageTitleText" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="156.41449546813965">
                                                    <font>
                                                       <Font size="20.0" />
                                                    </font>
                                                 </Text>
-                                                <TextArea fx:id="pageArea" opacity="0.0" prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: FFFFFF;" />
-                                                <Pane prefHeight="10.0" prefWidth="195.0" />
+                                                <TextArea fx:id="pageDescriptionText" opacity="0.0" prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: FFFFFF;" />
                                              </children>
                                           </VBox>
                                           <Pane prefHeight="200.0" prefWidth="142.0" />
@@ -259,17 +229,6 @@
                                     </AnchorPane>
                                  </children>
                               </VBox>
-                                        <TableView fx:id="songViewTable" editable="true" prefHeight="514.6666666666666" prefWidth="541.3333333333334" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                            <columns>
-                                                <TableColumn fx:id="songViewTitleColumn" prefWidth="163.0" text="Title" />
-                                                <TableColumn fx:id="songViewArtistColumn" minWidth="0.0" prefWidth="144.0" text="Artist" />
-                                                <TableColumn fx:id="songViewAlbumColumn" prefWidth="153.5" text="Album" />
-                                                <TableColumn fx:id="songViewDurationColumn" editable="false" maxWidth="67.0" minWidth="67.0" prefWidth="67.0" text="Duration" />
-                                            </columns>
-                                            <columnResizePolicy>
-                                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                            </columnResizePolicy>
-                                        </TableView>
                                     </children>
                                 </AnchorPane>
                             </children>

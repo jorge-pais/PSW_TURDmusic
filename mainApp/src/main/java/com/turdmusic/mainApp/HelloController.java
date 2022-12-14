@@ -36,7 +36,7 @@ public class HelloController {
             // Change to music view
             try{
                 Stage stage = (Stage) label1.getScene().getWindow();
-                MainGUI.createStage(stage);
+                MainGUI.createMainStage(stage);
             } catch (Exception e){
                 e.printStackTrace();
             }
