@@ -129,6 +129,28 @@ public class FolderController {
         newItems.removeAll(newItems);
     }
 
+    // Fade label for visual feedback
+    private void showAndFadeLabel(){
+        FadeTransition fade = new FadeTransition();
+        fade.setDuration(Duration.millis(2000));
+
+        fade.setFromValue(1);
+        fade.setToValue(0);
+        fade.setCycleCount(1);
+
+        fade.setNode(scannedLabel);
+        scannedLabel.setVisible(true);
+
+        fade.play();
+    }
+
+    private void updatePathList() {
+        allItems.removeAll(allItems);
+        allItems.addAll(items);
+        allItems.addAll(newItems);
+        pathList.setItems(allItems);
+    }
+
     public void finishButtonClicked() {
         if (items.isEmpty()){
             ButtonType cancel = new ButtonType("Cancel");
@@ -163,25 +185,4 @@ public class FolderController {
         }
 
     }
-    // Fade label for visual feedback
-    private void showAndFadeLabel(){
-        FadeTransition fade = new FadeTransition();
-        fade.setDuration(Duration.millis(2000));
-
-        fade.setFromValue(1);
-        fade.setToValue(0);
-        fade.setCycleCount(1);
-
-        fade.setNode(scannedLabel);
-        scannedLabel.setVisible(true);
-
-        fade.play();
-    }
-    private void updatePathList() {
-        allItems.removeAll(allItems);
-        allItems.addAll(items);
-        allItems.addAll(newItems);
-        pathList.setItems(allItems);
-    }
-
 }
