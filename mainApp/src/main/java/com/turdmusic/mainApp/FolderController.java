@@ -39,7 +39,6 @@ public class FolderController {
         // Allow multiple items to be selected
         pathList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
-
     public void addFolderClicked(){
         DirectoryChooser directoryChooser = new DirectoryChooser();
 
@@ -58,7 +57,6 @@ public class FolderController {
         updatePathList();
         //addedFolder = true;
     }
-
     public void removeFolderClicked(){
         // get the selected items
         ObservableList<String> selectedItems = pathList.getSelectionModel().getSelectedItems();
@@ -89,9 +87,7 @@ public class FolderController {
         }
         //for (String i: selectedItems)
     }
-
     public void scanSelectedPressed(){
-        // TODO: POP-UP NOTIFICATION OR FADEOUT LABEL
         ObservableList<String> selectedItems = pathList.getSelectionModel().getSelectedItems();
 
         //Check if the path is on newItems and scan
@@ -114,9 +110,7 @@ public class FolderController {
             showAndFadeLabel();
         }*/
     }
-
     public void scanAllPressed(){
-        // TODO: POP-UP NOTIFICATION
         //ObservableList<String> allItems = pathList.getItems();
 
         for (String i: newItems){
@@ -143,14 +137,12 @@ public class FolderController {
 
         fade.play();
     }
-
     private void updatePathList() {
         allItems.removeAll(allItems);
         allItems.addAll(items);
         allItems.addAll(newItems);
         pathList.setItems(allItems);
     }
-
     public void finishButtonClicked() {
         if (items.isEmpty()){
             ButtonType cancel = new ButtonType("Cancel");
@@ -183,6 +175,5 @@ public class FolderController {
             stage = (Stage) pathList.getScene().getWindow();
             stage.close();
         }
-
     }
 }

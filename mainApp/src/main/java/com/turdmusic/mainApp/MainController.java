@@ -288,8 +288,7 @@ public class MainController {
         }
     }
 
-
-     public VBox makeImageTile(Image image, String labelText){
+    public VBox makeImageTile(Image image, String labelText){
         VBox vBoxout = new VBox();
         vBoxout.prefHeight(200);
         vBoxout.prefWidth(200);
