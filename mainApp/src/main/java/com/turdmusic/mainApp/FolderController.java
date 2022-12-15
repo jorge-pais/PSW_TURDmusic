@@ -18,7 +18,6 @@ import java.util.Objects;
 */
 public class FolderController {
 
-    public static boolean addedFolder; // This tells the hello view that folder have been added and scanned
     public static Library library;
     public static Settings settings;
 
@@ -31,9 +30,7 @@ public class FolderController {
     public Label scannedLabel;
 
     public void initialize(){
-        addedFolder = false;
         items.setAll(library.getLibraryPaths());
-        //pathList.setItems(items);
         updatePathList();
 
         // Allow multiple items to be selected
@@ -42,21 +39,15 @@ public class FolderController {
 
     public void addFolderClicked(){
         DirectoryChooser directoryChooser = new DirectoryChooser();
-
         File path = directoryChooser.showDialog(null);
         if(path == null) return;
 
         newItems.add(path.getPath());
         //check if the path exist
-        /*for (String i: items){
-            if (newItems == items){
-                newItems.remove(i);
-            }
-        }*/
         newItems.removeAll(items);
+
         //update view
         updatePathList();
-        //addedFolder = true;
     }
 
     public void removeFolderClicked(){
@@ -64,33 +55,23 @@ public class FolderController {
         ObservableList<String> selectedItems = pathList.getSelectionModel().getSelectedItems();
 
         //Check if the path is on newItems
-        /*for (String i: selectedItems) {
-            for (String j : newItems) {
-                if (Objects.equals(i, j)) {
-                    newItems.remove(i);
-                }
-            }
-        }*/
         newItems.removeAll(selectedItems);
+
         //Check if the path is on items
         for (String i: selectedItems) {
             for (String j : items) {
                 if (Objects.equals(i, j)) {
-                    //items.remove(j);
                     library.removePath(i);
                 }
             }
         }
+
         items.removeAll(selectedItems);
-        //items.removeAll(selectedItems);
+
         updatePathList();
-        if(items.isEmpty()){
-            addedFolder = false;
-        }
-        //for (String i: selectedItems)
     }
 
-    public void scanSelectedPressed(){
+    public void scanSelectedClicked(){
         // TODO: POP-UP NOTIFICATION OR FADEOUT LABEL
         ObservableList<String> selectedItems = pathList.getSelectionModel().getSelectedItems();
 
@@ -100,35 +81,67 @@ public class FolderController {
                 if (Objects.equals(i, j)) {
                     library.addPath(i);
                     items.add(i);
-                    //newItems.remove(i);
-                    addedFolder = true;
                     showAndFadeLabel();
                 }
             }
         }
         newItems.removeAll(selectedItems);
-
-        /*for (String i: selectedItems){
-            library.addPath(i);
-            addedFolder = true;
-            showAndFadeLabel();
-        }*/
     }
 
-    public void scanAllPressed(){
-        // TODO: POP-UP NOTIFICATION
-        //ObservableList<String> allItems = pathList.getItems();
-
+    public void scanAllClicked(){
         for (String i: newItems){
             library.addPath(i);
-            addedFolder = true;
+
+            //POP-UP NOTIFICATION
             showAndFadeLabel();
-            //newItems.remove(i);
         }
         items.addAll(newItems);
-        newItems.removeAll(newItems);
+        newItems.clear();
     }
 
+
+    public void finishButtonClicked() {
+        stage = (Stage) pathList.getScene().getWindow();
+        //No paths define
+        if (items.isEmpty() && newItems.isEmpty()){
+            ButtonType cancel = new ButtonType("Cancel");
+            ButtonType exit = new ButtonType("Exit");
+            Alert alert = new Alert(Alert.AlertType.WARNING, "You don't have scan paths. Are you sure you want exit", cancel, exit);
+            alert.showAndWait().ifPresent(response -> {
+                if (response == exit) {
+                    stage.close();
+                }
+            });
+        }
+        else if (!newItems.isEmpty()){
+            ButtonType cancel = new ButtonType("Cancel");
+            ButtonType exit = new ButtonType("Don't save");
+            ButtonType save_all = new ButtonType("Save all paths");
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The paths are not save. Scan all new paths first or they will be remove", cancel, exit, save_all);
+            alert.showAndWait().ifPresent(response -> {
+                if (response == exit) {
+                    newItems.clear();
+                    stage.close();
+                }
+                if (response == save_all){
+                    scanAllClicked();
+                    stage.close();
+                }
+            });
+        }
+        else {
+            newItems.removeAll();
+            stage = (Stage) pathList.getScene().getWindow();
+            stage.close();
+        }
+
+    }
+    private void updatePathList() {
+        allItems.clear();
+        allItems.addAll(items);
+        allItems.addAll(newItems);
+        pathList.setItems(allItems);
+    }
     // Fade label for visual feedback
     private void showAndFadeLabel(){
         FadeTransition fade = new FadeTransition();
@@ -144,45 +157,4 @@ public class FolderController {
         fade.play();
     }
 
-    private void updatePathList() {
-        allItems.removeAll(allItems);
-        allItems.addAll(items);
-        allItems.addAll(newItems);
-        pathList.setItems(allItems);
-    }
-
-    public void finishButtonClicked() {
-        if (items.isEmpty()){
-            ButtonType cancel = new ButtonType("Cancel");
-            ButtonType yes = new ButtonType("Exit");
-            Alert alert = new Alert(Alert.AlertType.WARNING, "You don't have scan paths. Are you sure you want exit", cancel, yes);
-            alert.showAndWait().ifPresent(response -> {
-                if (response == yes) {
-                    stage = (Stage) pathList.getScene().getWindow();
-                    stage.close();
-                }
-            });
-        }
-        else if (!newItems.isEmpty()){
-            ButtonType cancel = new ButtonType("Cancel");
-            ButtonType yes = new ButtonType("I don't want save the paths");
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The paths are not save. Scan all new paths first or they will be remove", cancel, yes);
-            alert.showAndWait().ifPresent(response -> {
-                if (response == yes) {
-                    newItems.removeAll(newItems);
-                    stage = (Stage) pathList.getScene().getWindow();
-                    stage.close();
-                }
-            });
-            //TODO: Is missing come back to the heloPage
-            //settings.setFirstLaunch(false);
-        }
-        else {
-            //settings.setFirstLaunch(true);
-            newItems.removeAll();
-            stage = (Stage) pathList.getScene().getWindow();
-            stage.close();
-        }
-
-    }
 }

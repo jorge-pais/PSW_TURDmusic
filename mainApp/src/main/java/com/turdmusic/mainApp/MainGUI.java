@@ -3,6 +3,8 @@ package com.turdmusic.mainApp;
 import com.turdmusic.mainApp.core.*;
 import com.turdmusic.mainApp.core.models.ImageInfo;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -51,30 +53,45 @@ public class MainGUI extends Application {
         return image;
     }
 
-    public static void openFolderPage(Stage newStage) throws IOException {
+    public static void openFolderPage(Stage stage, Stage newStage) throws IOException {
         FXMLLoader loaderPathManager = new FXMLLoader(MainGUI.class.getResource("folderPage.fxml"));
-        Scene scene = new Scene(loaderPathManager.load(), 700, 400);
+        String name = "Select Folders";
+        createNewStage(newStage, loaderPathManager, name);
+        ObservableList<String> items = FXCollections.observableArrayList();
+        items.setAll(library.getLibraryPaths());
+        if((items.isEmpty())) {
+            // Mark the first launch here
+            Library.settings.setFirstLaunch(true);
+            System.out.println("Paths have been added");
+        }
+        else {
+            Library.settings.setFirstLaunch(false);
+        }
+        // Change the page
+        if(stage!=null) {
+            try {
+                createMainStage(stage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
+    public static void openPreferences(Stage newStage) throws IOException {
+        FXMLLoader loaderPreferencesView = new FXMLLoader(MainGUI.class.getResource("preferenceView.fxml"));
+        String name = "Preferences";
+        createNewStage(newStage, loaderPreferencesView, name);
+    }
+
+    private static void createNewStage(Stage newStage, FXMLLoader loaderPathManager, String name) throws IOException {
+        Scene scene = new Scene(loaderPathManager.load());
         newStage.setResizable(false);
-        newStage.setTitle("Select Folders");
+        newStage.setTitle(name);
         newStage.getIcons().add(getAppIcon());
         newStage.setScene(scene);
 
         // Change the new window's modality
         // block input from all other application windows
-        newStage.initModality(Modality.APPLICATION_MODAL);
-
-        newStage.showAndWait();
-    }
-
-    public static void openPreferences(Stage newStage) throws IOException {
-        FXMLLoader loaderPreferencesView = new FXMLLoader(MainGUI.class.getResource("preferenceView.fxml"));
-        Scene scene = new Scene(loaderPreferencesView.load());
-        newStage.setScene(scene);
-        newStage.setResizable(false);
-
-        newStage.setTitle("Preferences");
-        newStage.getIcons().add(getAppIcon());
         newStage.initModality(Modality.APPLICATION_MODAL);
         newStage.showAndWait();
     }
@@ -91,7 +108,6 @@ public class MainGUI extends Application {
         newStage.showAndWait();
     }
 
-    //public static void closePreferenceController(Stage newStage) {newStage.close();}
     public static void main(String[] args) {
 
         // Load the settings object containing the preferences
