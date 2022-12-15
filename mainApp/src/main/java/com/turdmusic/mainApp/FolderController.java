@@ -19,6 +19,7 @@ import java.util.Objects;
 public class FolderController {
 
     public static boolean addedFolder; // This tells the hello view that folder have been added and scanned
+    public static boolean noFolder;
     public static Library library;
     public static Settings settings;
 
@@ -36,6 +37,7 @@ public class FolderController {
         //pathList.setItems(items);
         updatePathList();
 
+        //this.stage = (Stage) pathList.getScene().getWindow();
         // Allow multiple items to be selected
         pathList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
@@ -47,12 +49,8 @@ public class FolderController {
         if(path == null) return;
 
         newItems.add(path.getPath());
+
         //check if the path exist
-        /*for (String i: items){
-            if (newItems == items){
-                newItems.remove(i);
-            }
-        }*/
         newItems.removeAll(items);
         //update view
         updatePathList();
@@ -90,7 +88,7 @@ public class FolderController {
         //for (String i: selectedItems)
     }
 
-    public void scanSelectedPressed(){
+    public void scanSelectedClicked(){
         // TODO: POP-UP NOTIFICATION OR FADEOUT LABEL
         ObservableList<String> selectedItems = pathList.getSelectionModel().getSelectedItems();
 
@@ -115,7 +113,7 @@ public class FolderController {
         }*/
     }
 
-    public void scanAllPressed(){
+    public void scanAllClicked(){
         // TODO: POP-UP NOTIFICATION
         //ObservableList<String> allItems = pathList.getItems();
 
@@ -126,7 +124,8 @@ public class FolderController {
             //newItems.remove(i);
         }
         items.addAll(newItems);
-        newItems.removeAll(newItems);
+        newItems.clear();
+        //newItems.removeAll(newItems);
     }
 
     // Fade label for visual feedback
@@ -145,32 +144,42 @@ public class FolderController {
     }
 
     private void updatePathList() {
-        allItems.removeAll(allItems);
+        allItems.clear();
         allItems.addAll(items);
         allItems.addAll(newItems);
         pathList.setItems(allItems);
     }
 
     public void finishButtonClicked() {
-        if (items.isEmpty()){
+        stage = (Stage) pathList.getScene().getWindow();
+        noFolder=false;
+        //No paths define
+        if (items.isEmpty() && newItems.isEmpty()){
             ButtonType cancel = new ButtonType("Cancel");
-            ButtonType yes = new ButtonType("Exit");
-            Alert alert = new Alert(Alert.AlertType.WARNING, "You don't have scan paths. Are you sure you want exit", cancel, yes);
+            ButtonType exit = new ButtonType("Exit");
+            Alert alert = new Alert(Alert.AlertType.WARNING, "You don't have scan paths. Are you sure you want exit", cancel, exit);
             alert.showAndWait().ifPresent(response -> {
-                if (response == yes) {
-                    stage = (Stage) pathList.getScene().getWindow();
+                if (response == exit) {
+                    noFolder = true;
                     stage.close();
                 }
             });
         }
         else if (!newItems.isEmpty()){
             ButtonType cancel = new ButtonType("Cancel");
-            ButtonType yes = new ButtonType("I don't want save the paths");
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The paths are not save. Scan all new paths first or they will be remove", cancel, yes);
+            ButtonType exit = new ButtonType("Don't save");
+            ButtonType save_all = new ButtonType("Save all paths");
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The paths are not save. Scan all new paths first or they will be remove", cancel, exit, save_all);
             alert.showAndWait().ifPresent(response -> {
-                if (response == yes) {
-                    newItems.removeAll(newItems);
-                    stage = (Stage) pathList.getScene().getWindow();
+                if (response == exit) {
+                    if(items.isEmpty()){
+                        noFolder = true;
+                    }
+                    newItems.clear();
+                    stage.close();
+                }
+                if (response == save_all){
+                    scanAllClicked();
                     stage.close();
                 }
             });

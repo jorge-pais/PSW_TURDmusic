@@ -46,9 +46,10 @@ public class MainController {
     public static Library library;
 
     public VBox allPage;
-    //public MenuItem optionsPreferences;
+    // public MenuItem optionsPreferences
 
-    //Button
+    public TextField searchField;
+    // Button
     public Label songsLabelButton;
     public Label albumsLabelButton;
     public Label artistsLabelButton;
@@ -355,7 +356,8 @@ public class MainController {
             songViewTable.setItems(songsToAdd);
     }
     public void updateAlbumTiles(ArrayList<Album> albums){
-        albumTiles.getChildren().removeAll(albumTiles.getChildren());
+        albumTiles.getChildren().clear();
+        //albumTiles.getChildren().removeAll(albumTiles.getChildren());
 
         for (Album i: albums) {
             VBox tile = makeImageTile(i.getCoverArt(), i.getTitle());
@@ -409,6 +411,17 @@ public class MainController {
          });
     }
 
+    public void searchAlbumTiles(){
+        ArrayList<Album> album = library.getAlbums();
+        String searchText = searchField.getText();
+
+        for (Album i: album){
+            /*if (newItems == items){
+                newItems.remove(i);
+            }*/
+        }
+    }
+
     private void updateInnerAlbumView(Album album){
         pageDurationColumn.setVisible(true);
         pageTitleColumn.setVisible(true);
@@ -459,12 +472,11 @@ public class MainController {
     public void launchPreferences() throws IOException {
         Stage newStage = new Stage();
         MainGUI.openPreferences(newStage);
-
     }
 
     public void launchFolder() throws IOException {
          Stage newStage = new Stage();
-         MainGUI.openFolderPage(newStage);
+         MainGUI.openFolderPage((Stage) allPage.getScene().getWindow(), newStage);
      }
 /*
     Save and load methods save/load the library

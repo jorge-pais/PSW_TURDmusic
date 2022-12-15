@@ -23,23 +23,24 @@ public class HelloController {
     }
 
     @FXML
-    protected void onMouseClicked() throws IOException {
+    protected void launchFolderClicked() throws IOException {
         // Create a new stage (window) and load the file selection scene
         Stage newStage = new Stage();
-        MainGUI.openFolderPage(newStage);
+        Stage stage = (Stage) label1.getScene().getWindow();
+        MainGUI.openFolderPage(stage, newStage);
 
-        if(FolderController.addedFolder) {
+        /*if(FolderController.addedFolder) {
             // Mark the first launch here
             Library.settings.setFirstLaunch(false);
             System.out.println("Paths have been added");
 
-            // Change to music view
+            // Change to main view
             try{
                 Stage stage = (Stage) label1.getScene().getWindow();
                 MainGUI.createMainStage(stage);
             } catch (Exception e){
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 }

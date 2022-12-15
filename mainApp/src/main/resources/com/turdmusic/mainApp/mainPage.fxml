@@ -174,17 +174,6 @@
                                     </TilePane>
                                  </content>
                               </ScrollPane>
-                                        <TableView fx:id="songViewTable" editable="true" prefHeight="514.6666666666666" prefWidth="541.3333333333334" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                            <columns>
-                                                <TableColumn fx:id="songViewTitleColumn" prefWidth="163.0" text="Title" />
-                                                <TableColumn fx:id="songViewArtistColumn" minWidth="0.0" prefWidth="144.0" text="Artist" />
-                                                <TableColumn fx:id="songViewAlbumColumn" prefWidth="153.5" text="Album" />
-                                                <TableColumn fx:id="songViewDurationColumn" editable="false" maxWidth="67.0" minWidth="67.0" prefWidth="67.0" text="Duration" />
-                                            </columns>
-                                            <columnResizePolicy>
-                                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                            </columnResizePolicy>
-                                        </TableView>
                               <VBox fx:id="pageBox" prefHeight="514.6666666666666" prefWidth="541.3333333333334" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
                                     <HBox alignment="CENTER" style="-fx-background-color: FFFFFF;">
@@ -229,6 +218,17 @@
                                     </AnchorPane>
                                  </children>
                               </VBox>
+                                        <TableView fx:id="songViewTable" editable="true" prefHeight="514.6666666666666" prefWidth="541.3333333333334" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <columns>
+                                                <TableColumn fx:id="songViewTitleColumn" prefWidth="163.0" text="Title" />
+                                                <TableColumn fx:id="songViewArtistColumn" minWidth="0.0" prefWidth="144.0" text="Artist" />
+                                                <TableColumn fx:id="songViewAlbumColumn" prefWidth="153.5" text="Album" />
+                                                <TableColumn fx:id="songViewDurationColumn" editable="false" maxWidth="67.0" minWidth="67.0" prefWidth="67.0" text="Duration" />
+                                            </columns>
+                                            <columnResizePolicy>
+                                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                            </columnResizePolicy>
+                                        </TableView>
                                     </children>
                                 </AnchorPane>
                             </children>

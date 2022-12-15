@@ -60,7 +60,7 @@ public class PreferenceController {
 
     public void launchPathManager() throws IOException {
         newStage = new Stage();
-        MainGUI.openFolderPage(newStage);
+        MainGUI.openFolderPage(null, newStage);
     }
 
     public void onMouseClickedCancel(){
