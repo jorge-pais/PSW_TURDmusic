@@ -153,12 +153,12 @@
                                     <children>
                                         <ScrollPane fx:id="playlistScroll" fitToHeight="true" fitToWidth="true" prefHeight="514.6666666666666" prefWidth="541.3333333333334" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <content>
-                                                <TilePane fx:id="playlistTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0" style="-fx-background-color: FFFFFF;" />
+                                                <TilePane fx:id="playlistTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0" style="-fx-background-color: FFFFFF; -fx-hgap: 10mm; -fx-vgap: 10mm;" />
                                             </content>
                                         </ScrollPane>
                                         <ScrollPane fx:id="artistScroll" fitToHeight="true" fitToWidth="true" prefHeight="514.6666666666666" prefWidth="541.3333333333334" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <content>
-                                                <TilePane fx:id="artistTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0" style="-fx-background-color: FFFFFF;">
+                                                <TilePane fx:id="artistTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0" style="-fx-background-color: FFFFFF; -fx-hgap: 10mm; -fx-vgap: 10mm;">
                                        <padding>
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                        </padding>
@@ -167,7 +167,7 @@
                                         </ScrollPane>
                               <ScrollPane fx:id="albumScroll" fitToHeight="true" fitToWidth="true" layoutX="10.0" layoutY="10.0" prefHeight="514.6666666666666" prefWidth="541.3333333333334" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <content>
-                                    <TilePane fx:id="albumTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0" style="-fx-background-color: FFFFFF;">
+                                    <TilePane fx:id="albumTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0" style="-fx-background-color: FFFFFF; -fx-hgap: 10mm; -fx-vgap: 10mm; -fx-padding: 10mm;">
                                        <padding>
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                        </padding>
