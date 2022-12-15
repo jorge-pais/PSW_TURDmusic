@@ -27,20 +27,7 @@ public class HelloController {
         // Create a new stage (window) and load the file selection scene
         Stage newStage = new Stage();
         Stage stage = (Stage) label1.getScene().getWindow();
+
         MainGUI.openFolderPage(stage, newStage);
-
-        /*if(FolderController.addedFolder) {
-            // Mark the first launch here
-            Library.settings.setFirstLaunch(false);
-            System.out.println("Paths have been added");
-
-            // Change to main view
-            try{
-                Stage stage = (Stage) label1.getScene().getWindow();
-                MainGUI.createMainStage(stage);
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-        }*/
     }
 }

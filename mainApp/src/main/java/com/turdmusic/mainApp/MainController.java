@@ -29,6 +29,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 // Add multiple options to a single menu item?
 // https://stackoverflow.com/questions/69200063/contextmenu-sub-menus-from-a-list-of-strings
@@ -55,26 +56,26 @@ public class MainController {
     public Label artistsLabelButton;
     public Label playlistsLabelButton;
 
-    //SongView
+    //Song View
     public TableView<Music> songViewTable;
     public TableColumn<Music, String> songViewTitleColumn;
     public TableColumn<Music, String> songViewArtistColumn;
     public TableColumn<Music, String> songViewAlbumColumn;
     public TableColumn<Music, String> songViewDurationColumn;
 
-    //AlbumView
+    //Album View
     public ScrollPane albumScroll;
     public TilePane albumTiles;
     public TilePane playlistTiles;
 
-    //ArtistView
+    //Artist View
     public ScrollPane artistScroll;
     public TilePane artistTiles;
 
-    //PlaylistView
+    //Playlist View
     public ScrollPane playlistScroll;
 
-    //IndividualView:  Album, Artist, Playlist
+    //Individual View:  Album, Artist, Playlist
     public VBox pageBox;
     public Text pageTitleText;
     public TextArea pageDescriptionText;
@@ -98,6 +99,7 @@ public class MainController {
 
         // Update the contents for each view
         updateAll();
+        //searchField.onen
 
         // Setup F5 to force update
         setupKeyF5();
@@ -289,8 +291,7 @@ public class MainController {
         }
     }
 
-
-     public VBox makeImageTile(Image image, String labelText){
+    public VBox makeImageTile(Image image, String labelText){
         VBox vBoxout = new VBox();
         vBoxout.prefHeight(200);
         vBoxout.prefWidth(200);
@@ -357,7 +358,6 @@ public class MainController {
     }
     public void updateAlbumTiles(ArrayList<Album> albums){
         albumTiles.getChildren().clear();
-        //albumTiles.getChildren().removeAll(albumTiles.getChildren());
 
         for (Album i: albums) {
             VBox tile = makeImageTile(i.getCoverArt(), i.getTitle());
@@ -411,16 +411,86 @@ public class MainController {
          });
     }
 
-    public void searchAlbumTiles(){
-        ArrayList<Album> album = library.getAlbums();
+    // TODO: Improve the way is call and complete Song and Playlist search
+    public void searchInViews(){
         String searchText = searchField.getText();
+        searchSongTable(searchText);
+        searchAlbumTiles(searchText);
+        searchArtistTiles(searchText);
+        searchPlaylistTiles(searchText);
+        System.out.println("The function search was call");
+    }
+    public void searchSongTable(String searchText){
+        // to complete
+    }
+    public void searchAlbumTiles(String searchText){
+        ArrayList<Album> album = library.getAlbums();
+        ArrayList<Album> searchAlbum = new ArrayList<>();
 
-        for (Album i: album){
-            /*if (newItems == items){
-                newItems.remove(i);
-            }*/
+        if(searchText != null) {
+            //assert searchAlbum != null;
+            for (Album i : album) {
+                //Don't consider a and A equal
+                if (i.getTitle().startsWith(searchText)) {
+                    System.out.println("Exist search paths");
+                    //assert !searchAlbum.isEmpty();
+                    searchAlbum.add(i);
+                }
+            }
+            if (!searchAlbum.isEmpty()) {
+                updateAlbumTiles(searchAlbum);
+            }
+        }
+        else {
+            updateAlbumTiles(album);
         }
     }
+    public void searchArtistTiles(String searchText){
+        ArrayList<Artist> artist = library.getArtists();
+        ArrayList<Artist> searchArtist = new ArrayList<>();
+
+         if(searchText != null) {
+             //assert searchAlbum != null;
+             for (Artist i : artist) {
+                 //Don't consider a and A equal
+                 if (i.getName().startsWith(searchText)) {
+                     System.out.println("Exist search paths");
+                     //assert !searchAlbum.isEmpty();
+                     searchArtist.add(i);
+                 }
+             }
+             if (!searchArtist.isEmpty()) {
+                 updateArtistTiles(searchArtist);
+             }
+         }
+         else {
+             updateArtistTiles(artist);
+         }
+     }
+    public void searchPlaylistTiles(String searchText){
+         /*ArrayList<Album> album = library.getAlbums();
+         ArrayList<Album> searchAlbum = new ArrayList<>();
+         String searchText = searchField.getText();
+         System.out.println("The function searchAlbumTiles was call");
+
+         if(searchText != null) {
+             //assert searchAlbum != null;
+             for (Album i : album) {
+                 //Don't consider a and A equal
+                 if (i.getTitle().startsWith(searchText)) {
+                     System.out.println("Exist search paths");
+                     //assert !searchAlbum.isEmpty();
+                     searchAlbum.add(i);
+                 }
+             }
+             if (!searchAlbum.isEmpty()) {
+                 updateAlbumTiles(searchAlbum);
+             }
+         }
+         else {
+             updateAlbumTiles(album);
+         }*/
+     }
 
     private void updateInnerAlbumView(Album album){
         pageDurationColumn.setVisible(true);
