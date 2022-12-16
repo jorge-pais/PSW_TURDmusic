@@ -38,9 +38,9 @@ import java.util.Collections;
   * This is the main UI/UX controller class, here are all the views
   * for the main application window, including
   * song/album/artist/playlist views
-  * */
+  */
 public class MainController {
-    private enum CurrentView {SongView, AlbumView, ArtistView, PlaylistView, Album, Artist, Playlist};
+    private enum CurrentView {SongView, AlbumView, ArtistView, PlaylistView, Album, Artist, Playlist}
     private CurrentView state;
 
     public static Library library;
@@ -78,7 +78,7 @@ public class MainController {
     //Individual View:  Album, Artist, Playlist
     public VBox pageBox;
     public Text pageTitleText;
-    public TextArea pageDescriptionText;
+    public Label descriptionLabel;
     public ImageView pageImage;
 
     public TableView<Music> pageTable;
@@ -513,6 +513,11 @@ public class MainController {
         pageTitleText.setText(album.getTitle());
 
         pageTable.setItems(songsToAdd);
+
+        String description = "Album by " + album.getArtist().getName() + "\n" +
+                album.getTracklist().size() + " songs";
+
+        descriptionLabel.setText(description);
     }
     private void updateInnerArtistView(Artist artist){
         ObservableList<Music> songsToAdd = FXCollections.observableArrayList();
@@ -529,6 +534,10 @@ public class MainController {
 
         pageTable.setItems(songsToAdd);
 
+        String description = artist.getSongs().size() + " songs \n" +
+                artist.getAlbums().size() + " albums";
+
+        descriptionLabel.setText(description);
     }
     private void updateInnerPlaylistView(Playlist playlist){
         ObservableList<Music> songsToAdd = FXCollections.observableArrayList();
@@ -544,6 +553,11 @@ public class MainController {
         pageTitleText.setText(playlist.getTitle());
 
         pageTable.setItems(songsToAdd);
+
+        String description = playlist.getTracklist().size() + " songs\n" +
+                "Created on " + playlist.getDateCreated().toString();
+
+        descriptionLabel.setText(description);
     }
 
     public void launchPreferences() throws IOException {
