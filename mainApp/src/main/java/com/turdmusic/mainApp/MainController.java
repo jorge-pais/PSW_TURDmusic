@@ -603,11 +603,13 @@ public class MainController {
                 throw new Exception();
 
             library = Library.loadLibrary(path);
+            MainGUI.setControllerReferences(library, new Settings());
+
+            updateAll();
         }catch (Exception e){
             e.printStackTrace();
             System.exit(1);
         }
-
     }
 
     public void exportLibrary() throws Exception{

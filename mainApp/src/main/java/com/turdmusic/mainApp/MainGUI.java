@@ -143,7 +143,7 @@ public class MainGUI extends Application {
     }
 
     // Add the static library reference to all of JavaFX controllers
-    private static void setControllerReferences(Library library, Settings settings){
+    public static void setControllerReferences(Library library, Settings settings){
         HelloController.library = library;
         FolderController.library = library;
         MainController.library = library;
