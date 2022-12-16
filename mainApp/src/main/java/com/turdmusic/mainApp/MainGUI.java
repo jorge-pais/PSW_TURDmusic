@@ -49,8 +49,7 @@ public class MainGUI extends Application {
     private static Image getAppIcon() {
         InputStream imageStream = MainGUI.class.getResourceAsStream("/com/turdmusic/mainApp/icons/logo.png");
         assert imageStream != null;
-        Image image = new Image(imageStream);
-        return image;
+        return new Image(imageStream);
     }
 
     public static void openFolderPage(Stage stage, Stage newStage) throws IOException {
