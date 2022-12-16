@@ -125,7 +125,7 @@ public class FolderController {
                     stage.close();
                 }
                 if (response == save_all){
-                    scanAllClicked();
+                    scanAllPressed();
                     stage.close();
                 }
             });
@@ -135,12 +135,6 @@ public class FolderController {
             stage = (Stage) pathList.getScene().getWindow();
             stage.close();
         }
-    }
-    private void updatePathList() {
-        allItems.clear();
-        allItems.addAll(items);
-        allItems.addAll(newItems);
-        pathList.setItems(allItems);
     }
     // Fade label for visual feedback
     private void showAndFadeLabel(){
@@ -156,5 +150,4 @@ public class FolderController {
 
         fade.play();
     }
-
 }
