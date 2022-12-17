@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
@@ -152,12 +154,12 @@
                                     <children>
                                         <ScrollPane fx:id="playlistScroll" fitToHeight="true" fitToWidth="true" prefHeight="514.6666666666666" prefWidth="541.3333333333334" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <content>
-                                                <TilePane fx:id="playlistTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0" style="-fx-background-color: FFFFFF; -fx-hgap: 10mm; -fx-vgap: 10mm;" />
+                                                <TilePane fx:id="playlistTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0" style="-fx-background-color: FFFFFF; -fx-hgap: 10mm; -fx-vgap: 10mm; -fx-padding: 10mm;" />
                                             </content>
                                         </ScrollPane>
                                         <ScrollPane fx:id="artistScroll" fitToHeight="true" fitToWidth="true" prefHeight="514.6666666666666" prefWidth="541.3333333333334" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <content>
-                                                <TilePane fx:id="artistTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0" style="-fx-background-color: FFFFFF; -fx-hgap: 10mm; -fx-vgap: 10mm;">
+                                                <TilePane fx:id="artistTiles" alignment="TOP_CENTER" prefHeight="503.0" prefWidth="521.0" style="-fx-background-color: FFFFFF; -fx-hgap: 10mm; -fx-vgap: 10mm; -fx-padding: 10mm;">
                                        <padding>
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                        </padding>
@@ -186,22 +188,36 @@
                                         </TableView>
                               <VBox fx:id="pageBox" prefHeight="514.6666666666666" prefWidth="541.3333333333334" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
-                                    <HBox alignment="CENTER" style="-fx-background-color: FFFFFF;">
+                                    <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" style="-fx-background-color: FFFFFF;" VBox.vgrow="NEVER">
                                        <children>
                                           <VBox alignment="CENTER" prefHeight="200.0" prefWidth="272.0">
                                              <children>
                                                 <AnchorPane prefHeight="198.0" prefWidth="261.0">
                                                    <children>
-                                                      <Text fx:id="pageTitleText" layoutX="14.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="180.0" AnchorPane.topAnchor="27.0">
+                                                      <Text fx:id="pageTitleText" layoutX="14.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="243.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="27.0">
                                                          <font>
                                                             <Font size="20.0" />
                                                          </font>
                                                       </Text>
+                                                      <Label fx:id="descriptionLabel" alignment="BOTTOM_LEFT" layoutX="15.0" layoutY="122.0" prefHeight="50.0" prefWidth="243.0" text="Label" AnchorPane.bottomAnchor="26.0" AnchorPane.leftAnchor="15.0" />
                                                    </children>
                                                 </AnchorPane>
                                              </children>
                                           </VBox>
-                                          <Pane prefHeight="200.0" prefWidth="142.0" />
+                                          <Pane prefHeight="200.0" prefWidth="142.0" HBox.hgrow="NEVER">
+                                             <children>
+                                                <AnchorPane prefHeight="198.0" prefWidth="142.0">
+                                                   <children>
+                                                      <Button layoutX="12.0" layoutY="147.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="97.0" text="Play" />
+                                                      <MenuButton layoutX="12.0" layoutY="112.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="97.0" text="...">
+                                                        <items>
+                                                          <MenuItem mnemonicParsing="false" text="Action 1" />
+                                                          <MenuItem mnemonicParsing="false" text="Action 2" />
+                                                        </items>
+                                                      </MenuButton>
+                                                   </children>
+                                                </AnchorPane>
+                                             </children></Pane>
                                           <ImageView fx:id="pageImage" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@defaultphotos/album_default.png" />

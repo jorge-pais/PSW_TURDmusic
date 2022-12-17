@@ -113,13 +113,23 @@ public class MainGUI extends Application {
         settings = new Settings();
 
         // Test from the first launch
-        //settings.setFirstLaunch(true);
+        settings.setFirstLaunch(true);
 
         try{
             if(settings.getFirstLaunch())
                 library = new Library();
-            else // TODO: update this to utilize library path from preferences
-                library = Library.loadLibrary(settings.getSavePath() + "/library.json");
+            else{
+                String osName = System.getProperty("os.name").toLowerCase();
+                if(osName.startsWith("windows")){
+                    library = Library.loadLibrary(settings.getSavePath() + "\\library.json");
+                }else if (osName.contains("linux")) {
+                    library = Library.loadLibrary(settings.getSavePath() + "/library.json");
+                }else{
+                    System.out.println("Unsupported OS");
+                    System.exit(-1);
+                }
+
+            }
 
         }catch (Exception e){
             library = new Library();
@@ -132,8 +142,8 @@ public class MainGUI extends Application {
         launch();
     }
 
-    // Add static library reference to all of JavaFX controllers
-    private static void setControllerReferences(Library library, Settings settings){
+    // Add the static library reference to all of JavaFX controllers
+    public static void setControllerReferences(Library library, Settings settings){
         HelloController.library = library;
         FolderController.library = library;
         MainController.library = library;
