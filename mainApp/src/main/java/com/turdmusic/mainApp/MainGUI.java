@@ -113,7 +113,7 @@ public class MainGUI extends Application {
         settings = new Settings();
 
         // Test from the first launch
-        settings.setFirstLaunch(true);
+        //settings.setFirstLaunch(true);
 
         try{
             if(settings.getFirstLaunch())

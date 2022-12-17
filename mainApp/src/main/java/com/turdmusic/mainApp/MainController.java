@@ -50,15 +50,15 @@ come back to the first page (Renato)
   * song/album/artist/playlist views
   * */
 public class MainController {
-    // TODO: REMOVE THIS ENUM IF IT DOESN'T PROVE USEFUL
-    /*private enum CurrentView {SongView, AlbumView, ArtistView, PlaylistView, Album, Artist, Playlist};
-    private CurrentView state;*/
+    private enum CurrentView {SongView, AlbumView, ArtistView, PlaylistView, Album, Artist, Playlist};
+    private CurrentView state;
 
     public static Library library;
 
     public VBox allPage;
 
     public TextField searchField;
+    public Label searchLabel;
     // Button
     public Label songsLabelButton;
     public Label albumsLabelButton;
@@ -108,11 +108,18 @@ public class MainController {
 
         // Update the contents for each view
         updateAll();
+<<<<<<< mainApp/src/main/java/com/turdmusic/mainApp/MainController.java
+=======
+
+        changeToSongView();
+>>>>>>> mainApp/src/main/java/com/turdmusic/mainApp/MainController.java
 
         // Setup F5 to force update
         setupKeyF5();
 
         setupKeyExit();
+
+        setupSearch();
     }
 
     private void setupSongTable(){
@@ -195,24 +202,26 @@ public class MainController {
 
         // Go to album page
         mi4.setOnAction(actionEvent -> {
-            pageBox.toFront();
-            changeView();
             ObservableList<Music> songsSelected = tableView.getSelectionModel().getSelectedItems();
             if(songsSelected.size()>0){
                 ArrayList<Music> songs = new ArrayList<>(songsSelected);
                 Album album = songs.get(0).getAlbum();
                 updateInnerAlbumView(album);
+                pageBox.toFront();
+                changeView();
+                state = CurrentView.Album;
             }
         });
         // Go to Artist page
         mi5.setOnAction(actionEvent -> {
-            pageBox.toFront();
-            changeView();
             ObservableList<Music> songsSelected = tableView.getSelectionModel().getSelectedItems();
             if(songsSelected.size()>0){
                 ArrayList<Music> songs = new ArrayList<>(songsSelected);
                 Artist artist = songs.get(0).getArtist();
                 updateInnerArtistView(artist);
+                pageBox.toFront();
+                changeView();
+                state = CurrentView.Artist;
             }
         });
         // Find missing data
@@ -328,27 +337,34 @@ public class MainController {
         changeView();
         songViewTable.toFront();
         songsLabelButton.setFont(Font.font("System", FontWeight.BOLD, FontPosture.REGULAR, 18));
+        state = CurrentView.SongView;
     }
     public void changeToAlbumView(){
         changeView();
         albumScroll.toFront();
         albumsLabelButton.setFont(Font.font("System", FontWeight.BOLD, FontPosture.REGULAR, 18));
+        state = CurrentView.AlbumView;
     }
     public void changeToArtistView(){
         changeView();
         artistScroll.toFront();
         artistsLabelButton.setFont(Font.font("System", FontWeight.BOLD, FontPosture.REGULAR, 18));
+        state = CurrentView.ArtistView;
     }
     public void changeToPlaylistView(){
         changeView();
         playlistScroll.toFront();
         playlistsLabelButton.setFont(Font.font("System", FontWeight.BOLD, FontPosture.REGULAR, 18));
+        state = CurrentView.PlaylistView;
     }
     private void changeView() {
         albumsLabelButton.setFont(Font.font("System", FontWeight.NORMAL, FontPosture.REGULAR, 18));
         songsLabelButton.setFont(Font.font("System", FontWeight.NORMAL, FontPosture.REGULAR, 18));
         artistsLabelButton.setFont(Font.font("System", FontWeight.NORMAL, FontPosture.REGULAR, 18));
         playlistsLabelButton.setFont(Font.font("System", FontWeight.NORMAL, FontPosture.REGULAR, 18));
+
+        searchField.clear(); // It's not a bug it's a feature
+        searchLabel.setText("");
     }
 
     // TODO: INSTEAD OF ALWAYS UPDATING THE VIEW, CHECK FOR CHANGES
@@ -378,6 +394,7 @@ public class MainController {
                     updateInnerAlbumView(i);
                     pageBox.toFront();
                     changeView();
+                    state = CurrentView.Album;
                 }
             });
             albumTiles.getChildren().add(tile);
@@ -393,6 +410,8 @@ public class MainController {
                 if(mouseEvent.getClickCount() == 1){
                     updateInnerArtistView(i);
                     pageBox.toFront();
+                    changeView();
+                    state = CurrentView.Artist;
                 }
             });
             artistTiles.getChildren().add(tile);
@@ -408,6 +427,8 @@ public class MainController {
                 if(mouseEvent.getClickCount() == 1){
                     updateInnerPlaylistView(i);
                     pageBox.toFront();
+                    state = CurrentView.Playlist;
+                    changeView();
                 }
             });
             playlistTiles.getChildren().add(tile);
@@ -438,76 +459,75 @@ public class MainController {
         searchPlaylistTiles(searchText);
         System.out.println("The function search was call");
     }
+    public void setupSearch(){
+        searchField.setOnKeyPressed(keyEvent -> {
+            String searchText = searchField.getText();
+
+            if(searchText.isEmpty()) {
+                searchLabel.setText("");
+                updateAll();
+            }
+            else
+                switch(state) {
+                    case SongView:
+                        searchSongTable(searchText);
+                        break;
+                    case AlbumView:
+                        searchAlbumTiles(searchText);
+                        break;
+                    case ArtistView:
+                        searchArtistTiles(searchText);
+                        break;
+                    case Playlist:
+                        searchPlaylistTiles(searchText);
+                    default:
+                        break;
+                }
+        });
+    }
     public void searchSongTable(String searchText){
-        // to complete
+        ArrayList<Music> results = library.searchSongs(searchText);
+
+        if(results != null) {
+            updateSongTable(results);
+            searchLabel.setText(results.size() + " matching result were found!");
+        }
+        else if(state == CurrentView.SongView) {
+            updateSongTable(library.getSongs());
+            searchLabel.setText("No matching result was found");
+        }
+
     }
     public void searchAlbumTiles(String searchText){
-        ArrayList<Album> album = library.getAlbums();
-        ArrayList<Album> searchAlbum = new ArrayList<>();
+        ArrayList<Album> results = library.searchAlbums(searchText);
 
-        if(searchText != null) {
-            //assert searchAlbum != null;
-            for (Album i : album) {
-                //Don't consider a and A equal
-                if (i.getTitle().startsWith(searchText)) {
-                    System.out.println("Exist search paths");
-                    //assert !searchAlbum.isEmpty();
-                    searchAlbum.add(i);
-                }
-            }
-            if (!searchAlbum.isEmpty()) {
-                updateAlbumTiles(searchAlbum);
-            }
+        if(results != null) {
+            updateAlbumTiles(results);
+            searchLabel.setText(results.size() + " matching result were found");
         }
-        else {
-            updateAlbumTiles(album);
-        }
+        else if(state == CurrentView.AlbumView)
+            searchLabel.setText("No matching result was found");
+
     }
     public void searchArtistTiles(String searchText){
-        ArrayList<Artist> artist = library.getArtists();
-        ArrayList<Artist> searchArtist = new ArrayList<>();
+        ArrayList<Artist> results = library.searchArtists(searchText);
 
-         if(searchText != null) {
-             //assert searchAlbum != null;
-             for (Artist i : artist) {
-                 //Don't consider a and A equal
-                 if (i.getName().startsWith(searchText)) {
-                     System.out.println("Exist search paths");
-                     //assert !searchAlbum.isEmpty();
-                     searchArtist.add(i);
-                 }
-             }
-             if (!searchArtist.isEmpty()) {
-                 updateArtistTiles(searchArtist);
-             }
-         }
-         else {
-             updateArtistTiles(artist);
-         }
+        if(results != null) {
+            updateArtistTiles(results);
+            searchLabel.setText(results.size() + " matching result were found");
+        }
+        else if(state == CurrentView.ArtistView)
+            searchLabel.setText("No matching result was found");
      }
     public void searchPlaylistTiles(String searchText){
-         /*ArrayList<Album> album = library.getAlbums();
-         ArrayList<Album> searchAlbum = new ArrayList<>();
-         String searchText = searchField.getText();
-         System.out.println("The function searchAlbumTiles was call");
-
-         if(searchText != null) {
-             //assert searchAlbum != null;
-             for (Album i : album) {
-                 //Don't consider a and A equal
-                 if (i.getTitle().startsWith(searchText)) {
-                     System.out.println("Exist search paths");
-                     //assert !searchAlbum.isEmpty();
-                     searchAlbum.add(i);
-                 }
-             }
-             if (!searchAlbum.isEmpty()) {
-                 updateAlbumTiles(searchAlbum);
-             }
+         ArrayList<Playlist> results = library.searchPlaylist(searchText);
+         if(results != null){
+             updatePlaylistTiles(results);
+             searchLabel.setText(results.size() + " matching result were found");
          }
-         else {
-             updateAlbumTiles(album);
-         }*/
+         else if(state == CurrentView.PlaylistView)
+             searchLabel.setText("No matching result was found");
+
      }
 
     private void updateInnerAlbumView(Album album){
