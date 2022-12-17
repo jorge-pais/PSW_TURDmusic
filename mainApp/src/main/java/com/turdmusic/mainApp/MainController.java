@@ -29,11 +29,21 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 
 // Add multiple options to a single menu item?
 // https://stackoverflow.com/questions/69200063/contextmenu-sub-menus-from-a-list-of-strings
 
+/*TODO:
+* Create a way to reproduce music the all album/artist/playlist
+* Add on Table Context the option of reproduce music
+* Eliminate on Table Context the "go to Album" inside album
+and "go to Artist" inside artist
+* Test if openFolder and put empty after to openPreference
+come back to the first page (Renato)
+* Understand why always i put a new path create the Main again (Renato)
+* Change Quit to Exit (and maybe put a setKey)
+* Put an AlertType on Exit of the application
+*/
  /** Main View Controller Class
   * This is the main UI/UX controller class, here are all the views
   * for the main application window, including
@@ -46,7 +56,6 @@ public class MainController {
     public static Library library;
 
     public VBox allPage;
-    // public MenuItem optionsPreferences
 
     public TextField searchField;
     public Label searchLabel;
@@ -99,11 +108,16 @@ public class MainController {
 
         // Update the contents for each view
         updateAll();
+<<<<<<< mainApp/src/main/java/com/turdmusic/mainApp/MainController.java
+=======
 
         changeToSongView();
+>>>>>>> mainApp/src/main/java/com/turdmusic/mainApp/MainController.java
 
         // Setup F5 to force update
         setupKeyF5();
+
+        setupKeyExit();
 
         setupSearch();
     }
@@ -428,6 +442,23 @@ public class MainController {
          });
     }
 
+     public void setupKeyExit() {
+         //Force the update page
+         allPage.addEventFilter(KeyEvent.KEY_RELEASED, event -> {
+             if (event.getCode() == KeyCode.ESCAPE)
+                 finishButtonClicked();
+         });
+     }
+
+    // TODO: Improve the way is call and complete Song and Playlist search
+    public void searchInViews(){
+        String searchText = searchField.getText();
+        searchSongTable(searchText);
+        searchAlbumTiles(searchText);
+        searchArtistTiles(searchText);
+        searchPlaylistTiles(searchText);
+        System.out.println("The function search was call");
+    }
     public void setupSearch(){
         searchField.setOnKeyPressed(keyEvent -> {
             String searchText = searchField.getText();
