@@ -17,7 +17,6 @@ import java.util.Objects;
     Controller class for the path selection window
 */
 public class FolderController {
-
     public static Library library;
     public static Settings settings;
 
@@ -63,9 +62,7 @@ public class FolderController {
                 }
             }
         }
-
         items.removeAll(selectedItems);
-
         updatePathList();
     }
     public void scanSelectedPressed(){
@@ -94,12 +91,6 @@ public class FolderController {
         }
         items.addAll(newItems);
         newItems.clear();
-    }
-    private void updatePathList() {
-        allItems.removeAll(allItems);
-        allItems.addAll(items);
-        allItems.addAll(newItems);
-        pathList.setItems(allItems);
     }
     public void finishButtonClicked() {
         stage = (Stage) pathList.getScene().getWindow();
@@ -132,9 +123,16 @@ public class FolderController {
         }
         else {
             newItems.removeAll();
-            stage = (Stage) pathList.getScene().getWindow();
             stage.close();
         }
+    }
+
+
+    private void updatePathList() {
+        allItems.clear();
+        allItems.addAll(items);
+        allItems.addAll(newItems);
+        pathList.setItems(allItems);
     }
     // Fade label for visual feedback
     private void showAndFadeLabel(){

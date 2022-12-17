@@ -52,34 +52,37 @@ public class MainGUI extends Application {
         return new Image(imageStream);
     }
 
-    public static void openFolderPage(Stage stage, Stage newStage) throws IOException {
-        FXMLLoader loaderPathManager = new FXMLLoader(MainGUI.class.getResource("folderPage.fxml"));
-        String name = "Select Folders";
-        createNewStage(newStage, loaderPathManager, name);
+    //TODO: Setting with info if exist paths added or not, instead of some of the code here
+    public static boolean existPaths() {
         ObservableList<String> items = FXCollections.observableArrayList();
         items.setAll(library.getLibraryPaths());
         if((items.isEmpty())) {
             // Mark the first launch here
             Library.settings.setFirstLaunch(true);
-            System.out.println("Paths have been added");
+            return false;
         }
         else {
             Library.settings.setFirstLaunch(false);
+            return true;
         }
-        // Change the page
-        if(stage!=null) {
-            try {
-                createMainStage(stage);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+    }
+
+    public static void openFolderPage(Stage newStage) throws IOException {
+        FXMLLoader loaderPathManager = new FXMLLoader(MainGUI.class.getResource("folderPage.fxml"));
+        String name = "Select Folders";
+        createNewStage(newStage, loaderPathManager, name);
     }
 
     public static void openPreferences(Stage newStage) throws IOException {
         FXMLLoader loaderPreferencesView = new FXMLLoader(MainGUI.class.getResource("preferenceView.fxml"));
         String name = "Preferences";
         createNewStage(newStage, loaderPreferencesView, name);
+    }
+
+    public static void openEditMenu(Stage newStage) throws IOException{
+        FXMLLoader fxmlLoader = new FXMLLoader(MainGUI.class.getResource("songEdit.fxml"));
+        String name = "Edit song entry";
+        createNewStage(newStage, fxmlLoader, name);
     }
 
     private static void createNewStage(Stage newStage, FXMLLoader loaderPathManager, String name) throws IOException {
@@ -91,18 +94,6 @@ public class MainGUI extends Application {
 
         // Change the new window's modality
         // block input from all other application windows
-        newStage.initModality(Modality.APPLICATION_MODAL);
-        newStage.showAndWait();
-    }
-
-    public static void openEditMenu(Stage newStage) throws IOException{
-        FXMLLoader fxmlLoader = new FXMLLoader(MainGUI.class.getResource("songEdit.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 302, 214);
-        newStage.setScene(scene);
-        newStage.setResizable(false);
-
-        newStage.setTitle("Edit song entry");
-        newStage.getIcons().add(getAppIcon());
         newStage.initModality(Modality.APPLICATION_MODAL);
         newStage.showAndWait();
     }
