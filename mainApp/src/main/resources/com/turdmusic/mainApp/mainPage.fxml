@@ -44,7 +44,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#launchPreferences" text="Preferences…" />
                   <MenuItem mnemonicParsing="false" onAction="#launchFolder" text="Manage Folders" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" onAction="#finishButtonClicked" text="Quit" />
+                        <MenuItem mnemonicParsing="false" onAction="#finishButtonClicked" text="Exist" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
@@ -63,11 +63,11 @@
                 </Menu>
             <Menu mnemonicParsing="false" text="Refresh">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#updateAll" text="All" />
-                  <MenuItem mnemonicParsing="false" text="Songs" />
-                  <MenuItem mnemonicParsing="false" text="Album" />
-                  <MenuItem mnemonicParsing="false" text="Artist" />
-                  <MenuItem mnemonicParsing="false" text="Playlist" />
+                  <MenuItem fx:id="allRefreshMenu" mnemonicParsing="false" text="All" />
+                  <MenuItem fx:id="songRefreshMenu" mnemonicParsing="false" text="Song" />
+                  <MenuItem fx:id="albumRefreshMenu" mnemonicParsing="false" text="Album" />
+                  <MenuItem fx:id="artistRefreshMenu" mnemonicParsing="false" text="Artist" />
+                  <MenuItem fx:id="playlistRefreshMenu" mnemonicParsing="false" text="Playlist" />
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Library">

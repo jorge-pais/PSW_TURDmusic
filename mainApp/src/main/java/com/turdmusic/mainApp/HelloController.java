@@ -28,6 +28,10 @@ public class HelloController {
         Stage newStage = new Stage();
         Stage stage = (Stage) label1.getScene().getWindow();
 
-        MainGUI.openFolderPage(stage, newStage);
+        MainGUI.openFolderPage(newStage);
+        if(MainGUI.existPaths()){
+            MainGUI.createMainStage(stage);
+        }
+
     }
 }

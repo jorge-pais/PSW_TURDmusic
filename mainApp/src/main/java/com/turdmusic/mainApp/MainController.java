@@ -38,10 +38,6 @@ import java.util.ArrayList;
 * Add on Table Context the option of reproduce music
 * Eliminate on Table Context the "go to Album" inside album
 and "go to Artist" inside artist
-* Test if openFolder and put empty after to openPreference
-come back to the first page (Renato)
-* Understand why always i put a new path create the Main again (Renato)
-* Change Quit to Exit (and maybe put a setKey)
 * Put an AlertType on Exit of the application
 */
  /** Main View Controller Class
@@ -57,8 +53,17 @@ public class MainController {
 
     public VBox allPage;
 
+    //Refresh Menu
+    public MenuItem allRefreshMenu;
+    public MenuItem songRefreshMenu;
+    public MenuItem albumRefreshMenu;
+    public MenuItem artistRefreshMenu;
+    public MenuItem playlistRefreshMenu;
+
+    // Search
     public TextField searchField;
     public Label searchLabel;
+
     // Button
     public Label songsLabelButton;
     public Label albumsLabelButton;
@@ -87,6 +92,7 @@ public class MainController {
     //Individual View:  Album, Artist, Playlist
     public VBox pageBox;
     public Text pageTitleText;
+    //TODO: TextArea will be used or not?
     public TextArea pageDescriptionText;
     public ImageView pageImage;
 
@@ -108,39 +114,37 @@ public class MainController {
 
         // Update the contents for each view
         updateAll();
-<<<<<<< mainApp/src/main/java/com/turdmusic/mainApp/MainController.java
-=======
+//<<<<<<< mainApp/src/main/java/com/turdmusic/mainApp/MainController.java
+//=======
 
         changeToSongView();
->>>>>>> mainApp/src/main/java/com/turdmusic/mainApp/MainController.java
+//>>>>>>> mainApp/src/main/java/com/turdmusic/mainApp/MainController.java
 
-        // Setup F5 to force update
-        setupKeyF5();
-
+        setupRefresh();
         setupKeyExit();
-
         setupSearch();
+
     }
 
     private void setupSongTable(){
-        songViewTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        //artistTiles.setStyle("-fx-background-color: #FFFFFF;");
+    songViewTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+    //artistTiles.setStyle("-fx-background-color: #FFFFFF;");
 
-        // Set up the song table columns (really important Lambda expressions)
-        songViewTitleColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getTitle()));
-        songViewArtistColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getArtist().getName()));
-        songViewAlbumColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getAlbum().getTitle()));
-        songViewDurationColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getFormattedTrackLength()));
+    // Set up the song table columns (really important Lambda expressions)
+    songViewTitleColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getTitle()));
+    songViewArtistColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getArtist().getName()));
+    songViewAlbumColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getAlbum().getTitle()));
+    songViewDurationColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getFormattedTrackLength()));
 
-        // Set up table event handlers to open selected songs on double click
-        songViewTable.setOnMouseClicked(mouseEvent -> {
-            if((mouseEvent.getClickCount() == 2) && mouseEvent.getButton() == MouseButton.PRIMARY)
-                openSelectedSongs(songViewTable);
-        });
-        songViewTable.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER) // Enter
-                openSelectedSongs(songViewTable);
-        });
+    // Set up table event handlers to open selected songs on double click
+    songViewTable.setOnMouseClicked(mouseEvent -> {
+        if((mouseEvent.getClickCount() == 2) && mouseEvent.getButton() == MouseButton.PRIMARY)
+            openSelectedSongs(songViewTable);
+    });
+    songViewTable.setOnKeyPressed(keyEvent -> {
+        if(keyEvent.getCode() == KeyCode.ENTER) // Enter
+            openSelectedSongs(songViewTable);
+    });
     }
     private void setupInnerSongTable(){
         pageTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -368,13 +372,7 @@ public class MainController {
     }
 
     // TODO: INSTEAD OF ALWAYS UPDATING THE VIEW, CHECK FOR CHANGES
-    public void updateAll(){
-        // Update the contents for each view
-        updateSongTable(library.getSongs());
-        updateAlbumTiles(library.getAlbums());
-        updateArtistTiles(library.getArtists());
-    }
-    public void updateSongTable(ArrayList<Music> music){
+    private void updateSongTable(ArrayList<Music> music){
         ObservableList<Music> songsToAdd = FXCollections.observableArrayList();
         songsToAdd.addAll(music);
 
@@ -382,7 +380,7 @@ public class MainController {
         if(songsToAdd.size() > 0)
             songViewTable.setItems(songsToAdd);
     }
-    public void updateAlbumTiles(ArrayList<Album> albums){
+    private void updateAlbumTiles(ArrayList<Album> albums){
         albumTiles.getChildren().clear();
 
         for (Album i: albums) {
@@ -400,7 +398,7 @@ public class MainController {
             albumTiles.getChildren().add(tile);
         }
     }
-    public void updateArtistTiles(ArrayList<Artist> artists){
+    private void updateArtistTiles(ArrayList<Artist> artists){
         artistTiles.getChildren().removeAll(artistTiles.getChildren()); //Clear
 
         for(Artist i: artists){
@@ -417,7 +415,7 @@ public class MainController {
             artistTiles.getChildren().add(tile);
         }
     }
-    public void updatePlaylistTiles(ArrayList<Playlist> playlists){
+    private void updatePlaylistTiles(ArrayList<Playlist> playlists){
         playlistTiles.getChildren().removeAll(playlistTiles.getChildren());
 
         for (Playlist i: playlists){
@@ -434,15 +432,38 @@ public class MainController {
             playlistTiles.getChildren().add(tile);
         }
     }
-    public void setupKeyF5() {
-         //Force the update page
-         allPage.addEventFilter(KeyEvent.KEY_RELEASED, event -> {
-             if (event.getCode() == KeyCode.F5)
-                 updateAll();
-         });
+    public void updateAll(){
+        // Update the contents for each view
+        updateSongTable(library.getSongs());
+        updateAlbumTiles(library.getAlbums());
+        updateArtistTiles(library.getArtists());
+        updatePlaylistTiles(library.getPlaylists());
     }
 
-     public void setupKeyExit() {
+    private void setupRefresh() {
+        allRefreshMenu.setOnAction(actionEvent -> {
+            updateAll();
+        });
+        songRefreshMenu.setOnAction(actionEvent -> {
+            updateSongTable(library.getSongs());
+        });
+        albumRefreshMenu.setOnAction(actionEvent -> {
+            updateAlbumTiles(library.getAlbums());
+        });
+        artistRefreshMenu.setOnAction(actionEvent -> {
+            updateArtistTiles(library.getArtists());
+        });
+        playlistRefreshMenu.setOnAction(actionEvent -> {
+            updatePlaylistTiles(library.getPlaylists());
+        });
+
+        //Refresh all using the F5 key press
+        allPage.addEventFilter(KeyEvent.KEY_RELEASED, event -> {
+            if (event.getCode() == KeyCode.F5)
+                updateAll();
+        });
+    }
+    public void setupKeyExit() {
          //Force the update page
          allPage.addEventFilter(KeyEvent.KEY_RELEASED, event -> {
              if (event.getCode() == KeyCode.ESCAPE)
@@ -579,12 +600,24 @@ public class MainController {
 
     public void launchPreferences() throws IOException {
         Stage newStage = new Stage();
+        Stage stage = (Stage) allPage.getScene().getWindow();
         MainGUI.openPreferences(newStage);
+
+        //If not exist paths is come back to the heloPage
+        if(!MainGUI.existPaths()){
+            MainGUI.createMainStage(stage);
+        }
     }
 
     public void launchFolder() throws IOException {
-         Stage newStage = new Stage();
-         MainGUI.openFolderPage((Stage) allPage.getScene().getWindow(), newStage);
+        Stage newStage = new Stage();
+        Stage stage = (Stage) allPage.getScene().getWindow();
+        MainGUI.openFolderPage(newStage);
+
+        //If not exist paths is come back to the heloPage
+        if(!MainGUI.existPaths()){
+            MainGUI.createMainStage(stage);
+        }
      }
 /*
     Save and load methods save/load the library
