@@ -43,6 +43,10 @@ public class Playlist{
     public Date getDateCreated(){ return dateCreated; }
     @JsonIgnore
     public void setPicture(BufferedImage image){
+        if(image == null) {
+            imageInfo = null;
+            return;
+        }
         try {
             this.imageInfo = new ImageInfo(image, "album_" + id);
         }catch (Exception e){

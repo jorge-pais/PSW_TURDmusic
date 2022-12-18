@@ -1,6 +1,5 @@
 package com.turdmusic.mainApp.core.models;
 
-
 import java.util.List;
 
 /* Class with music metadata retrieved from AcousticID */

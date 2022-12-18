@@ -5,7 +5,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
@@ -32,35 +31,12 @@
     <children>
         <MenuBar VBox.vgrow="NEVER">
             <menus>
-                <Menu mnemonicParsing="false" text="File">
+                <Menu mnemonicParsing="false" text="Options">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="New" />
-                        <MenuItem mnemonicParsing="false" text="Open…" />
-                        <Menu mnemonicParsing="false" text="Open Recent" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Close" />
-                        <MenuItem mnemonicParsing="false" text="Save" />
-                        <MenuItem mnemonicParsing="false" text="Save As…" />
-                        <MenuItem mnemonicParsing="false" text="Revert" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#launchPreferences" text="Preferences…" />
                   <MenuItem mnemonicParsing="false" onAction="#launchFolder" text="Manage Folders" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" onAction="#finishButtonClicked" text="Exist" />
-                    </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Undo" />
-                        <MenuItem mnemonicParsing="false" text="Redo" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Cut" />
-                        <MenuItem mnemonicParsing="false" text="Copy" />
-                        <MenuItem mnemonicParsing="false" text="Paste" />
-                        <MenuItem mnemonicParsing="false" text="Delete" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Select All" />
-                        <MenuItem mnemonicParsing="false" text="Unselect All" />
+                        <MenuItem mnemonicParsing="false" onAction="#finishButtonClicked" text="Exit" />
                     </items>
                 </Menu>
             <Menu mnemonicParsing="false" text="Refresh">
@@ -208,13 +184,7 @@
                                              <children>
                                                 <AnchorPane prefHeight="198.0" prefWidth="142.0">
                                                    <children>
-                                                      <Button layoutX="12.0" layoutY="147.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="97.0" text="Play" />
-                                                      <MenuButton layoutX="12.0" layoutY="112.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="97.0" text="...">
-                                                        <items>
-                                                          <MenuItem mnemonicParsing="false" text="Action 1" />
-                                                          <MenuItem mnemonicParsing="false" text="Action 2" />
-                                                        </items>
-                                                      </MenuButton>
+                                                      <Button fx:id="playButton" layoutX="12.0" layoutY="147.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="97.0" text="Play" />
                                                    </children>
                                                 </AnchorPane>
                                              </children></Pane>
@@ -257,7 +227,7 @@
         <HBox id="HBox" alignment="CENTER_LEFT" layoutX="10.0" layoutY="587.0" spacing="5.0">
             <children>
                 <Pane prefHeight="16.0" prefWidth="184.0" />
-                <Label maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Double click to play song" HBox.hgrow="ALWAYS">
+                <Label maxHeight="1.7976931348623157E308" maxWidth="-1.0" text=" " HBox.hgrow="ALWAYS">
                     <font>
                         <Font size="11.0" fx:id="x31" />
                     </font>

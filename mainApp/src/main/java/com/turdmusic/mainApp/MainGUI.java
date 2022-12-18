@@ -53,10 +53,9 @@ public class MainGUI extends Application {
     }
 
     //TODO: Setting with info if exist paths added or not, instead of some of the code here
+    // FIXME verify if there are any songs left on the library
     public static boolean existPaths() {
-        ObservableList<String> items = FXCollections.observableArrayList();
-        items.setAll(library.getLibraryPaths());
-        if((items.isEmpty())) {
+        if(library.getLibraryPaths().isEmpty()) {
             // Mark the first launch here
             Library.settings.setFirstLaunch(true);
             return false;
@@ -119,7 +118,6 @@ public class MainGUI extends Application {
                     System.out.println("Unsupported OS");
                     System.exit(-1);
                 }
-
             }
 
         }catch (Exception e){
