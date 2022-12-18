@@ -33,6 +33,7 @@ import javax.imageio.ImageIO;
 // The resulting ID's can then be queried to obtain the metadata in
 //
 // TODO: Instead of searching for fpcalc existance, we should have it in a folder in our app
+// https://stackoverflow.com/questions/1383536/including-an-exe-file-to-jar
 // TODO: Manage multiple Artists and Albuns
 // TODO: Completar MusicInfo, ligacao ao cover...  .org/releasegroup/[id]
 // TODO: Ver casos 302, nulls...

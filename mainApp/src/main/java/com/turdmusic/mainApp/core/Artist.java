@@ -49,6 +49,10 @@ public class Artist {
     }
     @JsonIgnore
     public void setPicture(BufferedImage image){
+        if(image == null) {
+            imageInfo = null;
+            return;
+        }
         try {
             this.imageInfo = new ImageInfo(image, "artist_" + id);
         }catch (Exception e){
@@ -56,7 +60,6 @@ public class Artist {
             e.printStackTrace();
         }
     }
-
 
     public void addSong(Music song){
         songs.add(song);

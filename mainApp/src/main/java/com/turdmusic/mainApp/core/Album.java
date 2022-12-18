@@ -58,6 +58,11 @@ public class Album {
     public ArrayList<Music> getTracklist(){ return tracklist; }
     @JsonIgnore
     public void setPicture(BufferedImage image){
+        if(image == null) {
+            imageInfo = null;
+            findAlbumCover();
+            return;
+        }
         try {
             this.imageInfo = new ImageInfo(image, "album_" + id);
         }catch (Exception e){
