@@ -6,6 +6,7 @@ import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.io.File;
 
@@ -253,9 +254,13 @@ public class Library{
 
         ArrayList<Music> output = new ArrayList<>();
 
-        for (Music i: this.songs)
-            if(i.getTitle().toLowerCase().contains(query))
+        String string;
+        for (Music i: this.songs) {
+            // Remove all accents from letters
+            string = (Normalizer.normalize(i.getTitle().toLowerCase(), Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", ""));
+            if (string.contains(query))
                 output.add(i);
+        }
 
         if(output.size() > 0)
             return output;
@@ -266,9 +271,12 @@ public class Library{
 
         ArrayList<Album> output = new ArrayList<>();
 
-        for (Album i: this.albums)
-            if(i.getTitle().toLowerCase().contains(query))
+        String string;
+        for (Album i: this.albums) {
+            string = (Normalizer.normalize(i.getTitle().toLowerCase(), Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", ""));
+            if (string.contains(query))
                 output.add(i);
+        }
 
         if(output.size() > 0)
             return output;
@@ -279,9 +287,12 @@ public class Library{
 
         ArrayList<Artist> output = new ArrayList<>();
 
-        for (Artist i: this.artists)
-            if(i.getName().toLowerCase().contains(query))
+        String string;
+        for (Artist i: this.artists) {
+            string = (Normalizer.normalize(i.getName().toLowerCase(), Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", ""));
+            if (string.contains(query))
                 output.add(i);
+        }
 
         if(output.size() > 0)
             return output;
@@ -292,9 +303,12 @@ public class Library{
 
         ArrayList<Playlist> output = new ArrayList<>();
 
-        for (Playlist i: this.playlists)
-            if(i.getTitle().toLowerCase().contains(query))
+        String string;
+        for (Playlist i: this.playlists) {
+            string = (Normalizer.normalize(i.getTitle().toLowerCase(), Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", ""));
+            if (string.contains(query))
                 output.add(i);
+        }
 
         if(output.size() > 0)
             return output;

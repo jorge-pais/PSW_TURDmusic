@@ -1,5 +1,10 @@
 package com.turdmusic.mainApp.core.models;
 
+/**
+ * Class that holds the data structure to perform the
+ * translation between the MusicInfo json response
+ * and the results that are actually presented on the table
+ * */
 public class ResultInfo {
 
     public String artist;
