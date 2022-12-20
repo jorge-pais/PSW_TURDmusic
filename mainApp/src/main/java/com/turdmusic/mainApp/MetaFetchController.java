@@ -7,8 +7,12 @@ import com.turdmusic.mainApp.core.models.ResultInfo;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +66,33 @@ public class MetaFetchController {
             library.removeSong(song);
             Music music = library.createSongEntry(resultInfo.artist, resultInfo.album, resultInfo.title, song.getFile(), library.getSongs().size(), song.getTrackNumber());
             library.getSongs().add(music);
-            // open the album cover fetching function
+
+            CoverFetchController.music = music;
+            CoverFetchController.resultInfo = resultInfo;
+
+            ButtonType yes = new ButtonType("Yes");
+            ButtonType no = new ButtonType("No");
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Would you like to also get the album cover art?", no, yes);
+            alert.showAndWait().ifPresent(response -> {
+                if (response == no){
+                    ((Stage)selectButton.getScene().getWindow()).close();
+                }
+                if (response == yes) {
+                    FXMLLoader loader = new FXMLLoader(MetaFetchController.class.getResource("coverFetch.fxml"));
+
+                    try {
+                        Scene scene = new Scene(loader.load());
+                        Stage stage = new Stage();
+                        stage.setTitle("Select Album Cover");
+                        stage.getIcons().add(MainGUI.getAppIcon());
+                        stage.setScene(scene);
+                        stage.showAndWait();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    ((Stage)selectButton.getScene().getWindow()).close();
+                }
+            });
         }
         // call another function to create the new song
     }

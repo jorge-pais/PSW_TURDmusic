@@ -177,6 +177,8 @@ public class MainController {
 
             boolean goToAlbum = false, goToArtist = false;
             if(mouseEvent.isSecondaryButtonDown()){
+
+
                 Album album = songsSelected.get(0).getAlbum();
                 Artist artist = songsSelected.get(0).getArtist();
 
@@ -193,7 +195,10 @@ public class MainController {
                 }
                 mi4.setDisable(goToAlbum);
                 mi5.setDisable(goToArtist);
-                }
+
+                if(state == CurrentView.Album) mi4.setDisable(true);
+                if(state == CurrentView.Artist) mi5.setDisable(true);
+            }
         });
 
         // Go to album page
@@ -236,6 +241,8 @@ public class MainController {
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.showAndWait();
                 updateAll();
+
+                saveDefaultLibrary();
             } catch (Exception e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "No results could be found for the selected song.");
                 alert.show();
@@ -251,6 +258,8 @@ public class MainController {
                 MainGUI.openEditMenu(stage);
 
                 updateAll();
+
+                saveDefaultLibrary();
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -334,6 +343,8 @@ public class MainController {
         songsLabelButton.setFont(Font.font("System", FontWeight.BOLD, FontPosture.REGULAR, 18));
         state = CurrentView.SongView;
 
+        updateSongTable(library.getSongs());
+
         searchField.setDisable(false);
     }
     public void changeToAlbumView(){
@@ -342,6 +353,8 @@ public class MainController {
         albumsLabelButton.setFont(Font.font("System", FontWeight.BOLD, FontPosture.REGULAR, 18));
         state = CurrentView.AlbumView;
 
+        updateAlbumTiles(library.getAlbums());
+
         searchField.setDisable(false);
     }
     public void changeToArtistView(){
@@ -349,6 +362,9 @@ public class MainController {
         artistScroll.toFront();
         artistsLabelButton.setFont(Font.font("System", FontWeight.BOLD, FontPosture.REGULAR, 18));
         state = CurrentView.ArtistView;
+
+        updateArtistTiles(library.getArtists());
+
         searchField.setDisable(false);
     }
     public void changeToPlaylistView(){
@@ -356,6 +372,9 @@ public class MainController {
         playlistScroll.toFront();
         playlistsLabelButton.setFont(Font.font("System", FontWeight.BOLD, FontPosture.REGULAR, 18));
         state = CurrentView.PlaylistView;
+
+        updatePlaylistTiles(library.getPlaylists());
+
         searchField.setDisable(false);
     }
     private void changeView() {
@@ -685,7 +704,7 @@ public class MainController {
         playButton.setOnAction(actionEvent -> library.openSongs(playlist.getTracklist()));
     }
 
-    public void launchPreferences() throws IOException {
+    public void launchPreferences() throws Exception {
         Stage newStage = new Stage();
         Stage stage = (Stage) allPage.getScene().getWindow();
         MainGUI.openPreferences(newStage);
@@ -694,9 +713,10 @@ public class MainController {
         if(!MainGUI.existPaths()){
             MainGUI.createMainStage(stage);
         }
+        saveDefaultLibrary();
     }
 
-    public void launchFolder() throws IOException {
+    public void launchFolder() throws Exception {
         Stage newStage = new Stage();
         Stage stage = (Stage) allPage.getScene().getWindow();
         MainGUI.openFolderPage(newStage);
@@ -705,6 +725,8 @@ public class MainController {
         if(!MainGUI.existPaths()){
             MainGUI.createMainStage(stage);
         }
+
+        saveDefaultLibrary();
      }
 /*
     Save and load methods save/load the library
@@ -728,7 +750,7 @@ public class MainController {
 
         library.saveLibrary(path);
     }
-    public void loadDefaultLibrary() throws Exception{
+    public void loadDefaultLibrary(){
         String osName = System.getProperty("os.name").toLowerCase();
         String path;
         try {
@@ -752,12 +774,22 @@ public class MainController {
     public void exportLibrary() throws Exception{
         FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showSaveDialog(null);
+        if(file != null)
+            library.saveLibrary(file.getPath());
     }
-    public void importLibrary() throws Exception{
+    public void importLibrary(){
         FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showOpenDialog(null);
-
-        library = Library.loadLibrary(file.getPath());
+        if(file == null) return;
+        Library newLibrary;
+        try{
+            newLibrary = Library.loadLibrary(file.getPath());
+        }catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Invalid library file!");
+            alert.show();
+            return;
+        }
+        library = newLibrary;
     }
 
     private void openSelectedSongs(TableView<Music> table){
