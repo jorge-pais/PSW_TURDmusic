@@ -75,7 +75,7 @@ public class Album {
             //if(imageInfo.getImageObj() != null)
             return this.imageInfo.getImageObj();
         else {
-            InputStream imageStream = getClass().getResourceAsStream("/com/turdmusic/mainApp/defaultphotos/album_default.png");
+            InputStream imageStream = getClass().getResourceAsStream("/com/turdmusic/mainApp/defaultPhotos/album_default.png");
             assert imageStream != null;
             return new Image(imageStream);
         }

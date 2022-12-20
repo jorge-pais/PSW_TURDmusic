@@ -4,7 +4,7 @@ package com.turdmusic.mainApp.core;
 public class Utils {
 
     // Types of files to check
-    public enum fileType {Audio, Image};
+    public enum fileType {Audio, Image}
 
     public static boolean checkFileExtension(String name, fileType type){
         String[] supportedExtensions;
