@@ -17,9 +17,9 @@ import com.turdmusic.mainApp.core.models.CoverInfo;
 import com.turdmusic.mainApp.core.models.ImageInfo;
 import com.turdmusic.mainApp.core.models.MusicInfo;
 import com.google.gson.Gson;
+import javafx.scene.control.Alert;
 
 import javax.imageio.ImageIO;
-
 
 //
 // Resources for implementing this:
@@ -30,6 +30,10 @@ import javax.imageio.ImageIO;
 // The resulting ID's can then be queried to obtain the metadata in
 //
 // https://stackoverflow.com/questions/1383536/including-an-exe-file-to-jar
+// TODO: Completar MusicInfo, ligacao ao cover...  .org/releasegroup/[id]
+// TODO: Ver casos 302, nulls...
+// TODO: Verificar se existe ligacao a internet
+// TODO: Verificar todos os albuns do Nome musica maioritario
 public class AcoustidRequester {
 
     public static Settings settings;
@@ -85,12 +89,9 @@ public class AcoustidRequester {
 
         int exitVal = process.waitFor();
         if (exitVal == 0) {
-            System.out.println("Success");
             return output.toString();
-        }else{
-                System.out.println("Something went wrong");
-                return null;
         }
+        return null;
     }
 
     // returns: List of all covers url available for an album

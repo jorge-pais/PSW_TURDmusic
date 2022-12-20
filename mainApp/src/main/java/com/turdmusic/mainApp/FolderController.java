@@ -127,7 +127,6 @@ public class FolderController {
         }
     }
 
-
     private void updatePathList() {
         allItems.clear();
         allItems.addAll(items);
