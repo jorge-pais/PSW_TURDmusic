@@ -3,6 +3,9 @@ package com.turdmusic.mainApp.core.models;
 import java.util.List;
 import java.util.Map;
 
+/** Class with music metadata retrieved from Cover Archive
+ * Used for interfacing with the json responses
+ * */
 public class CoverInfo {
     public List<Image> images;
 

@@ -12,7 +12,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +58,6 @@ public class MetaFetchController {
         if(selectedItems.size() == 0){
             Alert alert = new Alert(Alert.AlertType.ERROR, "No result was selected, please choose the most appropriate result");
             alert.show();
-            return;
         }
         else{
             ResultInfo resultInfo = selectedItems.get(0);
@@ -88,7 +86,7 @@ public class MetaFetchController {
                         stage.setScene(scene);
                         stage.showAndWait();
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        System.out.println("Error during cover art fetching");
                     }
                     ((Stage)selectButton.getScene().getWindow()).close();
                 }
