@@ -45,7 +45,7 @@ public class MainGUI extends Application {
         stage.show();
     }
 
-    private static Image getAppIcon() {
+    public static Image getAppIcon() {
         InputStream imageStream = MainGUI.class.getResourceAsStream("/com/turdmusic/mainApp/icons/logo.png");
         assert imageStream != null;
         return new Image(imageStream);
@@ -81,7 +81,7 @@ public class MainGUI extends Application {
         createNewStage(newStage, fxmlLoader, name);
     }
 
-    private static void createNewStage(Stage newStage, FXMLLoader loaderPathManager, String name) throws IOException {
+    public static void createNewStage(Stage newStage, FXMLLoader loaderPathManager, String name) throws IOException {
         Scene scene = new Scene(loaderPathManager.load());
         newStage.setResizable(false);
         newStage.setTitle(name);
@@ -98,9 +98,6 @@ public class MainGUI extends Application {
 
         // Load the settings object containing the preferences
         settings = new Settings();
-
-        // Test from the first launch
-        settings.setFirstLaunch(true);
 
         try{
             if(settings.getFirstLaunch())
@@ -140,5 +137,7 @@ public class MainGUI extends Application {
         AcoustidRequester.settings = settings;
         SongEditController.library = library;
         MetaFetchController.library = library;
+        CoverFetchController.library = library;
+        CoverFetchController.settings = settings;
     }
 }

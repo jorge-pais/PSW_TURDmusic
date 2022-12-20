@@ -45,7 +45,7 @@ public class Settings {
         prefs.put(fpcalcExecutable, executable);
     }
 
-    private void defaultSettings(){
+    public void defaultSettings(){
         // This seems to work for all tested Operating Systems
         String osName = System.getProperty("os.name").toLowerCase();
         String homeFolder = System.getProperty("user.home");

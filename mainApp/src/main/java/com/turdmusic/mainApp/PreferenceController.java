@@ -90,4 +90,8 @@ public class PreferenceController {
         onMouseClickedCancel();
     }
 
+    public void defaultSettingsButtons(){
+        settings.defaultSettings();
+        setupTextFields();
+    }
 }

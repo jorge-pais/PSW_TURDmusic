@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 public class CoverInfo {
-    private List<Image> images;
+    public List<Image> images;
 
     @Override
     public String toString() {
@@ -21,7 +21,7 @@ public class CoverInfo {
     }
 
     public class Image{
-        private Map<String, String> thumbnails;
+        public Map<String, String> thumbnails;
 
 
         @Override
