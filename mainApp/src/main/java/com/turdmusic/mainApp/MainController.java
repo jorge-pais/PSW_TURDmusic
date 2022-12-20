@@ -268,6 +268,19 @@ public class MainController {
                 e.printStackTrace();
             }
         });
+        // Remove song from library
+        mi1.setOnAction(actionEvent -> {
+            ObservableList<Music> selection = tableView.getSelectionModel().getSelectedItems();
+            if(selection.size() > 0)
+                for (Music i: selection)
+                    library.removeSong(i);
+            updateAll();
+            try{
+                saveDefaultLibrary();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        });
 
         songContext.getItems().addAll(mi1, mi2, playlistOptions, mi3, mi4, mi5);
     }
@@ -293,6 +306,11 @@ public class MainController {
                 // Refresh the context menu
                 setupTableContext(songViewTable); //Major event handler Spaghetti code
                 setupTableContext(pageTable);
+                try{
+                    saveDefaultLibrary();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -451,6 +469,12 @@ public class MainController {
 
                 setupTableContext(songViewTable); //Major event handler Spaghetti code
                 setupTableContext(pageTable);
+
+                try{
+                    saveDefaultLibrary();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             });
 
             tile.setOnContextMenuRequested(contextMenuEvent -> contextMenu.show(tile, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY()));

@@ -63,6 +63,8 @@ public class CoverFetchController {
     private ImageView createImageview(ImageInfo imageInfo){
         ImageView imageView = new ImageView();
         imageView.setImage(imageInfo.getImageObj());
+        imageView.setFitHeight(150);
+        imageView.setFitWidth(150);
 
         return imageView;
     }

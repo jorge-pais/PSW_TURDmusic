@@ -1,10 +1,10 @@
 package com.turdmusic.mainApp;
 
-import com.turdmusic.mainApp.core.*;
+import com.turdmusic.mainApp.core.AcoustidRequester;
+import com.turdmusic.mainApp.core.Library;
+import com.turdmusic.mainApp.core.Settings;
 import com.turdmusic.mainApp.core.models.ImageInfo;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
