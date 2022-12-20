@@ -22,8 +22,8 @@ public class Library{
     private final ArrayList<Artist> artists;
     private final ArrayList<Playlist> playlists;
 
-    private Album undefinedAlbum;
-    private Artist undefinedArtist;
+    private Album undefinedAlbum = null;
+    private Artist undefinedArtist = null;
 
     public static Settings settings;
 
@@ -34,6 +34,8 @@ public class Library{
     public ArrayList<Artist> getArtists(){ return artists; }
     public ArrayList<Album> getAlbums(){ return albums; }
     public ArrayList<Playlist> getPlaylists(){ return playlists; }
+    public Album getUndefinedAlbum(){ return undefinedAlbum; }
+    public Artist getUndefinedArtist(){ return undefinedArtist; }
 
     public Library() {
         // Initialize all lists
@@ -64,6 +66,10 @@ public class Library{
             i.findAlbumCover();
             i.sortTrackList();
         }
+        /*for (Music i: this.songs) { // DEBUG
+            System.out.println(i.getFile().getPath());
+            System.out.println("---" + i.getTitle() + "---" + i.getArtist().getName() + "---" + i.getAlbum().getTitle());
+        }*/
 
         System.out.println("Path added!");
     }
@@ -145,8 +151,11 @@ public class Library{
             // check children folders recursively
             if(!file.isFile()) {
                 ArrayList<Music> scanResult = scanFilePath(file.getPath(), (startId + songsAdded));
+                assert scanResult != null;
+
                 musicList.addAll(scanResult);
                 songsAdded += scanResult.size();
+
             }
             else {
                 if (Utils.checkFileExtension(file.getName(), Utils.fileType.Audio)) { // check for a valid music file
@@ -187,12 +196,8 @@ public class Library{
      * @param id Integer id for the song
      * @return Music object with the appropriate artist/album relations
      */
-    private Music readSongMetadata(File fileHandle, int id) throws Exception{
-        //
-        // This function gets the metadata from a file and creates
-        // artist and album objects for the song, or adds the song
-        // to an existing album of artist
-        //
+    private Music readSongMetadata(File fileHandle, int id) throws Exception{ // FIXME
+
         AudioFile f = AudioFileIO.read(fileHandle);
         Tag tag = f.getTag();
 
@@ -202,13 +207,23 @@ public class Library{
         String trackTitle = tag.getFirst(FieldKey.TITLE).replaceFirst("\\s++$", "");
         String trackNumber = tag.getFirst(FieldKey.TRACK).replaceFirst("\\s++$", "");
 
-        Album album = null;
-        Artist artist = null;
-
         // If anything of these fields are missing the undefined
         // artist and albums will be assigned
         if (artistName.length() == 0 || albumTitle.length() == 0 || trackTitle.length() == 0)
             throw new Exception();
+
+        System.out.println(artistName + "---" + trackTitle);
+
+        int track = (trackNumber.length() == 0) ? 0 : Integer.parseInt(trackNumber);
+
+        return createSongEntry(artistName, albumTitle, trackTitle, fileHandle, id, track);
+    }
+
+    /** Creates a new song entry and create in the library the
+     * appropriate artist/album structure
+     * */
+    public Music createSongEntry(String artistName, String albumName, String title, File fileHandle, int id, int track){
+        Album album = null; Artist artist = null;
 
         for (Artist i : this.artists)
             if (i.getName().equals(artistName))
@@ -218,27 +233,21 @@ public class Library{
             this.artists.add(artist);
         }
 
-        for (Album i : this.albums)
-            if(i.getTitle().equals(albumTitle))
+        for (Album i : artist.getAlbums())
+            if(i.getTitle().equals(albumName))
                 album = i;
         if(album == null){
-            album = new Album(albumTitle, artist, this.albums.size());
+            album = new Album(albumName, artist, this.albums.size());
             artist.addAlbum(album);
             this.albums.add(album);
         }
-
-        int track = (trackNumber.length() == 0) ? 0 : Integer.parseInt(trackNumber);
-
-        Music song = new Music(trackTitle, id, fileHandle, artist, album, track);
+        Music song = new Music(title, id, fileHandle, artist, album, track);
         artist.addSong(song);
         album.addSong(song);
+
         return song;
     }
 
-    /*
-    Repeating functions for simplicity
-    TODO: find a way to reuse the same function without major class alterations
-    */
     public ArrayList<Music> searchSongs(String searchTerm){
         String query = searchTerm.toLowerCase().replaceFirst("\\s++$", "");
 
@@ -349,4 +358,5 @@ public class Library{
             e.printStackTrace();
         }
     }
+
 }

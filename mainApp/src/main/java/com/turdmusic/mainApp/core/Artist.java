@@ -7,9 +7,7 @@ import com.turdmusic.mainApp.core.models.ImageInfo;
 import javafx.scene.image.Image;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 
 @JsonIdentityInfo(
@@ -51,6 +49,10 @@ public class Artist {
     }
     @JsonIgnore
     public void setPicture(BufferedImage image){
+        if(image == null) {
+            imageInfo = null;
+            return;
+        }
         try {
             this.imageInfo = new ImageInfo(image, "artist_" + id);
         }catch (Exception e){
@@ -58,7 +60,6 @@ public class Artist {
             e.printStackTrace();
         }
     }
-
 
     public void addSong(Music song){
         songs.add(song);
@@ -75,7 +76,7 @@ public class Artist {
     }
     public void removeAlbum(Album album){ albums.remove(album); }
 
-    // This get/set pair is used for jackson serializing
+    // This get/set pair is used mainly for jackson serializing
     public ImageInfo getImageInfo(){ return this.imageInfo; }
     public void setImageInfo(ImageInfo imageInfo){
         this.imageInfo = imageInfo;

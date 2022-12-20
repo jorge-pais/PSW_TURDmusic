@@ -1,6 +1,8 @@
 package com.turdmusic.mainApp.core;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
@@ -11,9 +13,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.turdmusic.mainApp.core.models.CoverInfo;
+import com.turdmusic.mainApp.core.models.ImageInfo;
 import com.turdmusic.mainApp.core.models.MusicInfo;
 import com.google.gson.Gson;
+import javafx.scene.control.Alert;
 
+import javax.imageio.ImageIO;
 
 //
 // Resources for implementing this:
@@ -23,21 +29,22 @@ import com.google.gson.Gson;
 //      https://musicbrainz.org/doc/MusicBrainz_API
 // The resulting ID's can then be queried to obtain the metadata in
 //
-// TODO: Instead of searching for fpcalc existance, we should have it in a folder in our app
-// TODO: Manage multiple Artists and Albuns
+// https://stackoverflow.com/questions/1383536/including-an-exe-file-to-jar
 // TODO: Completar MusicInfo, ligacao ao cover...  .org/releasegroup/[id]
 // TODO: Ver casos 302, nulls...
+// TODO: Verificar se existe ligacao a internet
+// TODO: Verificar todos os albuns do Nome musica maioritario
 public class AcoustidRequester {
+
+    public static Settings settings;
 
     // API key
     private static final String key = "PFjVWjJwPw";
 
     // API request parameters
-    private static final String baseURL = "https://api.acoustid.org/v2/lookup";
-    private static final String fpcalcPath = "C:\\Users\\David\\Downloads\\fpcalc";
+    private static final String baseURL_acosticid = "https://api.acoustid.org/v2/lookup";
+    private static final String baseURL_coverarch = "https://coverartarchive.org/release-group";
     private static final String os = System.getProperty("os.name").toLowerCase();
-
-
 
     // Possibly in a different class - with Token for Spotify
     private static String getAPIRequest(String url, String path) throws URISyntaxException, IOException, InterruptedException {
@@ -54,48 +61,10 @@ public class AcoustidRequester {
         return response.body();
     }
 
-    // Maps json response to MusicInfo (java class)
-    // Returned value has music, artist information
-    private static MusicInfo.Result.Record getMusicInfo(String fingerprint, int duration) throws URISyntaxException, IOException, InterruptedException {
-        System.out.println("Fetching Data...");
-        String response = getAPIRequest(baseURL,"?client="+key+"&meta=recordings+compress+releasegroups&duration="+duration+"&fingerprint="+fingerprint);
-
-        Gson gson = new Gson();
-        MusicInfo music = gson.fromJson(response, MusicInfo.class);
-
-        if(!music.getStatus().equals("ok")){
-            return null;
-        }
-
-        System.out.println("Data Fetched...");
-        double THRESHOLD = 0.6;
-        MusicInfo.Result filteredResult = music.getResults().stream()
-                .filter(e -> e.getScore() > THRESHOLD)
-                .max((val1, val2) -> (int) (val1.getScore()*10000 - val2.getScore()*10000))
-                .orElse(null);
-
-
-        List<MusicInfo.Result.Record> filteredRecord = filteredResult.getRecordings();
-        Map<String, Long> recordsName = filteredRecord.stream()
-                .filter(record -> record.getTitle()!=null)
-                .collect(Collectors.groupingBy(MusicInfo.Result.Record::getTitle, Collectors.counting()));
-
-        String musicName = recordsName.entrySet().stream()
-                .max(Map.Entry.comparingByValue()).get().getKey();
-
-
-        MusicInfo.Result.Record musicInformation = filteredRecord.stream()
-                .filter(record -> record.getTitle()!=null && record.getTitle().equals(musicName))
-                .findFirst()
-                .orElse(null);
-
-        return musicInformation;
-    }
-
     private static String getFingerprint(String filepath) throws Exception{
-
         ProcessBuilder processBuilder = new ProcessBuilder();
 
+        String fpcalcPath = settings.getFpcalcExecutable();
 
         // Cross-platform compatibility
         if (os.contains("windows")) {
@@ -104,6 +73,7 @@ public class AcoustidRequester {
             processBuilder.command("bash" , "-c", fpcalcPath + " -plain '" + filepath + "'");
         } else {
             System.out.println("Operative system is not supported");
+            return null;
         }
 
         Process process = processBuilder.start();
@@ -118,34 +88,91 @@ public class AcoustidRequester {
         }
 
         int exitVal = process.waitFor();
-        switch (exitVal) {
-        case 0:
-            System.out.println("Success");
+        if (exitVal == 0) {
             return output.toString();
-        default:
-            System.out.println("Something went wrong");
-            return null;
         }
+        return null;
     }
 
+    // returns: List of all covers url available for an album
+    public static List<String> getCoversURL(MusicInfo.Result.Record.ReleaseGroup releaseGroup) throws URISyntaxException, IOException, InterruptedException {
+        System.out.println("Fetching Data...");
+        String response = getAPIRequest(baseURL_coverarch, "/" + releaseGroup.getId());
 
-    public static Music fetchMetadata(Music music) throws Exception {
+        Gson gson = new Gson();
+        CoverInfo covers = gson.fromJson(response, CoverInfo.class);
+        System.out.println("Data Fetched...");
+
+        List<Map<String, String>> urlCover = covers.getImages().stream()
+                .map(CoverInfo.Image::getThumbnails)
+                .collect(Collectors.toList());
+
+        List<String> totalURLsmall = urlCover.stream()
+                .map(w->w.get("250"))
+                .collect(Collectors.toList());
+
+        return totalURLsmall;
+    }
+
+    // Used to download selected cover
+    public static ImageInfo downloadCover(String linkImage, String nameImage) throws Exception {
+        URL url = new URL(linkImage);
+        BufferedImage image = ImageIO.read(url);
+        return (new ImageInfo(image, nameImage));
+    }
+
+    public static File temporaryCover(List<String> linkImage, String nameFile) throws Exception {
+        File tempFile = File.createTempFile(nameFile, ".tmp");
+        for (String s : linkImage) {
+            URL url = new URL(s);
+            BufferedImage image = ImageIO.read(url);
+            ImageIO.write(image, "jpg", tempFile);
+        }
+
+        return (tempFile);
+    }
+
+    // Maps json response to MusicInfo (java class)
+    // Returned value has music, artist information
+    public static List<MusicInfo.Result.Record> getMusicInfo(Music music) throws Exception {
         String musicPath = music.getFile().getPath();
 
-        MusicInfo.Result.Record musicInfo = getMusicInfo(getFingerprint(musicPath), music.getTrackLength());
+        String fingerprint = getFingerprint(musicPath);
+        int duration = music.getTrackLength();
 
-        music.setTitle(musicInfo.getTitle());
-        //music.setArtist();
-        //music.setAlbuns();
+        System.out.println("Fetching Data...");
+        String response = getAPIRequest(baseURL_acosticid,"?client="+key+"&meta=recordings+compress+releasegroups&duration="+duration+"&fingerprint="+fingerprint);
 
-        System.out.println();
+        Gson gson = new Gson();
+        MusicInfo musicInfo = gson.fromJson(response, MusicInfo.class);
 
-        //System.out.println(music.getArtists().get(0).getName());
-        //System.out.println(music.getTitle());
+        if(!musicInfo.getStatus().equals("ok")){
+            return null;
+        }
 
-        return music;
+        System.out.println("Data Fetched...");
+        // Chooses the recording with the highest score
+        MusicInfo.Result filteredResult = musicInfo.getResults().stream()
+                .max((val1, val2) -> (int) (val1.getScore()*10000 - val2.getScore()*10000))
+                .orElse(null);
+
+        if(filteredResult==null){return null;}
+
+        List<MusicInfo.Result.Record> filteredRecord = filteredResult.getRecordings();
+        Map<String, Long> recordsName = filteredRecord.stream()
+                .filter(record -> record.getTitle()!=null)
+                .collect(Collectors.groupingBy(MusicInfo.Result.Record::getTitle, Collectors.counting()));
+
+        String musicName = recordsName.entrySet().stream()
+                .max(Map.Entry.comparingByValue()).get().getKey();
+
+        // List of record
+        List<MusicInfo.Result.Record> musicInformation = filteredRecord.stream()
+                .filter(record -> record.getTitle()!=null && record.getTitle().equals(musicName))
+                .collect(Collectors.toList());
+
+        return musicInformation;
     }
-
 
 }
 

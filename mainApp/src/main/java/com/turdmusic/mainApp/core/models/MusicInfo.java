@@ -1,12 +1,11 @@
 package com.turdmusic.mainApp.core.models;
 
-
 import java.util.List;
 
 /* Class with music metadata retrieved from AcousticID */
 public class MusicInfo {
-    private String status;
-    private List<Result> results;
+    public String status;
+    public List<Result> results;
 
     public List<Result> getResults() {
         return results;
@@ -23,8 +22,8 @@ public class MusicInfo {
 
     public class Result{
         // Substituir por uma classe Record
-        private List<Record> recordings;
-        private float score;
+        public List<Record> recordings;
+        public float score;
 
         @Override
         public String toString() {
@@ -47,17 +46,25 @@ public class MusicInfo {
 
 
         public class Record{
-            private List<Artist> artists;
-            private String title;
+            public List<Artist> artists;
+            public String title;
+            public List<ReleaseGroup> releasegroups;
 
             @Override
             public String toString() {
                 return "Record{" +
                         "artists=" + artists +
                         ", title='" + title + '\'' +
+                        ", releasegroups=" + releasegroups +
                         '}';
             }
 
+            public List<ReleaseGroup> getReleaseGroups() {
+                return releasegroups;
+            }
+            public void setReleaseGroups(List<ReleaseGroup> releasegroups) {
+                this.releasegroups = releasegroups;
+            }
             public List<Artist> getArtists() {
                 return artists;
             }
@@ -72,7 +79,7 @@ public class MusicInfo {
             }
 
             public class Artist{
-                private String name;
+                public String name;
 
                 @Override
                 public String toString() {
@@ -84,6 +91,32 @@ public class MusicInfo {
                 }
                 public void setName(String name) {
                     this.name = name;
+                }
+            }
+
+            public class ReleaseGroup{
+                public String id;
+                public String title;
+
+                @Override
+                public String toString() {
+                    return "ReleaseGroup{" +
+                            "id='" + id + '\'' +
+                            ", title='" + title + '\'' +
+                            '}';
+                }
+
+                public String getId() {
+                    return id;
+                }
+                public void setId(String id) {
+                    this.id = id;
+                }
+                public String getTitle() {
+                    return title;
+                }
+                public void setTitle(String title) {
+                    this.title = title;
                 }
             }
         }

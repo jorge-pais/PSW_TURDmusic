@@ -23,38 +23,15 @@ public class HelloController {
     }
 
     @FXML
-    protected void onMouseClicked() throws IOException {
+    protected void launchFolderClicked() throws IOException {
         // Create a new stage (window) and load the file selection scene
         Stage newStage = new Stage();
-        /*FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("pathManager.fxml"));
+        Stage stage = (Stage) label1.getScene().getWindow();
 
-        Scene scene = new Scene(fxmlLoader.load(), 600, 400);
-        newStage.setTitle("Select Folders");
-        newStage.setScene(scene);
-
-        // Change the new window's modality
-        // block input from all other application windows
-        // TODO: investigate context menu buttons
-        newStage.initModality(Modality.APPLICATION_MODAL);
-
-        newStage.showAndWait();*/
-        MainGUI.openPathManager(newStage);
-
-        if(FolderSelection.addedFolder) {
-            // Mark the first launch here
-            Library.settings.setFirstLaunch(false);
-            System.out.println("Paths have been added");
-
-            // Change to music view
-            try{
-                //fxmlLoader = new FXMLLoader(getClass().getResource("songView.fxml"));
-                Stage stage = (Stage) label1.getScene().getWindow();
-                MainGUI.createStage(stage);
-                /*Scene newScene = new Scene(fxmlLoader.load());
-                stage.setScene(newScene);*/
-            } catch (Exception e){
-                e.printStackTrace();
-            }
+        MainGUI.openFolderPage(newStage);
+        if(MainGUI.existPaths()){
+            MainGUI.createMainStage(stage);
         }
+
     }
 }

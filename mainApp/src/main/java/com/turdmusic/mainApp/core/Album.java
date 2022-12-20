@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 
 /**
     Album Class which holds all album data and relations with their respective songs and artists
@@ -45,7 +46,6 @@ public class Album {
         this.artist = artist;
     }
 
-    //public void setArtists(Artist artist) { this.artist = artist; }
     public Artist getArtist(){ return this.artist; }
     public String getTitle(){
         return title;
@@ -57,6 +57,11 @@ public class Album {
     public ArrayList<Music> getTracklist(){ return tracklist; }
     @JsonIgnore
     public void setPicture(BufferedImage image){
+        if(image == null) {
+            imageInfo = null;
+            findAlbumCover();
+            return;
+        }
         try {
             this.imageInfo = new ImageInfo(image, "album_" + id);
         }catch (Exception e){
@@ -67,6 +72,7 @@ public class Album {
     @JsonIgnore
     public Image getCoverArt(){
         if(imageInfo != null)
+            //if(imageInfo.getImageObj() != null)
             return this.imageInfo.getImageObj();
         else {
             InputStream imageStream = getClass().getResourceAsStream("/com/turdmusic/mainApp/defaultphotos/album_default.png");
@@ -98,7 +104,7 @@ public class Album {
         try { // First check all children files for any pictures
             File folder = new File(tracklist.get(0).getFile().getParent());
 
-            for (File child : folder.listFiles()) {
+            for (File child : Objects.requireNonNull(folder.listFiles())) {
                 if (Utils.checkFileExtension(child.getName(), Utils.fileType.Image)) {
                     BufferedImage image = ImageIO.read(child);
 
