@@ -27,7 +27,6 @@ public class MainGUI extends Application {
         createMainStage(stage);
     }
 
-    // TODO: alter the function name
     public static void createMainStage(Stage stage) throws IOException {
         String sceneToOpen;
 
@@ -52,8 +51,6 @@ public class MainGUI extends Application {
         return new Image(imageStream);
     }
 
-    //TODO: Setting with info if exist paths added or not, instead of some of the code here
-    // FIXME verify if there are any songs left on the library
     public static boolean existPaths() {
         if(library.getLibraryPaths().isEmpty()) {
             // Mark the first launch here
@@ -142,5 +139,6 @@ public class MainGUI extends Application {
         ImageInfo.settings = settings;
         AcoustidRequester.settings = settings;
         SongEditController.library = library;
+        MetaFetchController.library = library;
     }
 }

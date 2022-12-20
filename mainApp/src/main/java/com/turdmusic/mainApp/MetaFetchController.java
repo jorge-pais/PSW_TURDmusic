@@ -1,5 +1,6 @@
 package com.turdmusic.mainApp;
 
+import com.turdmusic.mainApp.core.Library;
 import com.turdmusic.mainApp.core.models.MusicInfo;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
@@ -11,6 +12,7 @@ import java.util.List;
 public class MetaFetchController {
 
     public static List<MusicInfo.Result.Record> results;
+    public static Library library;
 
     public TableView<MusicInfo.Result.Record> resultsTable;
     public TableColumn<MusicInfo.Result.Record, String> titleResults;

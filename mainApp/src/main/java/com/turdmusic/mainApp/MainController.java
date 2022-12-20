@@ -333,24 +333,30 @@ public class MainController {
         songViewTable.toFront();
         songsLabelButton.setFont(Font.font("System", FontWeight.BOLD, FontPosture.REGULAR, 18));
         state = CurrentView.SongView;
+
+        searchField.setDisable(false);
     }
     public void changeToAlbumView(){
         changeView();
         albumScroll.toFront();
         albumsLabelButton.setFont(Font.font("System", FontWeight.BOLD, FontPosture.REGULAR, 18));
         state = CurrentView.AlbumView;
+
+        searchField.setDisable(false);
     }
     public void changeToArtistView(){
         changeView();
         artistScroll.toFront();
         artistsLabelButton.setFont(Font.font("System", FontWeight.BOLD, FontPosture.REGULAR, 18));
         state = CurrentView.ArtistView;
+        searchField.setDisable(false);
     }
     public void changeToPlaylistView(){
         changeView();
         playlistScroll.toFront();
         playlistsLabelButton.setFont(Font.font("System", FontWeight.BOLD, FontPosture.REGULAR, 18));
         state = CurrentView.PlaylistView;
+        searchField.setDisable(false);
     }
     private void changeView() {
         albumsLabelButton.setFont(Font.font("System", FontWeight.NORMAL, FontPosture.REGULAR, 18));
@@ -411,8 +417,22 @@ public class MainController {
         for (Playlist i: playlists){
             VBox tile = makeImageTile(i.getPlaylistPicture(), i.getTitle());
 
+            ContextMenu contextMenu = new ContextMenu();
+            MenuItem item = new MenuItem("Delete playlist");
+            contextMenu.getItems().add(item);
+
+            item.setOnAction(actionEvent -> {
+                library.getPlaylists().remove(i);
+                updatePlaylistTiles(library.getPlaylists());
+
+                setupTableContext(songViewTable); //Major event handler Spaghetti code
+                setupTableContext(pageTable);
+            });
+
+            tile.setOnContextMenuRequested(contextMenuEvent -> contextMenu.show(tile, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY()));
+
             tile.setOnMouseClicked(mouseEvent -> {
-                if(mouseEvent.getClickCount() == 1){
+                if(mouseEvent.getClickCount() == 1 && mouseEvent.getButton() == MouseButton.PRIMARY){
                     updateInnerPlaylistView(i);
                     pageBox.toFront();
                     state = CurrentView.Playlist;
@@ -443,12 +463,6 @@ public class MainController {
                 updateAll();
         });
     }
-    public void setupKeyExit() {
-         allPage.addEventFilter(KeyEvent.KEY_RELEASED, event -> {
-             if (event.getCode() == KeyCode.ESCAPE)
-                 finishButtonClicked();
-         });
-     }
 
     public void setupSearch(){
         searchField.setOnKeyPressed(keyEvent -> {
@@ -528,6 +542,9 @@ public class MainController {
         pageArtistColumn.setVisible(false);
         pageTrackColumn.setVisible(true);
 
+        // Disable search
+        searchField.setDisable(true);
+
         ObservableList<Music> songsToAdd = FXCollections.observableArrayList();
         songsToAdd.addAll(album.getTracklist());
 
@@ -578,6 +595,9 @@ public class MainController {
         pageArtistColumn.setVisible(false);
         pageTrackColumn.setVisible(false);
 
+        // Disable search
+        searchField.setDisable(true);
+
         pageImage.setImage(artist.getPicture());
         pageTitleText.setText(artist.getName());
 
@@ -624,6 +644,8 @@ public class MainController {
         pageAlbumColumn.setVisible(true);
         pageArtistColumn.setVisible(true);
         pageTrackColumn.setVisible(false);
+
+        searchField.setDisable(true);
 
         pageImage.setImage(playlist.getPlaylistPicture());
         pageTitleText.setText(playlist.getTitle());

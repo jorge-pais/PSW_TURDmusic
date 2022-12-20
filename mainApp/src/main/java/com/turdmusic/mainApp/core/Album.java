@@ -46,7 +46,6 @@ public class Album {
         this.artist = artist;
     }
 
-    //public void setArtists(Artist artist) { this.artist = artist; }
     public Artist getArtist(){ return this.artist; }
     public String getTitle(){
         return title;
