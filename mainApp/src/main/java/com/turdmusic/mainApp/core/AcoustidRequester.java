@@ -1,8 +1,6 @@
 package com.turdmusic.mainApp.core;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -11,7 +9,6 @@ import java.net.*;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -32,13 +29,7 @@ import javax.imageio.ImageIO;
 //      https://musicbrainz.org/doc/MusicBrainz_API
 // The resulting ID's can then be queried to obtain the metadata in
 //
-// TODO: Instead of searching for fpcalc existance, we should have it in a folder in our app
 // https://stackoverflow.com/questions/1383536/including-an-exe-file-to-jar
-// TODO: Manage multiple Artists and Albuns
-// TODO: Completar MusicInfo, ligacao ao cover...  .org/releasegroup/[id]
-// TODO: Ver casos 302, nulls...
-// TODO: Verificar se existe ligacao a internet
-// TODO: Verificar todos os albuns do Nome musica maioritario
 public class AcoustidRequester {
 
     public static Settings settings;
@@ -69,7 +60,6 @@ public class AcoustidRequester {
     private static String getFingerprint(String filepath) throws Exception{
         ProcessBuilder processBuilder = new ProcessBuilder();
 
-        // TODO: Have fpcalc inside the project
         String fpcalcPath = settings.getFpcalcExecutable();
 
         // Cross-platform compatibility
@@ -94,16 +84,16 @@ public class AcoustidRequester {
         }
 
         int exitVal = process.waitFor();
-        switch (exitVal) {
-            case 0:
-                System.out.println("Success");
-                return output.toString();
-            default:
+        if (exitVal == 0) {
+            System.out.println("Success");
+            return output.toString();
+        }else{
                 System.out.println("Something went wrong");
                 return null;
         }
     }
 
+    // returns: List of all covers url available for an album
     public static List<String> getCoversURL(MusicInfo.Result.Record.ReleaseGroup releaseGroup) throws URISyntaxException, IOException, InterruptedException {
         System.out.println("Fetching Data...");
         String response = getAPIRequest(baseURL_coverarch, "/" + releaseGroup.getId());
@@ -112,8 +102,6 @@ public class AcoustidRequester {
         CoverInfo covers = gson.fromJson(response, CoverInfo.class);
         System.out.println("Data Fetched...");
 
-        //List<Value> list = new ArrayList<Value>(map.values());
-        // TODO: Verify if it exists
         List<Map<String, String>> urlCover = covers.getImages().stream()
                 .map(CoverInfo.Image::getThumbnails)
                 .collect(Collectors.toList());
@@ -122,19 +110,25 @@ public class AcoustidRequester {
                 .map(w->w.get("250"))
                 .collect(Collectors.toList());
 
-        // TODO: Add selection of one thumbnail (sizewise) from the map, if any. Return String
-        //
-        // (another function/method should use the link to download the image)
-
         return totalURLsmall;
     }
-    private static ImageInfo downloadCover(String linkImage) throws Exception {
-        // Chamar APIRequester
-        // Exemplo do URL: "http://coverartarchive.org/release/a73ceee4-7992-4371-bbe1-5f2621a9742a/29884614890-250.jpg"
+
+    // Used to download selected cover
+    public static ImageInfo downloadCover(String linkImage, String nameImage) throws Exception {
         URL url = new URL(linkImage);
         BufferedImage image = ImageIO.read(url);
-        return (new ImageInfo(image, "teste"));
-        // TODO: Understand the name to be given
+        return (new ImageInfo(image, nameImage));
+    }
+
+    public static File temporaryCover(List<String> linkImage, String nameFile) throws Exception {
+        File tempFile = File.createTempFile(nameFile, ".tmp");
+        for (String s : linkImage) {
+            URL url = new URL(s);
+            BufferedImage image = ImageIO.read(url);
+            ImageIO.write(image, "jpg", tempFile);
+        }
+
+        return (tempFile);
     }
 
     // Maps json response to MusicInfo (java class)
@@ -147,7 +141,6 @@ public class AcoustidRequester {
 
         System.out.println("Fetching Data...");
         String response = getAPIRequest(baseURL_acosticid,"?client="+key+"&meta=recordings+compress+releasegroups&duration="+duration+"&fingerprint="+fingerprint);
-        // TODO: return null if response is not ok
 
         Gson gson = new Gson();
         MusicInfo musicInfo = gson.fromJson(response, MusicInfo.class);
@@ -158,9 +151,7 @@ public class AcoustidRequester {
 
         System.out.println("Data Fetched...");
         // Chooses the recording with the highest score
-        double THRESHOLD = 0.6;
         MusicInfo.Result filteredResult = musicInfo.getResults().stream()
-                .filter(e -> e.getScore() > THRESHOLD)
                 .max((val1, val2) -> (int) (val1.getScore()*10000 - val2.getScore()*10000))
                 .orElse(null);
 
