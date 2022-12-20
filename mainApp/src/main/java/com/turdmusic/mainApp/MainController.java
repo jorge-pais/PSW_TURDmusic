@@ -114,13 +114,12 @@ public class MainController {
         changeToSongView();
 
         setupRefresh();
-        //setupKeyExit();
         setupSearch();
     }
 
     private void setupSongTable(){
+        //Set up the Song View
         songViewTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        //artistTiles.setStyle("-fx-background-color: #FFFFFF;");
 
         // Set up the song table columns (really important Lambda expressions)
         songViewTitleColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getTitle()));
@@ -139,6 +138,7 @@ public class MainController {
         });
     }
     private void setupInnerSongTable(){
+        //Set up the Individual View
         pageTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         pageTitleColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getTitle()));
         pageDurationColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getFormattedTrackLength()));
@@ -183,6 +183,7 @@ public class MainController {
                 mi2.setDisable(songsSelected.size() > 1);
                 mi3.setDisable(songsSelected.size() > 1);
 
+                //Disable go to Album and go to Artist when multiselect different albums or artists
                 for (int i = 1; i < songsSelected.size(); i++) {
                     if (!songsSelected.get(i).getAlbum().equals(album))
                         goToAlbum = true;
@@ -263,7 +264,6 @@ public class MainController {
         menu.getItems().removeAll(menu.getItems()); //Clear
 
         MenuItem mi0 = new MenuItem("New Playlist");
-
         mi0.setOnAction(actionEvent -> {
             ObservableList<Music> songsToAdd = tableView.getSelectionModel().getSelectedItems();
             ArrayList<Music> music = new ArrayList<>(songsToAdd);
@@ -276,7 +276,6 @@ public class MainController {
             if (name != null) {
                 Playlist playlist = new Playlist(name, music);
                 library.getPlaylists().add(playlist);
-
                 updatePlaylistTiles(library.getPlaylists());
 
                 // Refresh the context menu
@@ -419,8 +418,11 @@ public class MainController {
 
             ContextMenu contextMenu = new ContextMenu();
             MenuItem item = new MenuItem("Delete playlist");
+            MenuItem remove = new MenuItem("Rename playlist");
             contextMenu.getItems().add(item);
+            contextMenu.getItems().add(remove);
 
+            changeNamePlaylist(i, remove);
             item.setOnAction(actionEvent -> {
                 library.getPlaylists().remove(i);
                 updatePlaylistTiles(library.getPlaylists());
@@ -450,6 +452,26 @@ public class MainController {
         updatePlaylistTiles(library.getPlaylists());
     }
 
+    private void changeNamePlaylist(Playlist playlist, MenuItem remove){
+        remove.setOnAction(actionEvent -> {
+            TextInputDialog textInputDialog = new TextInputDialog();
+            textInputDialog.setHeaderText("Rename the playlist's title");
+            textInputDialog.showAndWait();
+
+            String name = textInputDialog.getResult();
+            if (name != null) {
+                ArrayList<Music> music = playlist.getTracklist();
+                library.getPlaylists().remove(playlist);
+                Playlist replace_playlist = new Playlist(name, music);
+                library.getPlaylists().add(replace_playlist);
+
+                updatePlaylistTiles(library.getPlaylists());
+                // Refresh the context menu
+                setupTableContext(songViewTable); //Major event handler Spaghetti code
+                setupTableContext(pageTable);
+            }
+        });
+    }
     private void setupRefresh() {
         allRefreshMenu.setOnAction(actionEvent -> updateAll());
         songRefreshMenu.setOnAction(actionEvent -> updateSongTable(library.getSongs()));

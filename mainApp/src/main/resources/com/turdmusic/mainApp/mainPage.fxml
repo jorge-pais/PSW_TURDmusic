@@ -151,7 +151,7 @@
                                     </TilePane>
                                  </content>
                               </ScrollPane>
-                                        <TableView fx:id="songViewTable" editable="true" prefHeight="514.6666666666666" prefWidth="541.3333333333334" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                        <TableView fx:id="songViewTable" editable="true" prefHeight="514.6666666666666" prefWidth="541.3333333333334" style="-fx-background-color: FFFFFF;" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <columns>
                                                 <TableColumn fx:id="songViewTitleColumn" prefWidth="163.0" text="Title" />
                                                 <TableColumn fx:id="songViewArtistColumn" minWidth="0.0" prefWidth="144.0" text="Artist" />
