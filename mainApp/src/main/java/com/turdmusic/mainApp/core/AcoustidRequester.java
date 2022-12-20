@@ -20,9 +20,9 @@ import com.turdmusic.mainApp.core.models.CoverInfo;
 import com.turdmusic.mainApp.core.models.ImageInfo;
 import com.turdmusic.mainApp.core.models.MusicInfo;
 import com.google.gson.Gson;
+import javafx.scene.control.Alert;
 
 import javax.imageio.ImageIO;
-
 
 //
 // Resources for implementing this:
@@ -34,7 +34,6 @@ import javax.imageio.ImageIO;
 //
 // TODO: Instead of searching for fpcalc existance, we should have it in a folder in our app
 // https://stackoverflow.com/questions/1383536/including-an-exe-file-to-jar
-// TODO: Manage multiple Artists and Albuns
 // TODO: Completar MusicInfo, ligacao ao cover...  .org/releasegroup/[id]
 // TODO: Ver casos 302, nulls...
 // TODO: Verificar se existe ligacao a internet
@@ -94,14 +93,10 @@ public class AcoustidRequester {
         }
 
         int exitVal = process.waitFor();
-        switch (exitVal) {
-            case 0:
-                System.out.println("Success");
-                return output.toString();
-            default:
-                System.out.println("Something went wrong");
-                return null;
+        if (exitVal == 0) {
+            return output.toString();
         }
+        return null;
     }
 
     public static List<String> getCoversURL(MusicInfo.Result.Record.ReleaseGroup releaseGroup) throws URISyntaxException, IOException, InterruptedException {
