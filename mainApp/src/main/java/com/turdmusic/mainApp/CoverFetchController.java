@@ -28,7 +28,7 @@ public class CoverFetchController {
 
             if(covers.toArray().length > 0){
                 for (int i = 0; i < covers.toArray().length; i++){
-                    ImageInfo imageInfo = AcoustidRequester.downloadCover(covers.get(i), "tempCover_" + i + ".jpg");
+                    ImageInfo imageInfo = AcoustidRequester.downloadCover(covers.get(i), "tempCover_" + music.getAlbum().id +"_"+ i + ".jpg");
 
                     ImageView imageView = createImageview(imageInfo);
 
