@@ -91,12 +91,9 @@ public class AcoustidRequester {
 
         int exitVal = process.waitFor();
         if (exitVal == 0) {
-            System.out.println("Success");
             return output.toString();
-        }else{
-                System.out.println("Something went wrong");
-                return null;
         }
+        return null;
     }
 
     // returns: List of all covers url available for an album
@@ -117,7 +114,7 @@ public class AcoustidRequester {
                 .collect(Collectors.toList());
 
         List<String> totalURLsmall = urlCover.stream()
-                .map(w-> w.get("250"))
+                .map(w->w.get("250"))
                 .collect(Collectors.toList());
 
         if(totalURLsmall.size() == 0){return null;}
