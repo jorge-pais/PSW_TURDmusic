@@ -225,6 +225,7 @@ public class MainController {
             Music music = tableView.getSelectionModel().getSelectedItems().get(0);
             try {
                 MetaFetchController.results = AcoustidRequester.getMusicInfo(music);
+                MetaFetchController.song = music;
 
                 Stage stage = new Stage();
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("metaFetch.fxml"));
@@ -234,8 +235,7 @@ public class MainController {
                 stage.setScene(scene);
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.showAndWait();
-
-                // TODO Get the result
+                updateAll();
             } catch (Exception e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "No results could be found for the selected song.");
                 alert.show();
