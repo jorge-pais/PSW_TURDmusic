@@ -133,7 +133,6 @@ public class AcoustidRequester {
         return (new ImageInfo(image, nameImage));
     }
 
-
     // Maps json response to MusicInfo (java class)
     // Returned value has music, artist information
     public static List<MusicInfo.Result.Record> getMusicInfo(Music music) throws Exception {
