@@ -4,9 +4,9 @@ This is the project developed during the first semester of the 1st year of the E
 
 T.U.R.D. music provides users with a simple way to organize local music files, fetch metadata automatically and play them in the chosen media player.
 
-## Instalation
+## Installation
 
-See [Instalation Instructions](https://gitlab.com/psw_22_231/1meect02/t02_1/-/wikis/Installation-Instructions) in the wiki.
+See [Installation Instructions](https://gitlab.com/psw_22_231/1meect02/t02_1/-/wikis/Installation-Instructions) in the wiki.
 
 ## Prerequisites
 To get the application up and running, it is necessary to have installed some sort of media player software on your computer. We recommend using VLC media player, which is free, lightweight and open-source. 
