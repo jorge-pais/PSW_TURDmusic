@@ -1,6 +1,7 @@
 package com.turdmusic.mainApp;
 
 import com.turdmusic.mainApp.core.*;
+import com.turdmusic.mainApp.core.models.ImageInfo;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
@@ -29,7 +30,9 @@ import javafx.stage.Stage;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
+//import javafx.scene.web.WebView;
 
 /*TODO:
 * Add on Table Context the option of reproduce music
@@ -451,7 +454,6 @@ public class MainController {
         updateArtistTiles(library.getArtists());
         updatePlaylistTiles(library.getPlaylists());
     }
-
     private void changeNamePlaylist(Playlist playlist, MenuItem remove){
         remove.setOnAction(actionEvent -> {
             TextInputDialog textInputDialog = new TextInputDialog();
@@ -461,9 +463,12 @@ public class MainController {
             String name = textInputDialog.getResult();
             if (name != null) {
                 ArrayList<Music> music = playlist.getTracklist();
+                ImageInfo image = playlist.getImageInfo();
                 library.getPlaylists().remove(playlist);
+
                 Playlist replace_playlist = new Playlist(name, music);
                 library.getPlaylists().add(replace_playlist);
+                replace_playlist.setImageInfo(image);
 
                 updatePlaylistTiles(library.getPlaylists());
                 // Refresh the context menu
@@ -472,6 +477,7 @@ public class MainController {
             }
         });
     }
+
     private void setupRefresh() {
         allRefreshMenu.setOnAction(actionEvent -> updateAll());
         songRefreshMenu.setOnAction(actionEvent -> updateSongTable(library.getSongs()));
@@ -486,7 +492,19 @@ public class MainController {
         });
     }
 
-    public void setupSearch(){
+    public void aboutTURD(){
+         try {
+             URI uri= new URI("https://www.google.pt");
+
+             java.awt.Desktop.getDesktop().browse(uri);
+             System.out.println("TURD Web repository opened in browser");
+         } catch (Exception e) {
+
+             e.printStackTrace();
+         }
+    }
+
+     public void setupSearch(){
         searchField.setOnKeyPressed(keyEvent -> {
             String searchText = searchField.getText();
 
