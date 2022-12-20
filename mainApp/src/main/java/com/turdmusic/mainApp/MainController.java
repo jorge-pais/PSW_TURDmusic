@@ -1,6 +1,7 @@
 package com.turdmusic.mainApp;
 
 import com.turdmusic.mainApp.core.*;
+import com.turdmusic.mainApp.core.models.ImageInfo;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
@@ -29,7 +30,9 @@ import javafx.stage.Stage;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
+//import javafx.scene.web.WebView;
 
 /*TODO:
 * Add on Table Context the option of reproduce music
@@ -114,13 +117,12 @@ public class MainController {
         changeToSongView();
 
         setupRefresh();
-        //setupKeyExit();
         setupSearch();
     }
 
     private void setupSongTable(){
+        //Set up the Song View
         songViewTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        //artistTiles.setStyle("-fx-background-color: #FFFFFF;");
 
         // Set up the song table columns (really important Lambda expressions)
         songViewTitleColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getTitle()));
@@ -139,6 +141,7 @@ public class MainController {
         });
     }
     private void setupInnerSongTable(){
+        //Set up the Individual View
         pageTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         pageTitleColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getTitle()));
         pageDurationColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getFormattedTrackLength()));
@@ -185,6 +188,7 @@ public class MainController {
                 mi2.setDisable(songsSelected.size() > 1);
                 mi3.setDisable(songsSelected.size() > 1);
 
+                //Disable go to Album and go to Artist when multiselect different albums or artists
                 for (int i = 1; i < songsSelected.size(); i++) {
                     if (!songsSelected.get(i).getAlbum().equals(album))
                         goToAlbum = true;
@@ -272,7 +276,6 @@ public class MainController {
         menu.getItems().removeAll(menu.getItems()); //Clear
 
         MenuItem mi0 = new MenuItem("New Playlist");
-
         mi0.setOnAction(actionEvent -> {
             ObservableList<Music> songsToAdd = tableView.getSelectionModel().getSelectedItems();
             ArrayList<Music> music = new ArrayList<>(songsToAdd);
@@ -285,7 +288,6 @@ public class MainController {
             if (name != null) {
                 Playlist playlist = new Playlist(name, music);
                 library.getPlaylists().add(playlist);
-
                 updatePlaylistTiles(library.getPlaylists());
 
                 // Refresh the context menu
@@ -438,8 +440,11 @@ public class MainController {
 
             ContextMenu contextMenu = new ContextMenu();
             MenuItem item = new MenuItem("Delete playlist");
+            MenuItem remove = new MenuItem("Rename playlist");
             contextMenu.getItems().add(item);
+            contextMenu.getItems().add(remove);
 
+            changeNamePlaylist(i, remove);
             item.setOnAction(actionEvent -> {
                 library.getPlaylists().remove(i);
                 updatePlaylistTiles(library.getPlaylists());
@@ -468,6 +473,29 @@ public class MainController {
         updateArtistTiles(library.getArtists());
         updatePlaylistTiles(library.getPlaylists());
     }
+    private void changeNamePlaylist(Playlist playlist, MenuItem remove){
+        remove.setOnAction(actionEvent -> {
+            TextInputDialog textInputDialog = new TextInputDialog();
+            textInputDialog.setHeaderText("Rename the playlist's title");
+            textInputDialog.showAndWait();
+
+            String name = textInputDialog.getResult();
+            if (name != null) {
+                ArrayList<Music> music = playlist.getTracklist();
+                ImageInfo image = playlist.getImageInfo();
+                library.getPlaylists().remove(playlist);
+
+                Playlist replace_playlist = new Playlist(name, music);
+                library.getPlaylists().add(replace_playlist);
+                replace_playlist.setImageInfo(image);
+
+                updatePlaylistTiles(library.getPlaylists());
+                // Refresh the context menu
+                setupTableContext(songViewTable); //Major event handler Spaghetti code
+                setupTableContext(pageTable);
+            }
+        });
+    }
 
     private void setupRefresh() {
         allRefreshMenu.setOnAction(actionEvent -> updateAll());
@@ -483,7 +511,19 @@ public class MainController {
         });
     }
 
-    public void setupSearch(){
+    public void aboutTURD(){
+         try {
+             URI uri= new URI("https://www.google.pt");
+
+             java.awt.Desktop.getDesktop().browse(uri);
+             System.out.println("TURD Web repository opened in browser");
+         } catch (Exception e) {
+
+             e.printStackTrace();
+         }
+    }
+
+     public void setupSearch(){
         searchField.setOnKeyPressed(keyEvent -> {
             String searchText = searchField.getText();
 
