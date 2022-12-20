@@ -2,7 +2,9 @@ package com.turdmusic.mainApp.core.models;
 
 import java.util.List;
 
-/* Class with music metadata retrieved from AcousticID */
+/** Class with music metadata retrieved from AcousticID
+ * Used for interfacing with the json responses
+ * */
 public class MusicInfo {
     public String status;
     public List<Result> results;
@@ -21,7 +23,6 @@ public class MusicInfo {
     }
 
     public class Result{
-        // Substituir por uma classe Record
         public List<Record> recordings;
         public float score;
 

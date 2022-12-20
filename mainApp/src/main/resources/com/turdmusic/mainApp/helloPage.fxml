@@ -19,7 +19,7 @@
    <children>
       <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
          <children>
-            <Label layoutX="80.0" layoutY="65.0" text="Welcome to Totally Related, Unified and Deliverable Music!" textAlignment="CENTER">
+            <Label layoutX="80.0" layoutY="65.0" text="Welcome to Totally Unified, Relatable and Deliverable Music!" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>

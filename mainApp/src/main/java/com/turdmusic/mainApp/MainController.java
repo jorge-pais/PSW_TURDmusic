@@ -1,6 +1,7 @@
 package com.turdmusic.mainApp;
 
 import com.turdmusic.mainApp.core.*;
+import com.turdmusic.mainApp.core.models.ImageInfo;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
@@ -9,9 +10,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -27,16 +31,13 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.io.File;
-import java.io.IOException;
+import java.net.URI;
+import java.text.Normalizer;
 import java.util.ArrayList;
 
-/*TODO:
-* Add on Table Context the option of reproduce music
-* Eliminate on Table Context the "go to Album" inside album
-and "go to Artist" inside artist
-*/
- /** Main View Controller Class
+/** Main View Controller Class
   * This is the main UI/UX controller class, here are all the views
   * for the main application window, including
   * song/album/artist/playlist views
@@ -114,13 +115,14 @@ public class MainController {
         changeToSongView();
 
         setupRefresh();
-        //setupKeyExit();
         setupSearch();
+
+        saveDefaultLibrary();
     }
 
     private void setupSongTable(){
+        //Set up the Song View
         songViewTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        //artistTiles.setStyle("-fx-background-color: #FFFFFF;");
 
         // Set up the song table columns (really important Lambda expressions)
         songViewTitleColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getTitle()));
@@ -139,6 +141,7 @@ public class MainController {
         });
     }
     private void setupInnerSongTable(){
+        //Set up the Individual View
         pageTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         pageTitleColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getTitle()));
         pageDurationColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getFormattedTrackLength()));
@@ -185,6 +188,7 @@ public class MainController {
                 mi2.setDisable(songsSelected.size() > 1);
                 mi3.setDisable(songsSelected.size() > 1);
 
+                //Disable go to Album and go to Artist when multiselect different albums or artists
                 for (int i = 1; i < songsSelected.size(); i++) {
                     if (!songsSelected.get(i).getAlbum().equals(album))
                         goToAlbum = true;
@@ -264,6 +268,16 @@ public class MainController {
                 e.printStackTrace();
             }
         });
+        // Remove song from library
+        mi1.setOnAction(actionEvent -> {
+            ObservableList<Music> selection = tableView.getSelectionModel().getSelectedItems();
+            if(selection.size() > 0)
+                for (Music i: selection)
+                    library.removeSong(i);
+            updateAll();
+
+            saveDefaultLibrary();
+        });
 
         songContext.getItems().addAll(mi1, mi2, playlistOptions, mi3, mi4, mi5);
     }
@@ -272,7 +286,6 @@ public class MainController {
         menu.getItems().removeAll(menu.getItems()); //Clear
 
         MenuItem mi0 = new MenuItem("New Playlist");
-
         mi0.setOnAction(actionEvent -> {
             ObservableList<Music> songsToAdd = tableView.getSelectionModel().getSelectedItems();
             ArrayList<Music> music = new ArrayList<>(songsToAdd);
@@ -285,12 +298,13 @@ public class MainController {
             if (name != null) {
                 Playlist playlist = new Playlist(name, music);
                 library.getPlaylists().add(playlist);
-
                 updatePlaylistTiles(library.getPlaylists());
 
                 // Refresh the context menu
                 setupTableContext(songViewTable); //Major event handler Spaghetti code
                 setupTableContext(pageTable);
+
+                saveDefaultLibrary();
             }
         });
 
@@ -316,25 +330,25 @@ public class MainController {
     }
 
     private VBox makeImageTile(Image image, String labelText){
-        VBox vBoxout = new VBox();
-        vBoxout.prefHeight(200);
-        vBoxout.prefWidth(200);
-        vBoxout.setAlignment(Pos.CENTER);
-        vBoxout.setLayoutX(10);
-        vBoxout.setLayoutY(10);
+        VBox vBoxOut = new VBox();
+        vBoxOut.prefHeight(200);
+        vBoxOut.prefWidth(200);
+        vBoxOut.setAlignment(Pos.CENTER);
+        vBoxOut.setLayoutX(10);
+        vBoxOut.setLayoutY(10);
 
         ImageView picture = new ImageView();
         picture.setImage(image);
         picture.setFitHeight(150);
         picture.setFitWidth(150);
-        vBoxout.getChildren().add(picture);
+        vBoxOut.getChildren().add(picture);
 
         Label label = new Label(labelText);
         label.setMaxWidth(150);
         label.setAlignment(Pos.CENTER);
 
-        vBoxout.getChildren().add(label);
-        return vBoxout;
+        vBoxOut.getChildren().add(label);
+        return vBoxOut;
     }
 
     public void changeToSongView(){
@@ -437,15 +451,20 @@ public class MainController {
             VBox tile = makeImageTile(i.getPlaylistPicture(), i.getTitle());
 
             ContextMenu contextMenu = new ContextMenu();
-            MenuItem item = new MenuItem("Delete playlist");
-            contextMenu.getItems().add(item);
+            MenuItem delete = new MenuItem("Delete playlist");
+            MenuItem rename = new MenuItem("Rename playlist");
+            contextMenu.getItems().add(delete);
+            contextMenu.getItems().add(rename);
 
-            item.setOnAction(actionEvent -> {
+            changeNamePlaylist(i, rename);
+            delete.setOnAction(actionEvent -> {
                 library.getPlaylists().remove(i);
                 updatePlaylistTiles(library.getPlaylists());
 
                 setupTableContext(songViewTable); //Major event handler Spaghetti code
                 setupTableContext(pageTable);
+
+                saveDefaultLibrary();
             });
 
             tile.setOnContextMenuRequested(contextMenuEvent -> contextMenu.show(tile, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY()));
@@ -468,6 +487,31 @@ public class MainController {
         updateArtistTiles(library.getArtists());
         updatePlaylistTiles(library.getPlaylists());
     }
+    private void changeNamePlaylist(Playlist playlist, MenuItem remove){
+        remove.setOnAction(actionEvent -> {
+            TextInputDialog textInputDialog = new TextInputDialog();
+            textInputDialog.setHeaderText("Rename the playlist's title");
+            textInputDialog.showAndWait();
+
+            String name = textInputDialog.getResult();
+            if (name != null) {
+                ArrayList<Music> music = playlist.getTracklist();
+                ImageInfo image = playlist.getImageInfo();
+                library.getPlaylists().remove(playlist);
+
+                Playlist replace_playlist = new Playlist(name, music);
+                library.getPlaylists().add(replace_playlist);
+                replace_playlist.setImageInfo(image);
+
+                updatePlaylistTiles(library.getPlaylists());
+                // Refresh the context menu
+                setupTableContext(songViewTable); //Major event handler Spaghetti code
+                setupTableContext(pageTable);
+
+                saveDefaultLibrary();
+            }
+        });
+    }
 
     private void setupRefresh() {
         allRefreshMenu.setOnAction(actionEvent -> updateAll());
@@ -483,9 +527,24 @@ public class MainController {
         });
     }
 
+    public void aboutTURD(){
+         try {
+             URI uri= new URI("https://gitlab.com/psw_22_231/1meect02/t02_1");
+
+             // Windows
+             if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE))
+                Desktop.getDesktop().browse(uri);
+             else // unix
+                 Runtime.getRuntime().exec("xdg-open " + uri);
+
+         } catch (Exception e) {
+             e.printStackTrace();
+         }
+    }
+
     public void setupSearch(){
         searchField.setOnKeyPressed(keyEvent -> {
-            String searchText = searchField.getText();
+            String searchText = Normalizer.normalize(searchField.getText().toLowerCase(), Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
 
             if(searchText.isEmpty()) {
                 searchLabel.setText("");
@@ -709,7 +768,7 @@ public class MainController {
         Stage stage = (Stage) allPage.getScene().getWindow();
         MainGUI.openPreferences(newStage);
 
-        //If not exist paths is come back to the heloPage
+        //If not exist paths is come back to the helloPage
         if(!MainGUI.existPaths()){
             MainGUI.createMainStage(stage);
         }
@@ -721,7 +780,7 @@ public class MainController {
         Stage stage = (Stage) allPage.getScene().getWindow();
         MainGUI.openFolderPage(newStage);
 
-        //If not exist paths is come back to the heloPage
+        //If not exist paths is come back to the helloPage
         if(!MainGUI.existPaths()){
             MainGUI.createMainStage(stage);
         }
@@ -732,7 +791,7 @@ public class MainController {
     Save and load methods save/load the library
     to the defined savePath as library.json
 */
-    public void saveDefaultLibrary() throws Exception{
+    public void saveDefaultLibrary() {
         String filePath;
 
         String osName = System.getProperty("os.name").toLowerCase();
@@ -741,14 +800,20 @@ public class MainController {
         else if (osName.contains("linux"))
             filePath = Library.settings.getSavePath() + "/";
         else // Unsupported OS
-            throw new Exception();
+            return;
 
         File folder = new File(filePath);
         if(folder.mkdirs())
             System.out.println("Save path already exists!");
         String path = filePath + "library.json";
 
-        library.saveLibrary(path);
+        try {
+            library.saveLibrary(path);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
     }
     public void loadDefaultLibrary(){
         String osName = System.getProperty("os.name").toLowerCase();

@@ -9,6 +9,7 @@ import java.net.*;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -21,6 +22,7 @@ import javafx.scene.control.Alert;
 
 import javax.imageio.ImageIO;
 
+
 //
 // Resources for implementing this:
 //      https://acoustid.org/webservice
@@ -29,11 +31,6 @@ import javax.imageio.ImageIO;
 //      https://musicbrainz.org/doc/MusicBrainz_API
 // The resulting ID's can then be queried to obtain the metadata in
 //
-// https://stackoverflow.com/questions/1383536/including-an-exe-file-to-jar
-// TODO: Completar MusicInfo, ligacao ao cover...  .org/releasegroup/[id]
-// TODO: Ver casos 302, nulls...
-// TODO: Verificar se existe ligacao a internet
-// TODO: Verificar todos os albuns do Nome musica maioritario
 public class AcoustidRequester {
 
     public static Settings settings;
@@ -48,23 +45,36 @@ public class AcoustidRequester {
 
     // Possibly in a different class - with Token for Spotify
     private static String getAPIRequest(String url, String path) throws URISyntaxException, IOException, InterruptedException {
+        if(url == null || path==null){return null;}
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(new URI(url + path))
                 .GET()
+                .timeout(Duration.ofSeconds(10))
                 .build();
 
         HttpClient client = HttpClient.newBuilder()
                 .followRedirects(HttpClient.Redirect.NORMAL)
+                .connectTimeout(Duration.ofSeconds(10))
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if(!(response.statusCode() == 200 || response.statusCode() == 301 || response.statusCode() == 302)){return null;}
+
         return response.body();
     }
 
     private static String getFingerprint(String filepath) throws Exception{
+        if(filepath == null){return null;}
         ProcessBuilder processBuilder = new ProcessBuilder();
 
         String fpcalcPath = settings.getFpcalcExecutable();
+
+        if(!(new File(fpcalcPath)).exists()){ // Check if fpcalc is available
+            Alert alert = new Alert(Alert.AlertType.ERROR, "The fpcalc executable path does not exist");
+            alert.show();
+            return null;
+        }
 
         // Cross-platform compatibility
         if (os.contains("windows")) {
@@ -96,11 +106,15 @@ public class AcoustidRequester {
 
     // returns: List of all covers url available for an album
     public static List<String> getCoversURL(MusicInfo.Result.Record.ReleaseGroup releaseGroup) throws URISyntaxException, IOException, InterruptedException {
+        if(releaseGroup == null){return null;}
         System.out.println("Fetching Data...");
         String response = getAPIRequest(baseURL_coverarch, "/" + releaseGroup.getId());
 
         Gson gson = new Gson();
         CoverInfo covers = gson.fromJson(response, CoverInfo.class);
+
+        if(covers == null){return null;}
+
         System.out.println("Data Fetched...");
 
         List<Map<String, String>> urlCover = covers.getImages().stream()
@@ -111,30 +125,23 @@ public class AcoustidRequester {
                 .map(w->w.get("250"))
                 .collect(Collectors.toList());
 
+        if(totalURLsmall.size() == 0){return null;}
+
         return totalURLsmall;
     }
 
     // Used to download selected cover
     public static ImageInfo downloadCover(String linkImage, String nameImage) throws Exception {
+        if(linkImage==null || nameImage==null){return null;}
         URL url = new URL(linkImage);
         BufferedImage image = ImageIO.read(url);
         return (new ImageInfo(image, nameImage));
     }
 
-    public static File temporaryCover(List<String> linkImage, String nameFile) throws Exception {
-        File tempFile = File.createTempFile(nameFile, ".tmp");
-        for (String s : linkImage) {
-            URL url = new URL(s);
-            BufferedImage image = ImageIO.read(url);
-            ImageIO.write(image, "jpg", tempFile);
-        }
-
-        return (tempFile);
-    }
-
     // Maps json response to MusicInfo (java class)
     // Returned value has music, artist information
     public static List<MusicInfo.Result.Record> getMusicInfo(Music music) throws Exception {
+        if(music == null){return null;}
         String musicPath = music.getFile().getPath();
 
         String fingerprint = getFingerprint(musicPath);
@@ -167,11 +174,10 @@ public class AcoustidRequester {
                 .max(Map.Entry.comparingByValue()).get().getKey();
 
         // List of record
-        List<MusicInfo.Result.Record> musicInformation = filteredRecord.stream()
+
+        return filteredRecord.stream()
                 .filter(record -> record.getTitle()!=null && record.getTitle().equals(musicName))
                 .collect(Collectors.toList());
-
-        return musicInformation;
     }
 
 }

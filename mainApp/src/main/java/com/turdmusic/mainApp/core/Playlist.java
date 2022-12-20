@@ -60,7 +60,7 @@ public class Playlist{
             return this.imageInfo.getImageObj();
         else {
             // TODO Change this to a default playlist picture
-            InputStream imageStream = getClass().getResourceAsStream("/com/turdmusic/mainApp/defaultphotos/album_default.png");
+            InputStream imageStream = getClass().getResourceAsStream("/com/turdmusic/mainApp/defaultPhotos/playlist_default.png");
             assert imageStream != null;
             return new Image(imageStream);
         }
