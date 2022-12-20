@@ -2,6 +2,7 @@ package com.turdmusic.mainApp.core;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.*;
@@ -17,6 +18,7 @@ import com.turdmusic.mainApp.core.models.CoverInfo;
 import com.turdmusic.mainApp.core.models.ImageInfo;
 import com.turdmusic.mainApp.core.models.MusicInfo;
 import com.google.gson.Gson;
+import javafx.scene.control.Alert;
 
 import javax.imageio.ImageIO;
 
@@ -67,6 +69,12 @@ public class AcoustidRequester {
         ProcessBuilder processBuilder = new ProcessBuilder();
 
         String fpcalcPath = settings.getFpcalcExecutable();
+
+        if(!(new File(fpcalcPath)).exists()){ // Check if fpcalc is available
+            Alert alert = new Alert(Alert.AlertType.ERROR, "The fpcalc executable path does not exist");
+            alert.show();
+            return null;
+        }
 
         // Cross-platform compatibility
         if (os.contains("windows")) {
@@ -166,11 +174,10 @@ public class AcoustidRequester {
                 .max(Map.Entry.comparingByValue()).get().getKey();
 
         // List of record
-        List<MusicInfo.Result.Record> musicInformation = filteredRecord.stream()
+
+        return filteredRecord.stream()
                 .filter(record -> record.getTitle()!=null && record.getTitle().equals(musicName))
                 .collect(Collectors.toList());
-
-        return musicInformation;
     }
 
 }
