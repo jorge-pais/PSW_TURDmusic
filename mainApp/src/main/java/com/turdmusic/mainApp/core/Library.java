@@ -251,6 +251,7 @@ public class Library{
 
     public ArrayList<Music> searchSongs(String searchTerm){
         String query = searchTerm.toLowerCase().replaceFirst("\\s++$", "");
+        query = Normalizer.normalize(query.toLowerCase(), Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
 
         ArrayList<Music> output = new ArrayList<>();
 
@@ -268,6 +269,7 @@ public class Library{
     }
     public ArrayList<Album> searchAlbums(String searchTerm){
         String query = searchTerm.toLowerCase().replaceFirst("\\s++$", "");
+        query = Normalizer.normalize(query.toLowerCase(), Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
 
         ArrayList<Album> output = new ArrayList<>();
 
@@ -284,6 +286,7 @@ public class Library{
     }
     public ArrayList<Artist> searchArtists(String searchTerm){
         String query = searchTerm.toLowerCase().replaceFirst("\\s++$", "");
+        query = Normalizer.normalize(query.toLowerCase(), Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
 
         ArrayList<Artist> output = new ArrayList<>();
 
@@ -300,6 +303,7 @@ public class Library{
     }
     public ArrayList<Playlist> searchPlaylist(String searchTerm){
         String query = searchTerm.toLowerCase().replaceFirst("\\s++$", "");
+        query = Normalizer.normalize(query.toLowerCase(), Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
 
         ArrayList<Playlist> output = new ArrayList<>();
 
