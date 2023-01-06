@@ -49,7 +49,7 @@ public class TestUtils {
         }
 
         double totalPixels = widthA * heightA * 3;
-        double avgDifferentPixels = totalPixels / diff;
+        double avgDifferentPixels = diff / totalPixels;
 
         return (avgDifferentPixels / 255) * 100;
     }
