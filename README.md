@@ -6,7 +6,9 @@ T.U.R.D. music provides users with a simple way to organize local music files, f
 
 ## Installation
 
-See [Installation Instructions](https://gitlab.com/psw_22_231/1meect02/t02_1/-/wikis/Installation-Instructions) in the wiki.
+
+
+See [Installation Instructions](https://github.com/jorge-pais/PSW_TURDmusic/wiki/Installation-Instructions) in the wiki.
 
 ## Prerequisites
 To get the application up and running, it is necessary to have installed some sort of media player software on your computer. We recommend using VLC media player, which is free, lightweight and open-source. 
@@ -20,7 +22,7 @@ This application only support Windows and Linux environments, and requires Java 
 
 Opening the application for the first time, it is required to add music folders manually and scan them. The app automatically searches for all available music files and catalogues them by their available metadata. After this the user can freely see all songs, artists and albums by clicking the buttons on the left most pane. By right clicking elements such as songs or playlists different options become available and can be used to manipulate song data.
 
-See [User Manual](https://gitlab.com/psw_22_231/1meect02/t02_1/-/wikis/User-Manual) for further details.
+See [User Manual](https://github.com/jorge-pais/PSW_TURDmusic/wiki/User-Manual) for further details.
 
 ## License
 
